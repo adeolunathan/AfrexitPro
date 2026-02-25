@@ -78,4 +78,4 @@ export const questions: Question[] = [
 ];
 
 // Google Apps Script URL from working HTML
-export const API_URL = "https://script.google.com/macros/s/AKfycbyInPK45Argz8sOXO7Dp9XU4PBpejBI89klEP234yUP372T9-2Fja9xyaFpHK8_zBAtVA/exec";
+export const API_URL = "https://script.google.com/macros/s/AKfycbyyBwKT1O4CxCoPnC4W07qE-cJYsH_1PP6IJMU3c6aB6Wi7cXXhGSTSc7zAIcvl1gnyDg/exec";
