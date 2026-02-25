@@ -83,11 +83,11 @@ export function LandingPage({ onStart }: LandingPageProps) {
               <img
                 src="/logo-mark.png"
                 alt="Afrexit logo"
-                className="w-16 h-16 sm:w-10 sm:h-10 object-contain shrink-0"
+                className="w-10 h-10 object-contain shrink-0"
               />
-              <span className="text-4xl font-bold">
+              <span className="text-xl font-bold">
                 <span className="text-purple-600">Afr</span>
-                <span className="text-blue-600">Exit</span>
+                <span className="text-blue-600">exit</span>
               </span>
             </div>
             <div className="hidden md:flex items-center gap-6 text-sm text-gray-600">

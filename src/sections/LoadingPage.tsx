@@ -49,34 +49,28 @@ export function LoadingPage() {
         <div className="absolute bottom-12 left-4 h-56 w-56 rounded-full bg-purple/5 blur-3xl" />
       </div>
 
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/85 backdrop-blur-md border-b border-gray-200">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-purple rounded-lg flex items-center justify-center">
-                <svg viewBox="0 0 100 100" className="w-6 h-6">
-                  <defs>
-                    <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#a855f7" />
-                      <stop offset="100%" stopColor="#9333ea" />
-                    </linearGradient>
-                  </defs>
-                  <path d="M50 20 L70 55 Q75 65 65 70 Q55 75 50 65 L35 40 Z" fill="url(#logoGrad)" />
-                  <path d="M35 45 L20 70 L42 55 Z" fill="#a855f7" />
-                  <path d="M42 58 L58 70 L50 75 Z" fill="#2563eb" />
-                </svg>
-              </div>
-              <span className="font-semibold text-black text-lg">
-                <span className="text-purple">Afr</span>
-                <span className="text-blue">Exit</span>
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center gap-2">
+              <img
+                src="/logo-mark.png"
+                alt="Afrexit logo"
+                className="w-10 h-10 object-contain shrink-0"
+              />
+              <span className="text-xl font-bold">
+                <span className="text-purple-600">Afr</span>
+                <span className="text-blue-600">exit</span>
               </span>
             </div>
-            <div className="hidden sm:block text-xs text-gray-500">
-              Preparing your valuation report
+            <div className="hidden md:flex items-center gap-6 text-sm text-gray-600">
+              <span>Built for Nigerian SMEs</span>
+              <span className="text-purple-600">•</span>
+              <span>Free Valuation Tool</span>
             </div>
           </div>
         </div>
-      </header>
+      </nav>
 
       <main className="relative flex-1 pt-28 pb-14 px-4 sm:px-6">
         <div className="max-w-4xl mx-auto">

@@ -2,9 +2,7 @@ import { Button } from '@/components/ui/button';
 import { 
   ArrowRight, 
   CheckCircle2, 
-  ShieldCheck, 
   TriangleAlert, 
-  TrendingUp, 
   FileText, 
   Mail, 
   RefreshCw,
@@ -160,21 +158,24 @@ export function ResultsPage({ data, contact, onRestart }: ResultsPageProps) {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
-                <TrendingUp className="w-5 h-5 text-white" />
-              </div>
+              <img
+                src="/logo-mark.png"
+                alt="Afrexit logo"
+                className="w-10 h-10 object-contain shrink-0"
+              />
               <span className="text-xl font-bold">
                 <span className="text-purple-600">Afr</span>
                 <span className="text-blue-600">exit</span>
               </span>
             </div>
-            <div className="flex items-center gap-2 text-sm text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full">
-              <ShieldCheck className="w-4 h-4" />
-              <span className="hidden sm:inline">Valuation Complete</span>
+            <div className="hidden md:flex items-center gap-6 text-sm text-gray-600">
+              <span>Built for Nigerian SMEs</span>
+              <span className="text-purple-600">•</span>
+              <span>Free Valuation Tool</span>
             </div>
           </div>
         </div>
