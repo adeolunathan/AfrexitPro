@@ -1,10 +1,46 @@
+import { useState, useEffect } from 'react';
+import { CheckCircle2, BarChart3, Calculator, TrendingUp } from 'lucide-react';
+
 const loadingChecks = [
-  'Validating response completeness',
-  'Scoring sellability across the 9-factor framework',
-  'Estimating valuation range and likely value',
+  { text: 'Validating response completeness', icon: CheckCircle2, color: 'text-emerald-600 bg-emerald-100' },
+  { text: 'Scoring sellability across the 9-factor framework', icon: BarChart3, color: 'text-purple-600 bg-purple-100' },
+  { text: 'Estimating valuation range and likely value', icon: Calculator, color: 'text-blue-600 bg-blue-100' },
+];
+
+type ProgressStep = {
+  label: string;
+  width: number;
+};
+
+const progressSteps: ProgressStep[] = [
+  { label: 'Data quality scoring', width: 72 },
+  { label: 'Transferability assessment', width: 84 },
+  { label: 'Valuation range calibration', width: 66 },
 ];
 
 export function LoadingPage() {
+  const [activeStep, setActiveStep] = useState(0);
+
+  useEffect(() => {
+    // Step 1: Data quality scoring (0-3 seconds)
+    const timer1 = setTimeout(() => {
+      setActiveStep(1);
+    }, 3000);
+
+    // Step 2: Transferability assessment (3-6 seconds)
+    const timer2 = setTimeout(() => {
+      setActiveStep(2);
+    }, 6000);
+
+    // Step 3: Valuation range calibration stays active (6+ seconds)
+    // It remains on step 2 until the component unmounts
+
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-white relative overflow-x-hidden">
       <div className="pointer-events-none absolute inset-0">
@@ -17,11 +53,19 @@ export function LoadingPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <img
-                src="/logo-mark.png"
-                alt="Afrexit logo"
-                className="w-10 h-10 object-contain shrink-0"
-              />
+              <div className="w-10 h-10 bg-purple rounded-lg flex items-center justify-center">
+                <svg viewBox="0 0 100 100" className="w-6 h-6">
+                  <defs>
+                    <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#a855f7" />
+                      <stop offset="100%" stopColor="#9333ea" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M50 20 L70 55 Q75 65 65 70 Q55 75 50 65 L35 40 Z" fill="url(#logoGrad)" />
+                  <path d="M35 45 L20 70 L42 55 Z" fill="#a855f7" />
+                  <path d="M42 58 L58 70 L50 75 Z" fill="#2563eb" />
+                </svg>
+              </div>
               <span className="font-semibold text-black text-lg">
                 <span className="text-purple">Afr</span>
                 <span className="text-blue">Exit</span>
@@ -50,24 +94,21 @@ export function LoadingPage() {
                       style={{
                         background:
                           'conic-gradient(from 180deg, rgba(160,32,240,0.08) 0deg, #A020F0 110deg, #0070F3 230deg, rgba(0,112,243,0.08) 360deg)',
+                        animationDuration: '3s',
                       }}
                     />
                     <div className="absolute inset-[7px] rounded-full bg-white border border-gray-100" />
                     <div className="absolute inset-0 grid place-items-center">
-                      <img
-                        src="/logo-mark.png"
-                        alt="Afrexit logo"
-                        className="h-10 w-10 object-contain"
-                      />
+                      <img src="/logo-mark.png" alt="Afrexit" className="w-14 h-14" />
                     </div>
                   </div>
                 </div>
 
                 <div className="text-center md:text-left">
-                  <div className="inline-flex items-center gap-2 rounded-full border border-purple/20 bg-purple/5 px-3 py-1 text-xs font-semibold text-purple mb-3">
+                  <div className="inline-flex items-center gap-2 rounded-full border border-purple/20 bg-purple/5 px-4 py-1.5 text-2xl font-bold text-purple mb-3">
                     Valuation in progress
                   </div>
-                  <h1 className="text-2xl sm:text-3xl font-bold text-black leading-tight">
+                  <h1 className="text-xl sm:text-2xl font-bold text-black leading-tight">
                     Calculating your business valuation
                   </h1>
                   <p className="text-gray-600 mt-3 max-w-2xl">
@@ -80,50 +121,69 @@ export function LoadingPage() {
               </div>
 
               <div className="mt-8 grid gap-4 md:grid-cols-[1.25fr_1fr]">
-                <div className="rounded-xl border border-gray-200 bg-gray-50/80 p-4 sm:p-5">
-                  <div className="text-sm font-semibold text-black mb-3">What we are checking right now</div>
-                  <div className="space-y-3">
-                    {loadingChecks.map((item, index) => (
+                <div className="rounded-xl border border-gray-200 bg-gradient-to-br from-gray-50 to-white p-5 sm:p-6">
+                  <div className="flex items-center gap-2 mb-5">
+                    <TrendingUp className="w-5 h-5 text-purple-600" />
+                    <div className="text-base font-bold text-gray-900">What we are checking right now</div>
+                  </div>
+                  <div className="space-y-4">
+                    {loadingChecks.map((item) => (
                       <div
-                        key={item}
-                        className="flex items-center gap-3 rounded-lg border border-white bg-white/80 px-3 py-2"
+                        key={item.text}
+                        className="flex items-center gap-4 rounded-xl border border-gray-100 bg-white px-4 py-3.5 shadow-sm hover:shadow-md transition-shadow"
                       >
-                        <div className="relative h-5 w-5 shrink-0">
-                          <div
-                            className="absolute inset-0 rounded-full bg-purple/15"
-                            style={{ animationDelay: `${index * 180}ms` }}
-                          />
-                          <div className="absolute left-1/2 top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-purple to-blue animate-pulse" />
+                        <div className={`w-11 h-11 rounded-xl ${item.color} flex items-center justify-center shrink-0`}>
+                          <item.icon className="w-5 h-5" />
                         </div>
-                        <span className="text-sm text-gray-700">{item}</span>
+                        <span className="text-base font-medium text-gray-800">{item.text}</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                <div className="rounded-xl border border-gray-200 bg-white p-4 sm:p-5">
-                  <div className="text-sm font-semibold text-black mb-4">Progress indicator</div>
-                  <div className="space-y-4">
-                    {[72, 84, 66].map((width, idx) => (
-                      <div key={idx}>
-                        <div className="mb-1 text-xs text-gray-500">
-                          {idx === 0 && 'Data quality scoring'}
-                          {idx === 1 && 'Transferability assessment'}
-                          {idx === 2 && 'Valuation range calibration'}
+                <div className="rounded-xl border border-gray-200 bg-white p-5 sm:p-6">
+                  <div className="text-base font-bold text-black mb-5">Progress indicator</div>
+                  <div className="space-y-5">
+                    {progressSteps.map((step, idx) => {
+                      const isActive = activeStep === idx;
+                      const isCompleted = activeStep > idx;
+                      
+                      return (
+                        <div key={idx} className={`transition-opacity duration-500 ${isActive ? 'opacity-100' : 'opacity-60'}`}>
+                          <div className="mb-2 text-sm font-medium flex items-center gap-2">
+                            <span className={isActive ? 'text-purple' : isCompleted ? 'text-green-600' : 'text-gray-500'}>
+                              {step.label}
+                            </span>
+                            {isActive && (
+                              <span className="inline-flex items-center">
+                                <span className="w-1.5 h-1.5 bg-purple rounded-full animate-pulse" />
+                              </span>
+                            )}
+                            {isCompleted && (
+                              <svg className="w-3.5 h-3.5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                              </svg>
+                            )}
+                          </div>
+                          <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
+                            <div
+                              className={`h-full rounded-full transition-all duration-1000 ${
+                                isActive 
+                                  ? 'bg-gradient-to-r from-purple to-blue animate-pulse' 
+                                  : isCompleted 
+                                    ? 'bg-green-500' 
+                                    : 'bg-gray-300'
+                              }`}
+                              style={{
+                                width: isCompleted ? '100%' : isActive ? `${step.width}%` : '0%',
+                              }}
+                            />
+                          </div>
                         </div>
-                        <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
-                          <div
-                            className="h-full rounded-full bg-gradient-to-r from-purple to-blue"
-                            style={{
-                              width: `${width}%`,
-                              animation: `afrexit-breathe 1.8s ease-in-out ${idx * 120}ms infinite`,
-                            }}
-                          />
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
-                  <div className="mt-5 rounded-lg border border-gray-100 bg-gray-50 px-3 py-2 text-xs text-gray-500">
+                  <div className="mt-5 rounded-lg border border-gray-100 bg-gray-50 px-4 py-3 text-sm text-gray-600">
                     Do not close this tab while we generate your result.
                   </div>
                 </div>
@@ -137,11 +197,6 @@ export function LoadingPage() {
         @keyframes afrexit-shimmer {
           0% { background-position: 0% 0%; }
           100% { background-position: 200% 0%; }
-        }
-
-        @keyframes afrexit-breathe {
-          0%, 100% { opacity: 0.85; transform: scaleX(1); }
-          50% { opacity: 1; transform: scaleX(0.96); }
         }
       `}</style>
     </div>
