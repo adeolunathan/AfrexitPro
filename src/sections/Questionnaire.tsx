@@ -10,6 +10,7 @@ interface QuestionnaireProps {
   formData: FormData;
   onUpdate: (data: FormData) => void;
   onSubmit: (data: FormData) => void;
+  onNotice: (message: string) => void;
   onBackToLanding: () => void;
 }
 
@@ -27,7 +28,7 @@ const countryCodes = [
   { code: '+91', flag: '🇮🇳', name: 'India' },
 ];
 
-export function Questionnaire({ questions, formData, onUpdate, onSubmit, onBackToLanding }: QuestionnaireProps) {
+export function Questionnaire({ questions, formData, onUpdate, onSubmit, onNotice, onBackToLanding }: QuestionnaireProps) {
   const [step, setStep] = useState(0);
   const [currentValue, setCurrentValue] = useState<string>('');
   const [selectedCountry, setSelectedCountry] = useState(countryCodes[0]);
@@ -102,26 +103,31 @@ export function Questionnaire({ questions, formData, onUpdate, onSubmit, onBackT
   };
 
   const handleNext = () => {
+    let pendingUpdate: FormData = {};
+
     // Validate and collect current answer
     if (currentQuestion.type === 'text') {
       const val = currentValue.trim();
       if (currentQuestion.required && !val) {
-        alert('Please enter a value.');
+        onNotice('Please enter a value.');
         return;
       }
-      onUpdate({ [currentQuestion.id]: val });
+      pendingUpdate = { [currentQuestion.id]: val };
     } else if (currentQuestion.type === 'number') {
       const val = currentValue.trim();
       if (currentQuestion.required && !val) {
-        alert('Please enter a value.');
+        onNotice('Please enter a value.');
         return;
       }
-      onUpdate({ [currentQuestion.id]: val });
+      pendingUpdate = { [currentQuestion.id]: val };
     } else if (currentQuestion.type === 'select') {
       const val = formData[currentQuestion.id] || '';
       if (currentQuestion.required && !val) {
-        alert('Please select an option.');
+        onNotice('Please select an option.');
         return;
+      }
+      if (val) {
+        pendingUpdate = { [currentQuestion.id]: val };
       }
     } else if (currentQuestion.type === 'contact') {
       const firstName = (document.getElementById('firstName') as HTMLInputElement)?.value?.trim() || '';
@@ -130,11 +136,11 @@ export function Questionnaire({ questions, formData, onUpdate, onSubmit, onBackT
       const whatsappRaw = (document.getElementById('whatsapp') as HTMLInputElement)?.value?.trim() || '';
       
       if (!firstName || !businessName || !email || !whatsappRaw) {
-        alert('Please fill in your name, business name, email, and WhatsApp number.');
+        onNotice('Please fill in your name, business name, email, and WhatsApp number.');
         return;
       }
       if (!email.includes('@')) {
-        alert('Please enter a valid email.');
+        onNotice('Please enter a valid email.');
         return;
       }
       
@@ -142,23 +148,26 @@ export function Questionnaire({ questions, formData, onUpdate, onSubmit, onBackT
       const whatsappNumber = whatsappRaw.replace(/[^\d]/g, '');
       const fullWhatsapp = selectedCountry.code + whatsappNumber;
       
-      onUpdate({ 
+      pendingUpdate = {
         firstName, 
         businessName, 
         email, 
         whatsapp: fullWhatsapp,
         countryCode: selectedCountry.code,
         newsletter: newsletterChecked ? 'Yes' : 'No'
-      });
+      };
     }
 
     if (step < questions.length - 1) {
+      if (Object.keys(pendingUpdate).length > 0) {
+        onUpdate(pendingUpdate);
+      }
       setStep(step + 1);
     } else {
-      // Submit with all data including current
-      const finalData = { ...formData };
-      if (currentQuestion.type === 'text' || currentQuestion.type === 'number') {
-        finalData[currentQuestion.id] = currentValue.trim();
+      // Submit with current step merged in immediately (avoids stale state on first submit)
+      const finalData = { ...formData, ...pendingUpdate };
+      if (Object.keys(pendingUpdate).length > 0) {
+        onUpdate(pendingUpdate);
       }
       onSubmit(finalData);
     }

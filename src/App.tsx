@@ -1,4 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { LandingPage } from './sections/LandingPage';
 import { Questionnaire } from './sections/Questionnaire';
 import { LoadingPage } from './sections/LoadingPage';
@@ -8,6 +17,10 @@ import type { FormData, ValuationResult } from './types/questionnaire';
 
 export type Page = 'landing' | 'questionnaire' | 'loading' | 'results';
 type ResultData = NonNullable<ValuationResult['data']>;
+type AppNotice = {
+  title: string;
+  message: string;
+};
 
 const previewResults: Record<string, ResultData> = {
   results: {
@@ -52,6 +65,7 @@ function App() {
   const [formData, setFormData] = useState<FormData>({});
   const [resultData, setResultData] = useState<ValuationResult['data'] | null>(null);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
+  const [notice, setNotice] = useState<AppNotice | null>(null);
 
   // Load saved progress from localStorage on mount
   useEffect(() => {
@@ -105,7 +119,11 @@ function App() {
     setFormData(prev => ({ ...prev, ...data }));
   }, []);
 
-  const handleSubmit = async (finalData: FormData) => {
+  const showNotice = useCallback((message: string, title = 'Please check and try again') => {
+    setNotice({ title, message });
+  }, []);
+
+  const handleSubmit = useCallback(async (finalData: FormData) => {
     // Show loading screen
     setCurrentPage('loading');
     
@@ -128,8 +146,8 @@ function App() {
       
       if (!json || json.status !== 'success') {
         const msg = (json && json.message) ? json.message : 'Submission failed.';
-        alert(msg);
         setCurrentPage('questionnaire');
+        showNotice(msg, 'Submission issue');
         return;
       }
       
@@ -140,11 +158,11 @@ function App() {
       localStorage.removeItem('afrexit_answers');
       localStorage.removeItem('afrexit_view');
     } catch (err) {
-      alert('Network or server error. Please try again.');
       console.error(err);
       setCurrentPage('questionnaire');
+      showNotice('Network or server error. Please try again.', 'Connection error');
     }
-  };
+  }, [showNotice]);
 
   const handleRestart = () => {
     setFormData({});
@@ -166,6 +184,7 @@ function App() {
           formData={formData}
           onUpdate={handleFormUpdate}
           onSubmit={handleSubmit}
+          onNotice={showNotice}
           onBackToLanding={() => setCurrentPage('landing')}
         />
       )}
@@ -185,6 +204,27 @@ function App() {
           onRestart={handleRestart}
         />
       )}
+
+      <AlertDialog open={Boolean(notice)} onOpenChange={(open) => !open && setNotice(null)}>
+        <AlertDialogContent className="max-w-md border-gray-200">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-black">
+              {notice?.title}
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-gray-600 leading-6">
+              {notice?.message}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction
+              onClick={() => setNotice(null)}
+              className="bg-purple hover:bg-purple/90 text-white"
+            >
+              OK
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
