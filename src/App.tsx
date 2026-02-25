@@ -7,14 +7,73 @@ import { questions, API_URL } from './types/questionnaire';
 import type { FormData, ValuationResult } from './types/questionnaire';
 
 export type Page = 'landing' | 'questionnaire' | 'loading' | 'results';
+type ResultData = NonNullable<ValuationResult['data']>;
+
+const previewResults: Record<string, ResultData> = {
+  results: {
+    lowEstimate: '32',
+    highEstimate: '53',
+    adjustedValue: '42',
+    sellabilityScore: 71,
+    rating: 'Very Sellable',
+    diagId: 'preview-dc56e8d6',
+    warnings: ['Some financial records may require stronger documentation'],
+  },
+  'results-risky': {
+    lowEstimate: '9',
+    highEstimate: '17',
+    adjustedValue: '12',
+    sellabilityScore: 34,
+    rating: 'Needs Work',
+    diagId: 'preview-risk-11c2',
+    warnings: [
+      'High owner dependency detected',
+      'Limited proof of revenue quality',
+      'Transferability risks may reduce buyer interest',
+    ],
+  },
+};
+
+const previewContacts: Record<string, FormData> = {
+  results: {
+    firstName: 'Bolu',
+    businessName: 'PolarBear Foods',
+    email: 'bolu@example.com',
+  },
+  'results-risky': {
+    firstName: 'Amaka',
+    businessName: 'Northline Logistics',
+    email: 'amaka@example.com',
+  },
+};
 
 function App() {
   const [currentPage, setCurrentPage] = useState<Page>('landing');
   const [formData, setFormData] = useState<FormData>({});
   const [resultData, setResultData] = useState<ValuationResult['data'] | null>(null);
+  const [isPreviewMode, setIsPreviewMode] = useState(false);
 
   // Load saved progress from localStorage on mount
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const preview = params.get('preview');
+
+    if (preview === 'loading') {
+      setIsPreviewMode(true);
+      setCurrentPage('loading');
+      return;
+    }
+
+    if (preview && previewResults[preview]) {
+      setIsPreviewMode(true);
+      if (previewContacts[preview]) {
+        setFormData(previewContacts[preview]);
+      }
+      setResultData(previewResults[preview]);
+      setCurrentPage('results');
+      return;
+    }
+
     const savedData = localStorage.getItem('afrexit_answers');
     const savedPage = localStorage.getItem('afrexit_view') as Page;
     
@@ -33,9 +92,10 @@ function App() {
 
   // Save progress to localStorage
   useEffect(() => {
+    if (isPreviewMode) return;
     localStorage.setItem('afrexit_answers', JSON.stringify(formData));
     localStorage.setItem('afrexit_view', currentPage);
-  }, [formData, currentPage]);
+  }, [formData, currentPage, isPreviewMode]);
 
   const handleStartValuation = () => {
     setCurrentPage('questionnaire');
@@ -115,7 +175,15 @@ function App() {
       )}
       
       {currentPage === 'results' && resultData && (
-        <ResultsPage data={resultData} onRestart={handleRestart} />
+        <ResultsPage
+          data={resultData}
+          contact={{
+            firstName: formData.firstName,
+            businessName: formData.businessName,
+            email: formData.email,
+          }}
+          onRestart={handleRestart}
+        />
       )}
     </div>
   );
