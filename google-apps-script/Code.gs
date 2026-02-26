@@ -655,7 +655,7 @@ function getScoreTier_(score) {
     bgColor: "#d1fae5",
     headline: "Your Business is Ready for Market", 
     message: "Strong fundamentals. Buyers can validate performance with minimal friction.", 
-    ctaText: "Discuss Your Exit Strategy" 
+    ctaText: "Click Here to Discuss Your Exit Strategy →" 
   };
   if (score >= 40) return { 
     level: "medium", 
@@ -663,7 +663,7 @@ function getScoreTier_(score) {
     bgColor: "#fef3c7",
     headline: "Strong Foundation with Room to Grow", 
     message: "Real value present. 90 days of improvements could raise valuation.", 
-    ctaText: "Get Improvement Roadmap" 
+    ctaText: "Click Here to Get Improvement Roadmap →" 
   };
   return { 
     level: "low", 
@@ -671,7 +671,7 @@ function getScoreTier_(score) {
     bgColor: "#fee2e2",
     headline: "Build Value Before You Sell", 
     message: "Benefit from stronger records and transferability before market.", 
-    ctaText: "Fix the Gaps First" 
+    ctaText: "Click Here to Fix the Gaps First →" 
   };
 }
 
