@@ -197,11 +197,18 @@ export function ResultsPage({ data, contact, onRestart }: ResultsPageProps) {
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3">
               Hi {firstName}! Your valuation is ready
             </h1>
-            <p className="text-gray-600 max-w-lg mx-auto">
+            <p className="text-gray-600 max-w-2xl mx-auto">
               {businessName ? (
-                <>Based on your responses, <span className="font-semibold text-gray-900">{businessName}</span> is valued. {theme.note}</>
+                <>
+                  Based on your responses, we have valued{' '}
+                  <span className="font-semibold text-gray-900">{businessName}</span> at about{' '}
+                  <span className="font-semibold text-gray-900">{formatNairaMillions(data.adjustedValue)}</span>. {theme.note}
+                </>
               ) : (
-                <>Based on your responses, {theme.note}</>
+                <>
+                  Based on your responses, we have valued your business at about{' '}
+                  <span className="font-semibold text-gray-900">{formatNairaMillions(data.adjustedValue)}</span>. {theme.note}
+                </>
               )}
             </p>
           </div>
