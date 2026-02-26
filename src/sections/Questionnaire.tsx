@@ -188,6 +188,35 @@ export function Questionnaire({ questions, formData, onUpdate, onSubmit, onNotic
     }
   };
 
+  const handleEnterToProceed = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    handleNext();
+  };
+
+  const handleContactEnter = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    currentField: 'firstName' | 'businessName' | 'email' | 'whatsapp'
+  ) => {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+
+    const nextFieldMap: Partial<Record<typeof currentField, string>> = {
+      firstName: 'businessName',
+      businessName: 'email',
+      email: 'whatsapp',
+    };
+
+    const nextFieldId = nextFieldMap[currentField];
+    if (nextFieldId) {
+      const nextInput = document.getElementById(nextFieldId) as HTMLInputElement | null;
+      nextInput?.focus();
+      return;
+    }
+
+    handleNext();
+  };
+
   const selectCountry = (country: typeof countryCodes[0]) => {
     setSelectedCountry(country);
     setShowCountryDropdown(false);
@@ -237,6 +266,7 @@ export function Questionnaire({ questions, formData, onUpdate, onSubmit, onNotic
                     type="text"
                     value={currentValue}
                     onChange={(e) => setCurrentValue(e.target.value)}
+                    onKeyDown={handleEnterToProceed}
                     placeholder={currentQuestion.placeholder || ''}
                     className="w-full p-4 text-lg bg-white border-gray-200 focus:border-purple rounded-lg text-black"
                     autoFocus
@@ -251,6 +281,7 @@ export function Questionnaire({ questions, formData, onUpdate, onSubmit, onNotic
                     inputMode="numeric"
                     value={formatCurrency(currentValue)}
                     onChange={handleCurrencyInput}
+                    onKeyDown={handleEnterToProceed}
                     placeholder={currentQuestion.placeholder || ''}
                     className="w-full p-4 text-lg bg-white border-gray-200 focus:border-purple rounded-lg text-black"
                     autoFocus
@@ -298,6 +329,7 @@ export function Questionnaire({ questions, formData, onUpdate, onSubmit, onNotic
                       id="firstName"
                       placeholder="e.g., Bolu"
                       defaultValue={formData.firstName || ''}
+                      onKeyDown={(e) => handleContactEnter(e, 'firstName')}
                       className="w-full p-4 text-lg bg-white border-gray-200 focus:border-purple rounded-lg text-black"
                     />
                   </div>
@@ -308,6 +340,7 @@ export function Questionnaire({ questions, formData, onUpdate, onSubmit, onNotic
                       id="businessName"
                       placeholder="e.g., PolarBear"
                       defaultValue={formData.businessName || ''}
+                      onKeyDown={(e) => handleContactEnter(e, 'businessName')}
                       className="w-full p-4 text-lg bg-white border-gray-200 focus:border-purple rounded-lg text-black"
                     />
                   </div>
@@ -318,6 +351,7 @@ export function Questionnaire({ questions, formData, onUpdate, onSubmit, onNotic
                       id="email"
                       placeholder="e.g., you@email.com"
                       defaultValue={formData.email || ''}
+                      onKeyDown={(e) => handleContactEnter(e, 'email')}
                       className="w-full p-4 text-lg bg-white border-gray-200 focus:border-purple rounded-lg text-black"
                     />
                   </div>
@@ -365,6 +399,7 @@ export function Questionnaire({ questions, formData, onUpdate, onSubmit, onNotic
                         inputMode="numeric"
                         placeholder="801 234 5678"
                         defaultValue={formData.whatsapp ? formData.whatsapp.replace(selectedCountry.code, '') : ''}
+                        onKeyDown={(e) => handleContactEnter(e, 'whatsapp')}
                         className="h-14 flex-1 px-4 py-0 text-lg bg-white border-gray-200 focus:border-purple rounded-lg text-black"
                       />
                     </div>

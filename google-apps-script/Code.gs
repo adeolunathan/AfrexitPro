@@ -9,7 +9,7 @@ const CONFIG = {
   LOOKUP_SHEET: "Lookup Tables",
   ANALYTICS_SHEET: "Analytics",
   DIAGNOSTICS_SHEET: "Diagnostics",
-  SENDER_NAME: "Zenova Labs",
+  SENDER_NAME: "Afrexit",
   YOUR_WHATSAPP_NUMBER: "2348065756001",
   INSTAGRAM_URL: "https://instagram.com/deolunathan",
   TIKTOK_URL: "https://tiktok.com/@deolunathan",
@@ -710,8 +710,9 @@ function generateEmailHTML(data) {
     text-align: center;
   }
   .header-logo {
-    font-size: 24px;
+    font-size: 40px;
     font-weight: 800;
+    line-height: 1.05;
     margin-bottom: 16px;
   }
   .header-logo span:first-child { color: #a78bfa; }
@@ -1054,12 +1055,11 @@ function generateEmailHTML(data) {
       </div>
       
       <div class="disclaimer">
-        <strong>Important:</strong> This is an automated estimate for informational purposes only, not financial or legal advice. Actual value requires professional due diligence and negotiation. Consult licensed advisors before making any business sale decisions.
+        <strong>Important:</strong> This is an automated estimate for informational purposes only, not financial or legal advice. Actual value requires professional due diligence and negotiation. Contact Afrexit or other licensed advisors before making any business sale decisions.
       </div>
     </div>
     
     <div class="footer">
-      <p>&copy; ${new Date().getFullYear()} ${CONFIG.SENDER_NAME}. All rights reserved.</p>
       <div class="follow-section">
         <p><strong>Follow for more insights:</strong><br>I share weekly content about business valuation, exits, and M&A in Nigeria:</p>
         <div class="social-links">
@@ -1068,6 +1068,7 @@ function generateEmailHTML(data) {
           <a href="${CONFIG.YOUTUBE_URL}">YouTube</a>
         </div>
       </div>
+      <p style="margin-top: 12px;">&copy; ${new Date().getFullYear()} ${CONFIG.SENDER_NAME}. All rights reserved.</p>
     </div>
   </div>
 </body>

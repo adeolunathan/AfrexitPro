@@ -120,8 +120,8 @@ function ScoreGauge({ score, theme }: { score: number; theme: ReturnType<typeof 
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-4xl sm:text-5xl font-bold text-gray-900">{score}</span>
-        <span className="text-sm text-gray-400 font-medium">/100</span>
+        <span className="text-4xl sm:text-5xl font-extrabold text-gray-900">{score}</span>
+        <span className="text-sm text-gray-500 font-semibold">/100</span>
       </div>
     </div>
   );
