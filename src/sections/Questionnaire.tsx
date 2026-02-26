@@ -183,6 +183,9 @@ export function Questionnaire({ questions, formData, onUpdate, onSubmit, onNotic
 
   const selectOption = (value: string) => {
     onUpdate({ [currentQuestion.id]: value });
+    if (step < questions.length - 1) {
+      setStep((prev) => Math.min(prev + 1, questions.length - 1));
+    }
   };
 
   const selectCountry = (country: typeof countryCodes[0]) => {

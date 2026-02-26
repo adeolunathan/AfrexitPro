@@ -745,11 +745,16 @@ function generateEmailHTML(data) {
     color: #6b7280;
     margin-bottom: 12px;
   }
-  .valuation-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 12px;
+  .valuation-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
     margin-bottom: 20px;
+  }
+  .valuation-col {
+    width: 33.33%;
+    vertical-align: top;
+    padding: 0 4px;
   }
   .valuation-card {
     background: #f9fafb;
@@ -757,6 +762,7 @@ function generateEmailHTML(data) {
     border-radius: 12px;
     padding: 16px 12px;
     text-align: center;
+    min-height: 92px;
   }
   .valuation-card.highlight {
     background: linear-gradient(135deg, #ede9fe, #ddd6fe);
@@ -771,7 +777,7 @@ function generateEmailHTML(data) {
     margin-bottom: 8px;
   }
   .valuation-amount {
-    font-size: 20px;
+    font-size: 26px;
     font-weight: 800;
     color: #111827;
   }
@@ -784,44 +790,47 @@ function generateEmailHTML(data) {
     padding: 20px;
     margin-bottom: 20px;
   }
-  .score-header {
-    display: flex;
-    align-items: center;
-    gap: 16px;
+  .score-table {
+    width: 100%;
+    border-collapse: collapse;
   }
-  .score-content {
-    flex: 1;
+  .score-badge-cell {
+    width: 108px;
+    vertical-align: middle;
+  }
+  .score-copy {
+    vertical-align: middle;
+    padding-left: 18px;
   }
   .score-content h3 {
     font-size: 16px;
     font-weight: 700;
     color: #111827;
-    margin: 0 0 4px 0;
+    margin: 0 0 6px 0;
   }
   .score-content p {
-    font-size: 14px;
+    font-size: 15px;
     color: #4b5563;
-    margin: 0 0 8px 0;
+    margin: 0;
   }
   .distress-warning {
-    font-size: 12px;
+    font-size: 13px;
     color: #dc2626;
-    margin-top: 4px;
+    margin-top: 8px;
+    line-height: 1.4;
   }
   .score-badge {
-    width: 72px;
-    height: 72px;
+    width: 88px;
+    height: 88px;
     border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    display: block;
     background: ${tier.badgeColor};
     color: white;
-    font-size: 24px;
+    font-size: 37px;
     font-weight: 800;
-    flex-shrink: 0;
-    line-height: 1;
+    line-height: 88px;
     text-align: center;
+    margin: 0 auto;
   }
   .score-info h3 {
     font-size: 16px;
@@ -845,29 +854,31 @@ function generateEmailHTML(data) {
     margin-top: 8px;
   }
   .factors-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    width: 100%;
   }
   .factor-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 12px;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
     background: white;
     border-radius: 8px;
     border: 1px solid #e5e7eb;
-    gap: 8px;
+    margin-bottom: 8px;
   }
   .factor-name {
     font-size: 13px;
     color: #4b5563;
+    text-align: left;
+    padding: 10px 12px;
   }
   .factor-score {
     font-size: 13px;
     font-weight: 700;
     color: #111827;
     white-space: nowrap;
+    text-align: right;
+    padding: 10px 12px;
+    padding-left: 20px;
   }
   .cta-section {
     background: #111827;
@@ -935,13 +946,12 @@ function generateEmailHTML(data) {
   }
   @media (max-width: 480px) {
     .container { margin: 0; border-radius: 0; }
-    .valuation-grid { grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
     .valuation-card { padding: 12px 8px; }
     .valuation-label { font-size: 9px; }
-    .valuation-amount { font-size: 14px; }
-    .score-badge { width: 56px; height: 56px; font-size: 18px; }
-    .score-header { gap: 12px; }
-    .factors-grid { grid-template-columns: 1fr; }
+    .valuation-amount { font-size: 20px; }
+    .score-badge { width: 72px; height: 72px; font-size: 29px; line-height: 72px; }
+    .score-badge-cell { width: 84px; }
+    .score-copy { padding-left: 12px; }
     .content { padding: 20px; }
   }
 </style>
@@ -960,56 +970,80 @@ function generateEmailHTML(data) {
       
       <div class="section">
         <div class="section-title">Valuation Range</div>
-        <div class="valuation-grid">
-          <div class="valuation-card">
-            <div class="valuation-label">Conservative</div>
-            <div class="valuation-amount">₦${data.lowEstimate}M</div>
-          </div>
-          <div class="valuation-card highlight">
-            <div class="valuation-label">Most Likely</div>
-            <div class="valuation-amount">₦${data.adjustedValue}M</div>
-          </div>
-          <div class="valuation-card">
-            <div class="valuation-label">Optimistic</div>
-            <div class="valuation-amount">₦${data.highEstimate}M</div>
-          </div>
-        </div>
+        <table role="presentation" class="valuation-table" width="100%" cellpadding="0" cellspacing="0">
+          <tr>
+            <td class="valuation-col" width="33%">
+              <div class="valuation-card">
+                <div class="valuation-label">Conservative</div>
+                <div class="valuation-amount">₦${data.lowEstimate}M</div>
+              </div>
+            </td>
+            <td class="valuation-col" width="34%">
+              <div class="valuation-card highlight">
+                <div class="valuation-label">Most Likely</div>
+                <div class="valuation-amount">₦${data.adjustedValue}M</div>
+              </div>
+            </td>
+            <td class="valuation-col" width="33%">
+              <div class="valuation-card">
+                <div class="valuation-label">Optimistic</div>
+                <div class="valuation-amount">₦${data.highEstimate}M</div>
+              </div>
+            </td>
+          </tr>
+        </table>
       </div>
       
       <div class="score-section">
-        <div class="score-header">
-          <div class="score-badge">${data.sellabilityScore}</div>
-          <div class="score-content">
-            <h3>Sellability Score</h3>
-            <p>${data.rating}</p>
-            ${data.distressFlag ? `<div class="distress-warning"><strong>⚠️ Distress Sale:</strong> Urgent sale may reduce value by 15%</div>` : ''}
-          </div>
-        </div>
+        <table role="presentation" class="score-table" width="100%" cellpadding="0" cellspacing="0">
+          <tr>
+            <td class="score-badge-cell" width="108" valign="middle">
+              <div class="score-badge">${data.sellabilityScore}</div>
+            </td>
+            <td class="score-copy" valign="middle">
+              <div class="score-content">
+                <h3>Sellability Score</h3>
+                <p><strong>${data.rating}</strong></p>
+                ${data.distressFlag ? `<div class="distress-warning"><strong>⚠️ Distress Sale:</strong> Urgent sale may reduce value by 15%</div>` : ''}
+              </div>
+            </td>
+          </tr>
+        </table>
       </div>
       
       <div class="section">
         <div class="section-title">Factor Breakdown</div>
         <div class="factors-grid">
-          <div class="factor-item">
-            <span class="factor-name">Records & Proof</span>
-            <span class="factor-score">${data.f1_score}/100</span>
-          </div>
-          <div class="factor-item">
-            <span class="factor-name">Banking Transparency</span>
-            <span class="factor-score">${data.f2_score}/100</span>
-          </div>
-          <div class="factor-item">
-            <span class="factor-name">Customer Defensibility</span>
-            <span class="factor-score">${data.f3_score}/100</span>
-          </div>
-          <div class="factor-item">
-            <span class="factor-name">Owner Independence</span>
-            <span class="factor-score">${data.f4_score}/100</span>
-          </div>
-          <div class="factor-item">
-            <span class="factor-name">Working Capital</span>
-            <span class="factor-score">${data.f5_score}/100</span>
-          </div>
+          <table role="presentation" class="factor-item" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td class="factor-name">Records &amp; Proof</td>
+              <td class="factor-score">${data.f1_score}/100</td>
+            </tr>
+          </table>
+          <table role="presentation" class="factor-item" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td class="factor-name">Banking Transparency</td>
+              <td class="factor-score">${data.f2_score}/100</td>
+            </tr>
+          </table>
+          <table role="presentation" class="factor-item" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td class="factor-name">Customer Defensibility</td>
+              <td class="factor-score">${data.f3_score}/100</td>
+            </tr>
+          </table>
+          <table role="presentation" class="factor-item" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td class="factor-name">Owner Independence</td>
+              <td class="factor-score">${data.f4_score}/100</td>
+            </tr>
+          </table>
+          <table role="presentation" class="factor-item" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td class="factor-name">Working Capital</td>
+              <td class="factor-score">${data.f5_score}/100</td>
+            </tr>
+          </table>
         </div>
       </div>
       
