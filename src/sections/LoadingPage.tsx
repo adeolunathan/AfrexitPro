@@ -18,7 +18,11 @@ const progressSteps: ProgressStep[] = [
   { label: 'Valuation range calibration', width: 66 },
 ];
 
-export function LoadingPage() {
+interface LoadingPageProps {
+  onBackToLanding: () => void;
+}
+
+export function LoadingPage({ onBackToLanding }: LoadingPageProps) {
   const [activeStep, setActiveStep] = useState(0);
 
   useEffect(() => {
@@ -52,7 +56,12 @@ export function LoadingPage() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={onBackToLanding}
+              aria-label="Go to homepage"
+              className="flex items-center gap-2"
+            >
               <img
                 src="/logo-mark.png"
                 alt="Afrexit logo"
@@ -62,7 +71,7 @@ export function LoadingPage() {
                 <span className="text-purple-600">Afr</span>
                 <span className="text-blue-600">exit</span>
               </span>
-            </div>
+            </button>
             <div className="hidden md:flex items-center gap-6 text-sm text-gray-600">
               <span>Built for Nigerian SMEs</span>
               <span className="text-purple-600">•</span>

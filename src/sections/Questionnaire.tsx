@@ -228,17 +228,22 @@ export function Questionnaire({ questions, formData, onUpdate, onSubmit, onNotic
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4">
             <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <img
-                  src="/logo-mark.png"
-                  alt="Afrexit logo"
-                  className="w-11 h-11 sm:w-12 sm:h-12 object-contain"
-                />
-                <span className="font-semibold text-black">
-                  <span className="text-purple">Afr</span>
-                  <span className="text-blue">exit</span>
+              <button
+              type="button"
+              onClick={onBackToLanding}
+              aria-label="Go to homepage"
+              className="flex items-center gap-2"
+            >
+              <img
+                src="/logo-mark.png"
+                alt="Afrexit logo"
+                className="w-11 h-11 sm:w-12 sm:h-12 object-contain"
+              />
+              <span className="font-semibold text-black">
+                <span className="text-purple">Afr</span>
+                <span className="text-blue">exit</span>
               </span>
-            </div>
+            </button>
             <div className="text-sm text-gray-500">
               Step {step + 1} of {questions.length}
             </div>

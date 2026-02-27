@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -66,6 +66,8 @@ function App() {
   const [resultData, setResultData] = useState<ValuationResult['data'] | null>(null);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [notice, setNotice] = useState<AppNotice | null>(null);
+  const submissionTokenRef = useRef(0);
+  const activeControllerRef = useRef<AbortController | null>(null);
 
   // Load saved progress from localStorage on mount
   useEffect(() => {
@@ -90,7 +92,7 @@ function App() {
 
     const savedData = localStorage.getItem('afrexit_answers');
     const savedPage = localStorage.getItem('afrexit_view') as Page;
-    
+
     if (savedData) {
       try {
         setFormData(JSON.parse(savedData));
@@ -98,7 +100,7 @@ function App() {
         console.error('Failed to parse saved data:', e);
       }
     }
-    
+
     if (savedPage && ['landing', 'questionnaire', 'results'].includes(savedPage)) {
       setCurrentPage(savedPage);
     }
@@ -116,51 +118,72 @@ function App() {
   };
 
   const handleFormUpdate = useCallback((data: FormData) => {
-    setFormData(prev => ({ ...prev, ...data }));
+    setFormData((prev) => ({ ...prev, ...data }));
   }, []);
 
   const showNotice = useCallback((message: string, title = 'Please check and try again') => {
     setNotice({ title, message });
   }, []);
 
+  const handleGoHome = useCallback(() => {
+    submissionTokenRef.current += 1;
+    if (activeControllerRef.current) {
+      activeControllerRef.current.abort();
+      activeControllerRef.current = null;
+    }
+    setCurrentPage('landing');
+    localStorage.setItem('afrexit_view', 'landing');
+  }, []);
+
   const handleSubmit = useCallback(async (finalData: FormData) => {
     // Show loading screen
     setCurrentPage('loading');
-    
+    const requestToken = ++submissionTokenRef.current;
+    let controller: AbortController | null = null;
+
     try {
       // Use FormData exactly like the working HTML
       const fd = new FormData();
       Object.entries(finalData).forEach(([k, v]) => fd.append(k, v));
-      
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 25000);
-      
-      const res = await fetch(API_URL, { 
-        method: 'POST', 
-        body: fd, 
-        signal: controller.signal 
+
+      controller = new AbortController();
+      activeControllerRef.current = controller;
+      const timeoutId = setTimeout(() => controller && controller.abort(), 25000);
+
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        body: fd,
+        signal: controller.signal,
       });
       clearTimeout(timeoutId);
-      
+      if (submissionTokenRef.current !== requestToken) return;
+
       const json = await res.json();
-      
+      if (submissionTokenRef.current !== requestToken) return;
+
       if (!json || json.status !== 'success') {
-        const msg = (json && json.message) ? json.message : 'Submission failed.';
+        const msg = json && json.message ? json.message : 'Submission failed.';
         setCurrentPage('questionnaire');
         showNotice(msg, 'Submission issue');
         return;
       }
-      
+
       setResultData(json.data);
       setCurrentPage('results');
-      
+
       // Clear saved data on success
       localStorage.removeItem('afrexit_answers');
       localStorage.removeItem('afrexit_view');
     } catch (err) {
+      if (submissionTokenRef.current !== requestToken) return;
+      if (err instanceof DOMException && err.name === 'AbortError') return;
       console.error(err);
       setCurrentPage('questionnaire');
       showNotice('Network or server error. Please try again.', 'Connection error');
+    } finally {
+      if (controller && activeControllerRef.current === controller) {
+        activeControllerRef.current = null;
+      }
     }
   }, [showNotice]);
 
@@ -174,10 +197,8 @@ function App() {
 
   return (
     <div className="min-h-screen bg-white text-black">
-      {currentPage === 'landing' && (
-        <LandingPage onStart={handleStartValuation} />
-      )}
-      
+      {currentPage === 'landing' && <LandingPage onStart={handleStartValuation} />}
+
       {currentPage === 'questionnaire' && (
         <Questionnaire
           questions={questions}
@@ -185,14 +206,12 @@ function App() {
           onUpdate={handleFormUpdate}
           onSubmit={handleSubmit}
           onNotice={showNotice}
-          onBackToLanding={() => setCurrentPage('landing')}
+          onBackToLanding={handleGoHome}
         />
       )}
-      
-      {currentPage === 'loading' && (
-        <LoadingPage />
-      )}
-      
+
+      {currentPage === 'loading' && <LoadingPage onBackToLanding={handleGoHome} />}
+
       {currentPage === 'results' && resultData && (
         <ResultsPage
           data={resultData}
@@ -201,6 +220,7 @@ function App() {
             businessName: formData.businessName,
             email: formData.email,
           }}
+          onGoHome={handleGoHome}
           onRestart={handleRestart}
         />
       )}
@@ -208,12 +228,8 @@ function App() {
       <AlertDialog open={Boolean(notice)} onOpenChange={(open) => !open && setNotice(null)}>
         <AlertDialogContent className="max-w-md border-gray-200">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-black">
-              {notice?.title}
-            </AlertDialogTitle>
-            <AlertDialogDescription className="text-gray-600 leading-6">
-              {notice?.message}
-            </AlertDialogDescription>
+            <AlertDialogTitle className="text-black">{notice?.title}</AlertDialogTitle>
+            <AlertDialogDescription className="text-gray-600 leading-6">{notice?.message}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogAction

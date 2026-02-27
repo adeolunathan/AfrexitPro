@@ -20,7 +20,12 @@ export function SuccessPage({ onRestart }: SuccessPageProps) {
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={onRestart}
+              aria-label="Go to homepage"
+              className="flex items-center gap-2"
+            >
               <div className="w-8 h-8 bg-purple rounded-lg flex items-center justify-center">
                 <TrendingUp className="w-4 h-4 text-white" />
               </div>
@@ -28,7 +33,7 @@ export function SuccessPage({ onRestart }: SuccessPageProps) {
                 <span className="text-purple">Afr</span>
                 <span className="text-blue">exit</span>
               </span>
-            </div>
+            </button>
           </div>
         </div>
       </header>
