@@ -4,7 +4,7 @@ import { CheckCircle2, BarChart3, Calculator, TrendingUp } from 'lucide-react';
 const loadingChecks = [
   { text: 'Validating response completeness', icon: CheckCircle2, color: 'text-emerald-600 bg-emerald-100' },
   { text: 'Scoring sellability across the 9-factor framework', icon: BarChart3, color: 'text-purple-600 bg-purple-100' },
-  { text: 'Estimating valuation range and likely value', icon: Calculator, color: 'text-blue-600 bg-blue-100' },
+  { text: 'Estimating value range and likely outcome', icon: Calculator, color: 'text-blue-600 bg-blue-100' },
 ];
 
 type ProgressStep = {
@@ -15,7 +15,7 @@ type ProgressStep = {
 const progressSteps: ProgressStep[] = [
   { label: 'Data quality scoring', width: 72 },
   { label: 'Transferability assessment', width: 84 },
-  { label: 'Valuation range calibration', width: 66 },
+  { label: 'Estimate range calibration', width: 66 },
 ];
 
 interface LoadingPageProps {
@@ -73,9 +73,9 @@ export function LoadingPage({ onBackToLanding }: LoadingPageProps) {
               </span>
             </button>
             <div className="hidden md:flex items-center gap-6 text-sm text-gray-600">
-              <span>Built for Nigerian SMEs</span>
+              <span>Sell-side readiness and M&A support for SMEs</span>
               <span className="text-purple-600">•</span>
-              <span>Free Valuation Tool</span>
+              <span>Free Estimate Tool</span>
             </div>
           </div>
         </div>
@@ -109,13 +109,13 @@ export function LoadingPage({ onBackToLanding }: LoadingPageProps) {
 
                 <div className="text-center md:text-left">
                   <div className="inline-flex items-center gap-2 rounded-full border border-purple/20 bg-purple/5 px-4 py-1.5 text-2xl font-bold text-purple mb-3">
-                    Valuation in progress
+                    Estimate in progress
                   </div>
                   <h1 className="text-xl sm:text-2xl font-bold text-black leading-tight">
-                    Calculating your business valuation
+                    Calculating your preliminary business value estimate
                   </h1>
                   <p className="text-gray-600 mt-3 max-w-2xl">
-                    We are analyzing your responses across financial quality, transferability, and buyer readiness to produce your estimated valuation range.
+                    We are analyzing your responses across financial quality, transferability, and buyer readiness to produce your estimated value range.
                   </p>
                   <p className="text-sm text-gray-500 mt-2">
                     This usually takes about 10–15 seconds.

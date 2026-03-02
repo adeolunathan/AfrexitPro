@@ -156,7 +156,7 @@ function ensureResponsesSheet_(ss) {
       "Industry", "Location", "Age", "Revenue", "Profit", "Growth",
       "Q7", "Q8", "Q9", "Q10", "Q11", "Q12", "Q13", "Q14", "Q15", "Q16", "Q17", "Q18", "Q19", "Q20", "Q21", "Q22", "Q23", "Q24",
       "DistressSale",
-      "FirstName", "WhatsApp", "Email", "BusinessName", "Newsletter"
+      "FirstName", "WhatsApp", "Email", "BusinessName", "Newsletter", "TermsAccepted", "PrivacyAccepted"
     ]);
     sh.getRange(1, 1, 1, sh.getLastColumn()).setFontWeight("bold");
   } else {
@@ -164,6 +164,12 @@ function ensureResponsesSheet_(ss) {
     if (header.indexOf("DistressSale") === -1) {
       sh.insertColumnAfter(header.indexOf("Q24") + 1);
       sh.getRange(1, header.indexOf("Q24") + 2).setValue("DistressSale").setFontWeight("bold");
+    }
+    const nextHeader = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0].map(String);
+    const missingTailHeaders = ["TermsAccepted", "PrivacyAccepted"].filter(name => nextHeader.indexOf(name) === -1);
+    if (missingTailHeaders.length > 0) {
+      const startCol = sh.getLastColumn() + 1;
+      sh.getRange(1, startCol, 1, missingTailHeaders.length).setValues([missingTailHeaders]).setFontWeight("bold");
     }
   }
   return sh;
@@ -285,7 +291,9 @@ function normalizePayload_(p, warnings) {
     whatsapp: cleanDigits_(String(get("whatsapp", "phone", "mobile"))),
     email: cleanText_(get("email")).toLowerCase(),
     businessName: cleanText_(get("businessName", "business_name")) || "Your Business",
-    newsletter: isTruthy_(get("newsletter")) ? "Yes" : ""
+    newsletter: isTruthy_(get("newsletter")) ? "Yes" : "",
+    termsAccepted: isTruthy_(get("termsAccepted", "terms_accepted", "termsAccepted[]")) ? "Yes" : "",
+    privacyAccepted: isTruthy_(get("privacyAccepted", "privacy_accepted", "privacyAccepted[]")) ? "Yes" : ""
   };
   
   if (!out.whatsapp) warnings.push("WARN_FIELD: whatsapp empty");
@@ -295,6 +303,7 @@ function normalizePayload_(p, warnings) {
 function validatePayload_(payload) {
   if (!payload.email || payload.email.indexOf("@") === -1) return { ok: false, message: "Valid email required." };
   if (!payload.businessName) return { ok: false, message: "Business name required." };
+  if (!isTruthy_(payload.termsAccepted) || !isTruthy_(payload.privacyAccepted)) return { ok: false, message: "Terms and privacy acceptance required." };
   if ((payload.revenue <= 0) && (payload.profit <= 0)) return { ok: false, message: "Revenue or profit must be > 0." };
   return { ok: true };
 }
@@ -368,7 +377,7 @@ function buildResponsesRow_(submissionId, timestamp, payload) {
     payload.q7, payload.q8, payload.q9, payload.q10, payload.q11, payload.q12, payload.q13, payload.q14,
     payload.q15, payload.q16, payload.q17, payload.q18, payload.q19, payload.q20, payload.q21, payload.q22,
     payload.q23, payload.q24, payload.distressSale || "",
-    payload.firstName, payload.whatsapp, payload.email, payload.businessName, payload.newsletter
+    payload.firstName, payload.whatsapp, payload.email, payload.businessName, payload.newsletter, payload.termsAccepted, payload.privacyAccepted
   ];
 }
 
@@ -662,7 +671,7 @@ function getScoreTier_(score) {
     badgeColor: "#f59e0b", 
     bgColor: "#fef3c7",
     headline: "Strong Foundation with Room to Grow", 
-    message: "Real value present. 90 days of improvements could raise valuation.", 
+    message: "Real value is present. 90 days of improvements could raise buyer readiness and your likely estimate range.", 
     ctaText: "Click Here to Get Improvement Roadmap →" 
   };
   return { 
@@ -677,7 +686,7 @@ function getScoreTier_(score) {
 
 function generateEmailHTML(data) {
   const tier = getScoreTier_(data.sellabilityScore);
-  const whatsappLink = `https://wa.me/${CONFIG.YOUR_WHATSAPP_NUMBER}?text=` + encodeURIComponent(`Hi, I received my valuation report for ${data.businessName} (Score: ${data.sellabilityScore}) and I'd like to discuss next steps.`);
+  const whatsappLink = `https://wa.me/${CONFIG.YOUR_WHATSAPP_NUMBER}?text=` + encodeURIComponent(`Hi, I received my preliminary estimate for ${data.businessName} (Score: ${data.sellabilityScore}) and I'd like to discuss next steps.`);
   const reportDate = new Date().toLocaleDateString("en-NG", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
   
   return `<!DOCTYPE html>
@@ -685,7 +694,7 @@ function generateEmailHTML(data) {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Business Valuation Report - ${data.businessName}</title>
+<title>Preliminary Business Value Estimate - ${data.businessName}</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { 
@@ -967,10 +976,10 @@ function generateEmailHTML(data) {
     
     <div class="content">
       <p class="greeting">Hi <strong>${data.firstName}</strong>,</p>
-      <p class="greeting">Your business valuation is ready. Below is your comprehensive estimate based on the information you provided.</p>
+      <p class="greeting">Your preliminary business value estimate is ready. Below is the automated estimate summary based on the information you provided.</p>
       
       <div class="section">
-        <div class="section-title">Valuation Range</div>
+        <div class="section-title">Estimated Value Range</div>
         <table role="presentation" class="valuation-table" width="100%" cellpadding="0" cellspacing="0">
           <tr>
             <td class="valuation-col" width="33%">
@@ -1055,13 +1064,13 @@ function generateEmailHTML(data) {
       </div>
       
       <div class="disclaimer">
-        <strong>Important:</strong> This is an automated estimate for informational purposes only, not financial or legal advice. Actual value requires professional due diligence and negotiation. Contact Afrexit or other licensed advisors before making any business sale decisions.
+        <strong>Important:</strong> This is an automated preliminary estimate for informational purposes only. It is not a certified valuation, financial advice, legal advice, or a signed advisory mandate. Actual deal value requires diligence, negotiation, and separate written engagement terms if Afrexit is to represent you.
       </div>
     </div>
     
     <div class="footer">
       <div class="follow-section">
-        <p><strong>Follow for more insights:</strong><br>I share weekly content about business valuation, exits, and M&A in Nigeria:</p>
+        <p><strong>Follow for more insights:</strong><br>I share weekly content about SME exits, buyer readiness, and M&A in Nigeria:</p>
         <div class="social-links">
           <a href="${CONFIG.INSTAGRAM_URL}">Instagram</a> &bull;
           <a href="${CONFIG.TIKTOK_URL}">TikTok</a> &bull;
@@ -1078,9 +1087,9 @@ function generateEmailHTML(data) {
 function sendValuationReport(data, calcRow) {
   if (!data.email || data.email.indexOf("@") === -1) return { success: false, error: "No valid email" };
   try {
-    const subject = `Your Business Valuation: ₦${data.lowEstimate}M - ₦${data.highEstimate}M`;
+    const subject = `Your Preliminary Business Value Estimate: ₦${data.lowEstimate}M - ₦${data.highEstimate}M`;
     const htmlBody = generateEmailHTML(data);
-    GmailApp.sendEmail(data.email, subject, `Hi ${data.firstName}, your valuation is ready.`, { htmlBody, name: CONFIG.SENDER_NAME });
+    GmailApp.sendEmail(data.email, subject, `Hi ${data.firstName}, your preliminary estimate is ready.`, { htmlBody, name: CONFIG.SENDER_NAME });
     setEmailStatus_(calcRow, "Sent");
     return { success: true };
   } catch (error) {

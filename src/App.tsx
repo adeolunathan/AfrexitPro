@@ -12,10 +12,15 @@ import { LandingPage } from './sections/LandingPage';
 import { Questionnaire } from './sections/Questionnaire';
 import { LoadingPage } from './sections/LoadingPage';
 import { ResultsPage } from './sections/ResultsPage';
+import { DisclaimerPage } from './sections/DisclaimerPage';
+import { TermsPage } from './sections/TermsPage';
+import { PrivacyPage } from './sections/PrivacyPage';
 import { questions, API_URL } from './types/questionnaire';
 import type { FormData, ValuationResult } from './types/questionnaire';
+import type { LegalPage } from './types/legal';
 
-export type Page = 'landing' | 'questionnaire' | 'loading' | 'results';
+type AppPage = 'landing' | 'questionnaire' | 'loading' | 'results';
+export type Page = AppPage | LegalPage;
 type ResultData = NonNullable<ValuationResult['data']>;
 type AppNotice = {
   title: string;
@@ -68,6 +73,7 @@ function App() {
   const [notice, setNotice] = useState<AppNotice | null>(null);
   const submissionTokenRef = useRef(0);
   const activeControllerRef = useRef<AbortController | null>(null);
+  const previousAppPageRef = useRef<AppPage>('landing');
 
   // Load saved progress from localStorage on mount
   useEffect(() => {
@@ -135,6 +141,17 @@ function App() {
     localStorage.setItem('afrexit_view', 'landing');
   }, []);
 
+  const openLegalPage = useCallback((page: LegalPage) => {
+    if (currentPage === 'landing' || currentPage === 'questionnaire' || currentPage === 'loading' || currentPage === 'results') {
+      previousAppPageRef.current = currentPage;
+    }
+    setCurrentPage(page);
+  }, [currentPage]);
+
+  const closeLegalPage = useCallback(() => {
+    setCurrentPage(previousAppPageRef.current);
+  }, []);
+
   const handleSubmit = useCallback(async (finalData: FormData) => {
     // Show loading screen
     setCurrentPage('loading');
@@ -197,7 +214,14 @@ function App() {
 
   return (
     <div className="min-h-screen bg-white text-black">
-      {currentPage === 'landing' && <LandingPage onStart={handleStartValuation} />}
+      {currentPage === 'landing' && (
+        <LandingPage
+          onStart={handleStartValuation}
+          onOpenDisclaimer={() => openLegalPage('disclaimer')}
+          onOpenTerms={() => openLegalPage('terms')}
+          onOpenPrivacy={() => openLegalPage('privacy')}
+        />
+      )}
 
       {currentPage === 'questionnaire' && (
         <Questionnaire
@@ -207,10 +231,34 @@ function App() {
           onSubmit={handleSubmit}
           onNotice={showNotice}
           onBackToLanding={handleGoHome}
+          onOpenDisclaimer={() => openLegalPage('disclaimer')}
+          onOpenTerms={() => openLegalPage('terms')}
+          onOpenPrivacy={() => openLegalPage('privacy')}
         />
       )}
 
       {currentPage === 'loading' && <LoadingPage onBackToLanding={handleGoHome} />}
+
+      {currentPage === 'disclaimer' && (
+        <DisclaimerPage
+          onBack={closeLegalPage}
+          onNavigate={openLegalPage}
+        />
+      )}
+
+      {currentPage === 'terms' && (
+        <TermsPage
+          onBack={closeLegalPage}
+          onNavigate={openLegalPage}
+        />
+      )}
+
+      {currentPage === 'privacy' && (
+        <PrivacyPage
+          onBack={closeLegalPage}
+          onNavigate={openLegalPage}
+        />
+      )}
 
       {currentPage === 'results' && resultData && (
         <ResultsPage
@@ -222,6 +270,9 @@ function App() {
           }}
           onGoHome={handleGoHome}
           onRestart={handleRestart}
+          onOpenDisclaimer={() => openLegalPage('disclaimer')}
+          onOpenTerms={() => openLegalPage('terms')}
+          onOpenPrivacy={() => openLegalPage('privacy')}
         />
       )}
 

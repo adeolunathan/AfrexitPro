@@ -4,6 +4,9 @@ import { ChevronRight, TrendingUp as Trend, Shield, Users, Building2, FileText, 
 
 interface LandingPageProps {
   onStart: () => void;
+  onOpenDisclaimer?: () => void;
+  onOpenTerms?: () => void;
+  onOpenPrivacy?: () => void;
 }
 
 const nineFactors = [
@@ -67,12 +70,12 @@ const howItWorks = [
   },
   {
     step: '03',
-    title: 'Get Your Report',
-    description: 'Receive a detailed valuation report via email within 24 hours.',
+    title: 'See Your Estimate',
+    description: 'View your preliminary estimate on-screen and receive a copy by email.',
   },
 ];
 
-export function LandingPage({ onStart }: LandingPageProps) {
+export function LandingPage({ onStart, onOpenDisclaimer, onOpenTerms, onOpenPrivacy }: LandingPageProps) {
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
@@ -91,9 +94,9 @@ export function LandingPage({ onStart }: LandingPageProps) {
               </span>
             </a>
             <div className="hidden md:flex items-center gap-6 text-sm text-gray-600">
-              <span>Built for Nigerian SMEs</span>
+              <span>Sell-side readiness and M&A support for SMEs</span>
               <span className="text-purple-600">•</span>
-              <span>Free Valuation Tool</span>
+              <span>Free Estimate Tool</span>
             </div>
           </div>
         </div>
@@ -105,7 +108,7 @@ export function LandingPage({ onStart }: LandingPageProps) {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 border border-gray-200 rounded-full px-4 py-2 mb-8">
             <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-            <span className="text-sm text-gray-600">Now serving Nigerian businesses nationwide</span>
+            <span className="text-sm text-gray-600">Built for Nigerian SME owners planning growth, exit, or sale readiness</span>
           </div>
 
           {/* Headline */}
@@ -118,7 +121,7 @@ export function LandingPage({ onStart }: LandingPageProps) {
 
           {/* Subtext */}
           <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-10">
-            Get a professional valuation based on 9 critical factors that buyers actually care about. Designed specifically for Nigerian SMEs.
+            Get a preliminary business value estimate and buyer-readiness snapshot based on 9 factors that serious SME buyers actually care about.
           </p>
 
           {/* CTA */}
@@ -127,7 +130,7 @@ export function LandingPage({ onStart }: LandingPageProps) {
               onClick={onStart}
               className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-6 text-lg font-semibold rounded-lg shadow-lg shadow-purple-200"
             >
-              Start Your Valuation
+              Start Your Estimate
               <ChevronRight className="w-5 h-5 ml-2" />
             </Button>
             <Dialog>
@@ -146,7 +149,7 @@ export function LandingPage({ onStart }: LandingPageProps) {
                       How It Works
                     </DialogTitle>
                     <DialogDescription className="text-sm text-gray-500">
-                      Three steps to get your valuation report.
+                      Three steps to get your preliminary estimate.
                     </DialogDescription>
                   </DialogHeader>
 
@@ -172,9 +175,37 @@ export function LandingPage({ onStart }: LandingPageProps) {
               </DialogContent>
             </Dialog>
           </div>
-          <p className="text-sm text-gray-500 mt-4">
-            Takes 5-7 minutes • Free report
-          </p>
+          <div className="mt-4 space-y-2">
+            <p className="text-sm text-gray-500">
+              Takes 5-7 minutes • Free estimate summary
+            </p>
+            <p className="mx-auto max-w-2xl text-sm leading-6 text-gray-500">
+              Automated estimate only. It is not a certified professional valuation and does not by itself create an advisory, brokerage, or banker-client relationship.
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-3 text-sm">
+              <button
+                type="button"
+                onClick={onOpenDisclaimer}
+                className="text-gray-500 underline underline-offset-4 hover:text-purple-600"
+              >
+                Important Disclosures
+              </button>
+              <button
+                type="button"
+                onClick={onOpenTerms}
+                className="text-gray-500 underline underline-offset-4 hover:text-purple-600"
+              >
+                Terms of Use
+              </button>
+              <button
+                type="button"
+                onClick={onOpenPrivacy}
+                className="text-gray-500 underline underline-offset-4 hover:text-purple-600"
+              >
+                Privacy Policy
+              </button>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -183,10 +214,10 @@ export function LandingPage({ onStart }: LandingPageProps) {
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-black">
-              The <span className="text-purple">9-Factor</span> Valuation Framework
+              The <span className="text-purple">9-Factor</span> Buyer-Readiness Framework
             </h2>
             <p className="text-gray-500 max-w-2xl mx-auto">
-              Our assessment evaluates your business across nine dimensions that determine real market value in the Nigerian context.
+              Our assessment evaluates your business across nine dimensions that shape transferability, buyer confidence, and likely value in the Nigerian context.
             </p>
           </div>
 
@@ -209,10 +240,33 @@ export function LandingPage({ onStart }: LandingPageProps) {
 
       {/* Footer */}
       <footer className="py-6 px-4 sm:px-6 border-t border-gray-200">
-        <div className="max-w-5xl mx-auto text-center">
+        <div className="max-w-5xl mx-auto text-center space-y-2">
           <p className="text-sm text-gray-400">
             © 2026 Afrexit. All rights reserved.
           </p>
+          <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
+            <button
+              type="button"
+              onClick={onOpenDisclaimer}
+              className="text-gray-500 hover:text-purple-600 underline transition-colors"
+            >
+              Important Disclosures
+            </button>
+            <button
+              type="button"
+              onClick={onOpenTerms}
+              className="text-gray-500 hover:text-purple-600 underline transition-colors"
+            >
+              Terms of Use
+            </button>
+            <button
+              type="button"
+              onClick={onOpenPrivacy}
+              className="text-gray-500 hover:text-purple-600 underline transition-colors"
+            >
+              Privacy Policy
+            </button>
+          </div>
         </div>
       </footer>
     </div>

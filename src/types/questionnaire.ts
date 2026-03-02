@@ -29,7 +29,8 @@ export interface ValuationResult {
 export const questions: Question[] = [
   { type: "select", id: "industry", question: "What industry best describes your business?", required: true,
     options: ["Retail/E-commerce","Food & Beverage","Professional Services","Personal Services","Manufacturing/Production","Logistics/Transportation","Technology/Software","Healthcare","Education/Training","Wholesale/Distribution","Other"] },
-  { type: "text", id: "location", question: "Where is your business located?", placeholder: "e.g., Lagos, Abuja", required: true },
+  { type: "select", id: "location", question: "Where is your business located?", required: true,
+    options: ["Abia","Adamawa","Akwa Ibom","Anambra","Bauchi","Bayelsa","Benue","Borno","Cross River","Delta","Ebonyi","Edo","Ekiti","Enugu","FCT (Abuja)","Gombe","Imo","Jigawa","Kaduna","Kano","Katsina","Kebbi","Kogi","Kwara","Lagos - Island","Lagos - Mainland","Nasarawa","Niger","Ogun","Ondo","Osun","Oyo","Plateau","Rivers","Sokoto","Taraba","Yobe","Zamfara"] },
   { type: "select", id: "age", question: "How long has the business been operating?", required: true,
     options: ["Less than 1 year","1-3 years","3-5 years","5-10 years","10-20 years","More than 20 years"] },
   { type: "number", id: "revenue", question: "What is your annual revenue (₦)?", placeholder: "e.g., 80000000", required: false },
@@ -74,7 +75,7 @@ export const questions: Question[] = [
     options: ["6+ months comfortably","3-6 months","1-3 months","Less than 1 month (need to sell urgently)"] },
   { type: "select", id: "distressSale", question: "Are you under urgent pressure to sell?", required: true,
     options: ["No, I'm not under pressure","Yes, I may need to sell urgently"] },
-  { type: "contact", id: "contact", question: "Where should we send your report?", required: true }
+  { type: "contact", id: "contact", question: "Where should we send your estimate summary?", required: true }
 ];
 
 // Google Apps Script URL from working HTML

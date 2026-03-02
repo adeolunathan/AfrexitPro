@@ -50,12 +50,12 @@ export function SuccessPage({ onRestart }: SuccessPageProps) {
 
           {/* Thank You Message */}
           <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-black">
-            Thank You! Your Valuation is <span className="text-purple">In Progress</span>
+            Thank You! Your Estimate is <span className="text-purple">In Progress</span>
           </h1>
 
           <p className="text-lg text-gray-600 mb-8 max-w-lg mx-auto">
             We've received your business information and our team is analyzing your responses 
-            against our 9-factor valuation framework.
+            against our 9-factor readiness framework.
           </p>
 
           {/* What Happens Next */}
@@ -72,7 +72,7 @@ export function SuccessPage({ onRestart }: SuccessPageProps) {
                 <div>
                   <p className="text-sm text-gray-600">
                     <span className="text-black font-medium">Check your email</span> - We've sent a confirmation 
-                    and your detailed valuation report will arrive within 24 hours.
+                    and your estimate summary will arrive shortly.
                   </p>
                 </div>
               </div>
@@ -82,8 +82,8 @@ export function SuccessPage({ onRestart }: SuccessPageProps) {
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">
-                    <span className="text-black font-medium">Review your report</span> - Your personalized 
-                    valuation will include insights on all 9 factors and recommendations.
+                    <span className="text-black font-medium">Review your summary</span> - Your personalized 
+                    estimate will include insights on all 9 factors and recommendations.
                   </p>
                 </div>
               </div>
@@ -104,7 +104,7 @@ export function SuccessPage({ onRestart }: SuccessPageProps) {
           {/* WhatsApp CTA */}
           <div className="mb-8">
             <a
-              href="https://wa.me/2348012345678?text=Hi%20Afrexit%20team,%20I%20just%20submitted%20my%20business%20valuation%20and%20have%20some%20questions."
+              href="https://wa.me/2348065756001?text=Hi%20Afrexit%20team,%20I%20just%20submitted%20my%20business%20estimate%20and%20have%20some%20questions."
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -160,7 +160,7 @@ export function SuccessPage({ onRestart }: SuccessPageProps) {
             onClick={onRestart}
             className="text-gray-500 hover:text-black transition-colors text-sm flex items-center gap-2 mx-auto"
           >
-            Start another valuation
+            Start another estimate
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>
@@ -170,7 +170,7 @@ export function SuccessPage({ onRestart }: SuccessPageProps) {
       <footer className="py-6 px-4 sm:px-6 border-t border-gray-200">
         <div className="max-w-3xl mx-auto text-center">
           <p className="text-sm text-gray-500">
-            © 2025 Afrexit. Professional business valuations for Nigerian SMEs.
+            © 2026 Afrexit. Preliminary estimates and transaction-readiness support for SMEs.
           </p>
         </div>
       </footer>
