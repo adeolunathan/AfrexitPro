@@ -1,4 +1,4 @@
-import type { V2FormData } from '../valuation-v2-types';
+import type { FormData } from '@/types/valuation';
 import { valuationRequestSchema, type NormalizationLineItem, type ValuationRequest } from './contracts';
 import { resolveFrontendPolicyGroup } from './policy-registry';
 
@@ -194,7 +194,7 @@ function buildHistoricalPeriod(
   };
 }
 
-function buildOwnerHistoricals(formData: V2FormData) {
+function buildOwnerHistoricals(formData: FormData) {
   const historicals = [
     buildHistoricalPeriod('latest_owner_input', 'Latest annual owner input', toNumber(formData.revenueLatest), toNumber(formData.operatingProfitLatest), {
       isRepresentative: true,
@@ -296,7 +296,7 @@ function createNormalizationLineItem(
   };
 }
 
-function buildNormalizationSchedule(formData: V2FormData) {
+function buildNormalizationSchedule(formData: FormData) {
   const schedule: NormalizationLineItem[] = [];
   const ownerTotalComp = toNumber(formData.ownerTotalCompensation);
   const marketManagerComp = toNumber(formData.marketManagerCompensation);
@@ -466,7 +466,7 @@ function buildNormalizationSchedule(formData: V2FormData) {
   return schedule;
 }
 
-export function buildOwnerValuationRequest(formData: V2FormData): ValuationRequest {
+export function buildOwnerValuationRequest(formData: FormData): ValuationRequest {
   const { policyGroupId } = resolveFrontendPolicyGroup(String(formData.level2 || ''));
   const submittedAt = new Date().toISOString();
   const purpose = mapPurpose(formData.transactionGoal);
@@ -588,6 +588,6 @@ export function buildOwnerValuationRequest(formData: V2FormData): ValuationReque
   return valuationRequestSchema.parse(request);
 }
 
-export function isOwnerAcknowledged(formData: V2FormData) {
+export function isOwnerAcknowledged(formData: FormData) {
   return isTruthy(formData.termsAccepted);
 }

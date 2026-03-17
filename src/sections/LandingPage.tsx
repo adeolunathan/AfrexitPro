@@ -61,17 +61,17 @@ const howItWorks = [
   {
     step: '01',
     title: 'Answer Questions',
-    description: 'Complete our 24-question assessment about your business operations, finances, and structure.',
+    description: 'Complete our comprehensive assessment about your business operations, finances, and structure.',
   },
   {
     step: '02',
     title: 'We Analyze',
-    description: 'Our system evaluates your responses against market data and buyer criteria.',
+    description: 'Our system evaluates your responses against industry benchmarks and buyer criteria.',
   },
   {
     step: '03',
     title: 'See Your Estimate',
-    description: 'View your preliminary estimate on-screen and receive a copy by email.',
+    description: 'View your detailed valuation estimate on-screen and receive a copy by email.',
   },
 ];
 
@@ -121,7 +121,7 @@ export function LandingPage({ onStart, onOpenDisclaimer, onOpenTerms, onOpenPriv
 
           {/* Subtext */}
           <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-10">
-            Get a preliminary business value estimate and buyer-readiness snapshot based on 9 factors that serious SME buyers actually care about.
+            Get a detailed business value estimate and buyer-readiness snapshot based on 9 factors that serious SME buyers actually care about.
           </p>
 
           {/* CTA */}
@@ -149,7 +149,7 @@ export function LandingPage({ onStart, onOpenDisclaimer, onOpenTerms, onOpenPriv
                       How It Works
                     </DialogTitle>
                     <DialogDescription className="text-sm text-gray-500">
-                      Three steps to get your preliminary estimate.
+                      Three steps to get your detailed estimate.
                     </DialogDescription>
                   </DialogHeader>
 
@@ -177,7 +177,7 @@ export function LandingPage({ onStart, onOpenDisclaimer, onOpenTerms, onOpenPriv
           </div>
           <div className="mt-4 space-y-2">
             <p className="text-sm text-gray-500">
-              Takes 5-7 minutes • Free estimate summary
+              Takes 7-10 minutes • Free detailed estimate
             </p>
             <p className="mx-auto max-w-2xl text-sm leading-6 text-gray-500">
               Automated estimate only. It is not a certified professional valuation and does not by itself create an advisory, brokerage, or banker-client relationship.

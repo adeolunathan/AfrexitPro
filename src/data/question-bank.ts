@@ -1,15 +1,15 @@
-import { ownerFieldBindings, type OwnerFieldId } from './valuation-engine/owner-intake';
-import { level1Options, level2ByLevel1 } from './valuation-engine/policy-registry';
-import type { V2Option, V2Question, V2Section } from './valuation-v2-types';
+import { ownerFieldBindings, type OwnerFieldId } from '@/valuation-engine/owner-intake';
+import { level1Options, level2ByLevel1 } from '@/valuation-engine/policy-registry';
+import type { Option, Question, Section } from '@/types/valuation';
 
 export { level2ByLevel1 };
 
-type DraftV2Question = Omit<V2Question, 'canonicalPath'>;
-type DraftV2Section = Omit<V2Section, 'questions'> & {
-  questions: DraftV2Question[];
+type DraftQuestion = Omit<Question, 'canonicalPath'>;
+type DraftSection = Omit<Section, 'questions'> & {
+  questions: DraftQuestion[];
 };
 
-const stateOptions: V2Option[] = [
+const stateOptions: Option[] = [
   { value: 'abia', label: 'Abia' },
   { value: 'adamawa', label: 'Adamawa' },
   { value: 'akwa_ibom', label: 'Akwa Ibom' },
@@ -50,7 +50,7 @@ const stateOptions: V2Option[] = [
   { value: 'zamfara', label: 'Zamfara' },
 ];
 
-const yearsOptions: V2Option[] = [
+const yearsOptions: Option[] = [
   { value: 'lt_1', label: 'Less than 1 year' },
   { value: '1_3', label: '1 to 3 years' },
   { value: '3_5', label: '3 to 5 years' },
@@ -59,11 +59,11 @@ const yearsOptions: V2Option[] = [
   { value: 'gt_20', label: 'More than 20 years' },
 ];
 
-function attachCanonicalBinding(question: DraftV2Question): V2Question {
+function attachCanonicalBinding(question: DraftQuestion): Question {
   const binding = ownerFieldBindings[question.id as OwnerFieldId];
 
   if (!binding) {
-    throw new Error(`Missing canonical field binding for V2 question "${question.id}"`);
+    throw new Error(`Missing canonical field binding for question "${question.id}"`);
   }
 
   return {
@@ -72,7 +72,7 @@ function attachCanonicalBinding(question: DraftV2Question): V2Question {
   };
 }
 
-const rawValuationV2Sections: DraftV2Section[] = [
+const rawSections: DraftSection[] = [
   {
     id: 'business-profile',
     title: 'Business Profile',
@@ -694,8 +694,8 @@ const rawValuationV2Sections: DraftV2Section[] = [
   },
   {
     id: 'contact',
-    title: 'Contact and Local Lab Submission',
-    description: 'This stays local and talks only to the experimental backend you run on your machine.',
+    title: 'Contact Information',
+    description: 'Provide your contact details so we can send you a copy of your valuation report.',
     questions: [
       { id: 'firstName', type: 'text', prompt: 'First name', required: true, placeholder: 'e.g. Ada' },
       { id: 'businessName', type: 'text', prompt: 'Business name', required: true, placeholder: 'e.g. Northfield Foods' },
@@ -704,7 +704,7 @@ const rawValuationV2Sections: DraftV2Section[] = [
       {
         id: 'termsAccepted',
         type: 'checkbox',
-        prompt: 'I understand this V2 flow is an experimental local-only valuation lab and not a live Afrexit production service.',
+        prompt: 'I understand that this is an automated estimate only and not a certified professional valuation.',
         required: true,
       },
       {
@@ -717,7 +717,7 @@ const rawValuationV2Sections: DraftV2Section[] = [
   },
 ];
 
-export const valuationV2Sections: V2Section[] = rawValuationV2Sections.map((section) => ({
+export const sections: Section[] = rawSections.map((section) => ({
   ...section,
   questions: section.questions.map(attachCanonicalBinding),
 }));
