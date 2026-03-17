@@ -1,0 +1,699 @@
+{
+  "policyGroups": {
+    "PG_AGRI_PRIMARY": {
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_AGRI_PRIMARY_2026Q1"
+      ],
+      "evidenceScore": 65,
+      "lastCalibrated": "2026-03-08",
+      "notes": [
+        "Benchmark coverage is derived from current recorded benchmark observations.",
+        "Calibration rebuilt automatically for PG_AGRI_PRIMARY from 14 observations."
+      ],
+      "ownerPhase": {
+        "capitalizedMetric": "sde",
+        "capitalizationRateRange": {
+          "low": 0.2741,
+          "mid": 0.3367,
+          "high": 0.4489
+        },
+        "marketMetric": "revenue",
+        "marketMultipleRange": {
+          "low": 0.528,
+          "mid": 0.76,
+          "high": 1.0305
+        },
+        "assetFloorRevenuePct": 0.14,
+        "workingCapitalTargetPct": 0.12,
+        "marketabilityFloor": 0.8,
+        "marketabilityCeiling": 0.93,
+        "dispersionPenaltyWeight": 0.22,
+        "reconciliationWeights": {
+          "capitalized_earnings": 0.55,
+          "market_multiple": 0.25,
+          "asset_approach": 0.2
+        }
+      }
+    },
+    "PG_AGRO_PROCESSING": {
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_AGRO_PROCESSING_2026Q1"
+      ],
+      "evidenceScore": 63,
+      "lastCalibrated": "2026-03-08",
+      "notes": [
+        "Benchmark coverage is derived from current recorded benchmark observations.",
+        "Calibration rebuilt automatically for PG_AGRO_PROCESSING from 14 observations."
+      ],
+      "ownerPhase": {
+        "capitalizedMetric": "sde",
+        "capitalizationRateRange": {
+          "low": 0.3083,
+          "mid": 0.3377,
+          "high": 0.3603
+        },
+        "marketMetric": "revenue",
+        "marketMultipleRange": {
+          "low": 0.6025,
+          "mid": 0.675,
+          "high": 0.764
+        },
+        "assetFloorRevenuePct": 0.18,
+        "workingCapitalTargetPct": 0.16,
+        "marketabilityFloor": 0.81,
+        "marketabilityCeiling": 0.94,
+        "dispersionPenaltyWeight": 0.2,
+        "reconciliationWeights": {
+          "market_multiple": 0.55,
+          "capitalized_earnings": 0.25,
+          "asset_approach": 0.2
+        }
+      }
+    },
+    "PG_ASSET_HEAVY_MANUFACTURING": {
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_ASSET_HEAVY_MANUFACTURING_2026Q1"
+      ],
+      "evidenceScore": 68,
+      "lastCalibrated": "2026-03-08",
+      "notes": [
+        "Benchmark coverage is derived from current recorded benchmark observations.",
+        "Calibration rebuilt automatically for PG_ASSET_HEAVY_MANUFACTURING from 10 observations."
+      ],
+      "ownerPhase": {
+        "capitalizedMetric": "adjustedEbit",
+        "capitalizationRateRange": {
+          "low": 0.216,
+          "mid": 0.23,
+          "high": 0.244
+        },
+        "marketMetric": "adjustedEbitda",
+        "marketMultipleRange": {
+          "low": 3.24,
+          "mid": 4,
+          "high": 4.74
+        },
+        "assetFloorRevenuePct": 0.2,
+        "workingCapitalTargetPct": 0.175,
+        "marketabilityFloor": 0.86,
+        "marketabilityCeiling": 0.86,
+        "dispersionPenaltyWeight": 0.19,
+        "reconciliationWeights": {
+          "market_multiple": 0.52,
+          "capitalized_earnings": 0.13,
+          "asset_approach": 0.35
+        }
+      }
+    },
+    "PG_CONTRACT_MANUFACTURING": {
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_CONTRACT_MANUFACTURING_2026Q1"
+      ],
+      "evidenceScore": 61,
+      "lastCalibrated": "2026-03-08",
+      "notes": [
+        "Benchmark coverage is derived from current recorded benchmark observations.",
+        "Calibration rebuilt automatically for PG_CONTRACT_MANUFACTURING from 14 observations."
+      ],
+      "ownerPhase": {
+        "capitalizedMetric": "sde",
+        "capitalizationRateRange": {
+          "low": 0.2633,
+          "mid": 0.3099,
+          "high": 0.343
+        },
+        "marketMetric": "revenue",
+        "marketMultipleRange": {
+          "low": 0.632,
+          "mid": 0.76,
+          "high": 0.866
+        },
+        "assetFloorRevenuePct": 0.17,
+        "workingCapitalTargetPct": 0.15,
+        "marketabilityFloor": 0.83,
+        "marketabilityCeiling": 0.95,
+        "dispersionPenaltyWeight": 0.18,
+        "reconciliationWeights": {
+          "market_multiple": 0.6,
+          "capitalized_earnings": 0.25,
+          "asset_approach": 0.15
+        }
+      }
+    },
+    "PG_PROJECT_CONTRACTING": {
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_PROJECT_CONTRACTING_2026Q1"
+      ],
+      "evidenceScore": 65,
+      "lastCalibrated": "2026-03-08",
+      "notes": [
+        "Benchmark coverage is derived from current recorded benchmark observations.",
+        "Calibration rebuilt automatically for PG_PROJECT_CONTRACTING from 14 observations."
+      ],
+      "ownerPhase": {
+        "capitalizedMetric": "sde",
+        "capitalizationRateRange": {
+          "low": 0.3484,
+          "mid": 0.3947,
+          "high": 0.482
+        },
+        "marketMetric": "revenue",
+        "marketMultipleRange": {
+          "low": 0.5555,
+          "mid": 0.7,
+          "high": 0.828
+        },
+        "assetFloorRevenuePct": 0.14,
+        "workingCapitalTargetPct": 0.06,
+        "marketabilityFloor": 0.8,
+        "marketabilityCeiling": 0.94,
+        "dispersionPenaltyWeight": 0.2,
+        "reconciliationWeights": {
+          "capitalized_earnings": 0.5,
+          "market_multiple": 0.3,
+          "asset_approach": 0.2
+        }
+      }
+    },
+    "PG_TRADING_DISTRIBUTION": {
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_TRADING_DISTRIBUTION_2026Q1"
+      ],
+      "evidenceScore": 68,
+      "lastCalibrated": "2026-03-08",
+      "notes": [
+        "Benchmark coverage is derived from current recorded benchmark observations.",
+        "Calibration rebuilt automatically for PG_TRADING_DISTRIBUTION from 10 observations."
+      ],
+      "ownerPhase": {
+        "capitalizedMetric": "adjustedEbit",
+        "capitalizationRateRange": {
+          "low": 0.2475,
+          "mid": 0.265,
+          "high": 0.2825
+        },
+        "marketMetric": "adjustedEbit",
+        "marketMultipleRange": {
+          "low": 2.74,
+          "mid": 3.4,
+          "high": 3.96
+        },
+        "assetFloorRevenuePct": 0.12,
+        "workingCapitalTargetPct": 0.125,
+        "marketabilityFloor": 0.88,
+        "marketabilityCeiling": 0.88,
+        "dispersionPenaltyWeight": 0.19,
+        "reconciliationWeights": {
+          "market_multiple": 0.55,
+          "capitalized_earnings": 0.25,
+          "asset_approach": 0.2
+        }
+      }
+    },
+    "PG_RETAIL_COMMERCE": {
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_RETAIL_COMMERCE_2026Q1"
+      ],
+      "evidenceScore": 65,
+      "lastCalibrated": "2026-03-08",
+      "notes": [
+        "Benchmark coverage is derived from current recorded benchmark observations.",
+        "Calibration rebuilt automatically for PG_RETAIL_COMMERCE from 14 observations."
+      ],
+      "ownerPhase": {
+        "capitalizedMetric": "sde",
+        "capitalizationRateRange": {
+          "low": 0.3503,
+          "mid": 0.4121,
+          "high": 0.5386
+        },
+        "marketMetric": "revenue",
+        "marketMultipleRange": {
+          "low": 0.353,
+          "mid": 0.48,
+          "high": 0.607
+        },
+        "assetFloorRevenuePct": 0.1,
+        "workingCapitalTargetPct": 0.09,
+        "marketabilityFloor": 0.79,
+        "marketabilityCeiling": 0.92,
+        "dispersionPenaltyWeight": 0.22,
+        "reconciliationWeights": {
+          "market_multiple": 0.55,
+          "capitalized_earnings": 0.2,
+          "asset_approach": 0.25
+        }
+      }
+    },
+    "PG_RECURRING_SOFTWARE": {
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_RECURRING_SOFTWARE_2026Q1"
+      ],
+      "evidenceScore": 68,
+      "lastCalibrated": "2026-03-08",
+      "notes": [
+        "Benchmark coverage is derived from current recorded benchmark observations.",
+        "Calibration rebuilt automatically for PG_RECURRING_SOFTWARE from 10 observations."
+      ],
+      "ownerPhase": {
+        "marketMetric": "revenue",
+        "marketMultipleRange": {
+          "low": 1.18,
+          "mid": 1.7,
+          "high": 2.44
+        },
+        "assetFloorRevenuePct": 0.05,
+        "workingCapitalTargetPct": 0.03,
+        "marketabilityFloor": 0.89,
+        "marketabilityCeiling": 0.95,
+        "dispersionPenaltyWeight": 0.13,
+        "reconciliationWeights": {
+          "market_multiple": 0.82,
+          "capitalized_earnings": 0,
+          "asset_approach": 0.18
+        },
+        "dcfEnabled": false
+      }
+    },
+    "PG_PROJECT_SOFTWARE_IT": {
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_PROJECT_SOFTWARE_IT_2026Q1"
+      ],
+      "evidenceScore": 61,
+      "lastCalibrated": "2026-03-08",
+      "notes": [
+        "Benchmark coverage is derived from current recorded benchmark observations.",
+        "Calibration rebuilt automatically for PG_PROJECT_SOFTWARE_IT from 14 observations."
+      ],
+      "ownerPhase": {
+        "capitalizedMetric": "sde",
+        "capitalizationRateRange": {
+          "low": 0.3077,
+          "mid": 0.3239,
+          "high": 0.3567
+        },
+        "marketMetric": "revenue",
+        "marketMultipleRange": {
+          "low": 1.0205,
+          "mid": 1.085,
+          "high": 1.408
+        },
+        "assetFloorRevenuePct": 0.08,
+        "workingCapitalTargetPct": 0.05,
+        "marketabilityFloor": 0.84,
+        "marketabilityCeiling": 0.97,
+        "dispersionPenaltyWeight": 0.16,
+        "reconciliationWeights": {
+          "market_multiple": 0.55,
+          "capitalized_earnings": 0.35,
+          "asset_approach": 0.1
+        }
+      }
+    },
+    "PG_LOGISTICS_ASSET": {
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_LOGISTICS_ASSET_2026Q1"
+      ],
+      "evidenceScore": 59,
+      "lastCalibrated": "2026-03-08",
+      "notes": [
+        "Benchmark coverage is derived from current recorded benchmark observations.",
+        "Calibration rebuilt automatically for PG_LOGISTICS_ASSET from 14 observations."
+      ],
+      "ownerPhase": {
+        "capitalizedMetric": "sde",
+        "capitalizationRateRange": {
+          "low": 0.2516,
+          "mid": 0.2868,
+          "high": 0.3546
+        },
+        "marketMetric": "revenue",
+        "marketMultipleRange": {
+          "low": 0.7505,
+          "mid": 0.85,
+          "high": 0.944
+        },
+        "assetFloorRevenuePct": 0.16,
+        "workingCapitalTargetPct": 0.08,
+        "marketabilityFloor": 0.8,
+        "marketabilityCeiling": 0.93,
+        "dispersionPenaltyWeight": 0.2,
+        "reconciliationWeights": {
+          "market_multiple": 0.5,
+          "capitalized_earnings": 0.1,
+          "asset_approach": 0.4
+        }
+      }
+    },
+    "PG_HOSPITALITY_VENUE": {
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_HOSPITALITY_VENUE_2026Q1"
+      ],
+      "evidenceScore": 63,
+      "lastCalibrated": "2026-03-08",
+      "notes": [
+        "Benchmark coverage is derived from current recorded benchmark observations.",
+        "Calibration rebuilt automatically for PG_HOSPITALITY_VENUE from 14 observations."
+      ],
+      "ownerPhase": {
+        "capitalizedMetric": "sde",
+        "capitalizationRateRange": {
+          "low": 0.4424,
+          "mid": 0.5202,
+          "high": 0.6537
+        },
+        "marketMetric": "revenue",
+        "marketMultipleRange": {
+          "low": 0.275,
+          "mid": 0.385,
+          "high": 0.5005
+        },
+        "assetFloorRevenuePct": 0.12,
+        "workingCapitalTargetPct": 0.05,
+        "marketabilityFloor": 0.78,
+        "marketabilityCeiling": 0.92,
+        "dispersionPenaltyWeight": 0.22,
+        "reconciliationWeights": {
+          "market_multiple": 0.55,
+          "capitalized_earnings": 0.25,
+          "asset_approach": 0.2
+        }
+      }
+    },
+    "PG_HEALTHCARE_SERVICE": {
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_HEALTHCARE_SERVICE_2026Q1"
+      ],
+      "evidenceScore": 61,
+      "lastCalibrated": "2026-03-08",
+      "notes": [
+        "Benchmark coverage is derived from current recorded benchmark observations.",
+        "Calibration rebuilt automatically for PG_HEALTHCARE_SERVICE from 14 observations."
+      ],
+      "ownerPhase": {
+        "capitalizedMetric": "sde",
+        "capitalizationRateRange": {
+          "low": 0.2385,
+          "mid": 0.3223,
+          "high": 0.372
+        },
+        "marketMetric": "revenue",
+        "marketMultipleRange": {
+          "low": 0.735,
+          "mid": 0.925,
+          "high": 1.159
+        },
+        "assetFloorRevenuePct": 0.16,
+        "workingCapitalTargetPct": 0.07,
+        "marketabilityFloor": 0.84,
+        "marketabilityCeiling": 0.96,
+        "dispersionPenaltyWeight": 0.17,
+        "reconciliationWeights": {
+          "market_multiple": 0.55,
+          "capitalized_earnings": 0.25,
+          "asset_approach": 0.2
+        }
+      }
+    },
+    "PG_HEALTHCARE_DISTRIBUTION": {
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_HEALTHCARE_DISTRIBUTION_2026Q1"
+      ],
+      "evidenceScore": 61,
+      "lastCalibrated": "2026-03-08",
+      "notes": [
+        "Benchmark coverage is derived from current recorded benchmark observations.",
+        "Calibration rebuilt automatically for PG_HEALTHCARE_DISTRIBUTION from 14 observations."
+      ],
+      "ownerPhase": {
+        "capitalizedMetric": "sde",
+        "capitalizationRateRange": {
+          "low": 0.3387,
+          "mid": 0.3664,
+          "high": 0.4119
+        },
+        "marketMetric": "revenue",
+        "marketMultipleRange": {
+          "low": 0.4695,
+          "mid": 0.61,
+          "high": 0.745
+        },
+        "assetFloorRevenuePct": 0.14,
+        "workingCapitalTargetPct": 0.14,
+        "marketabilityFloor": 0.82,
+        "marketabilityCeiling": 0.94,
+        "dispersionPenaltyWeight": 0.19,
+        "reconciliationWeights": {
+          "market_multiple": 0.55,
+          "capitalized_earnings": 0.15,
+          "asset_approach": 0.3
+        }
+      }
+    },
+    "PG_EDUCATION_ENROLLMENT": {
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_EDUCATION_ENROLLMENT_2026Q1"
+      ],
+      "evidenceScore": 63,
+      "lastCalibrated": "2026-03-08",
+      "notes": [
+        "Benchmark coverage is derived from current recorded benchmark observations.",
+        "Calibration rebuilt automatically for PG_EDUCATION_ENROLLMENT from 14 observations."
+      ],
+      "ownerPhase": {
+        "capitalizedMetric": "sde",
+        "capitalizationRateRange": {
+          "low": 0.3501,
+          "mid": 0.4039,
+          "high": 0.5034
+        },
+        "marketMetric": "revenue",
+        "marketMultipleRange": {
+          "low": 0.5835,
+          "mid": 0.765,
+          "high": 0.941
+        },
+        "assetFloorRevenuePct": 0.12,
+        "workingCapitalTargetPct": 0.05,
+        "marketabilityFloor": 0.83,
+        "marketabilityCeiling": 0.95,
+        "dispersionPenaltyWeight": 0.18,
+        "reconciliationWeights": {
+          "capitalized_earnings": 0.5,
+          "market_multiple": 0.3,
+          "asset_approach": 0.2
+        }
+      }
+    },
+    "PG_PROFESSIONAL_OWNER_LED": {
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_PROFESSIONAL_OWNER_LED_2026Q1"
+      ],
+      "evidenceScore": 68,
+      "lastCalibrated": "2026-03-08",
+      "notes": [
+        "Benchmark coverage is derived from current recorded benchmark observations.",
+        "Calibration rebuilt automatically for PG_PROFESSIONAL_OWNER_LED from 10 observations."
+      ],
+      "ownerPhase": {
+        "capitalizedMetric": "sde",
+        "capitalizationRateRange": {
+          "low": 0.236,
+          "mid": 0.25,
+          "high": 0.264
+        },
+        "marketMetric": "sde",
+        "marketMultipleRange": {
+          "low": 2.88,
+          "mid": 3.3,
+          "high": 3.775
+        },
+        "assetFloorRevenuePct": 0.05,
+        "workingCapitalTargetPct": 0.04,
+        "marketabilityFloor": 0.81,
+        "marketabilityCeiling": 0.89,
+        "dispersionPenaltyWeight": 0.18,
+        "reconciliationWeights": {
+          "capitalized_earnings": 0.62,
+          "market_multiple": 0.28,
+          "asset_approach": 0.1
+        }
+      }
+    },
+    "PG_PROFESSIONAL_PLATFORM": {
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_PROFESSIONAL_PLATFORM_2026Q1"
+      ],
+      "evidenceScore": 65,
+      "lastCalibrated": "2026-03-08",
+      "notes": [
+        "Benchmark coverage is derived from current recorded benchmark observations.",
+        "Calibration rebuilt automatically for PG_PROFESSIONAL_PLATFORM from 14 observations."
+      ],
+      "ownerPhase": {
+        "capitalizedMetric": "sde",
+        "capitalizationRateRange": {
+          "low": 0.2715,
+          "mid": 0.2818,
+          "high": 0.3345
+        },
+        "marketMetric": "revenue",
+        "marketMultipleRange": {
+          "low": 1.1515,
+          "mid": 1.375,
+          "high": 1.527
+        },
+        "assetFloorRevenuePct": 0.07,
+        "workingCapitalTargetPct": 0.05,
+        "marketabilityFloor": 0.84,
+        "marketabilityCeiling": 0.96,
+        "dispersionPenaltyWeight": 0.17,
+        "reconciliationWeights": {
+          "market_multiple": 0.55,
+          "capitalized_earnings": 0.35,
+          "asset_approach": 0.1
+        }
+      }
+    },
+    "PG_REAL_ESTATE_SERVICE": {
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_REAL_ESTATE_SERVICE_2026Q1"
+      ],
+      "evidenceScore": 63,
+      "lastCalibrated": "2026-03-08",
+      "notes": [
+        "Benchmark coverage is derived from current recorded benchmark observations.",
+        "Calibration rebuilt automatically for PG_REAL_ESTATE_SERVICE from 14 observations."
+      ],
+      "ownerPhase": {
+        "capitalizedMetric": "sde",
+        "capitalizationRateRange": {
+          "low": 0.3452,
+          "mid": 0.3684,
+          "high": 0.3799
+        },
+        "marketMetric": "revenue",
+        "marketMultipleRange": {
+          "low": 0.8335,
+          "mid": 0.89,
+          "high": 0.9795
+        },
+        "assetFloorRevenuePct": 0.1,
+        "workingCapitalTargetPct": 0.04,
+        "marketabilityFloor": 0.82,
+        "marketabilityCeiling": 0.94,
+        "dispersionPenaltyWeight": 0.18,
+        "reconciliationWeights": {
+          "market_multiple": 0.55,
+          "capitalized_earnings": 0.25,
+          "asset_approach": 0.2
+        }
+      }
+    },
+    "PG_PROPERTY_ASSET_NAV": {
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_PROPERTY_ASSET_NAV_2026Q1"
+      ],
+      "evidenceScore": 63,
+      "lastCalibrated": "2026-03-08",
+      "notes": [
+        "Benchmark coverage is derived from current recorded benchmark observations.",
+        "Calibration rebuilt automatically for PG_PROPERTY_ASSET_NAV from 14 observations."
+      ],
+      "ownerPhase": {
+        "capitalizedMetric": "sde",
+        "capitalizationRateRange": {
+          "low": 0.3452,
+          "mid": 0.3684,
+          "high": 0.3799
+        },
+        "marketMetric": "revenue",
+        "marketMultipleRange": {
+          "low": 0.8335,
+          "mid": 0.89,
+          "high": 0.9795
+        },
+        "assetFloorRevenuePct": 0.22,
+        "workingCapitalTargetPct": 0.1,
+        "marketabilityFloor": 0.8,
+        "marketabilityCeiling": 0.93,
+        "dispersionPenaltyWeight": 0.21,
+        "reconciliationWeights": {
+          "market_multiple": 0.15,
+          "capitalized_earnings": 0.15,
+          "asset_approach": 0.7
+        }
+      }
+    },
+    "PG_CREATIVE_AGENCY": {
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_CREATIVE_AGENCY_2026Q1"
+      ],
+      "evidenceScore": 63,
+      "lastCalibrated": "2026-03-08",
+      "notes": [
+        "Benchmark coverage is derived from current recorded benchmark observations.",
+        "Calibration rebuilt automatically for PG_CREATIVE_AGENCY from 14 observations."
+      ],
+      "ownerPhase": {
+        "capitalizedMetric": "sde",
+        "capitalizationRateRange": {
+          "low": 0.3812,
+          "mid": 0.4039,
+          "high": 0.5034
+        },
+        "marketMetric": "revenue",
+        "marketMultipleRange": {
+          "low": 0.633,
+          "mid": 0.91,
+          "high": 1.022
+        },
+        "assetFloorRevenuePct": 0.06,
+        "workingCapitalTargetPct": 0.05,
+        "marketabilityFloor": 0.78,
+        "marketabilityCeiling": 0.92,
+        "dispersionPenaltyWeight": 0.21,
+        "reconciliationWeights": {
+          "capitalized_earnings": 0.6,
+          "market_multiple": 0.3,
+          "asset_approach": 0.1
+        }
+      }
+    },
+    "PG_LOCAL_SERVICE_OWNER_OP": {
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_LOCAL_SERVICE_OWNER_OP_2026Q1"
+      ],
+      "evidenceScore": 69,
+      "lastCalibrated": "2026-03-08",
+      "notes": [
+        "Benchmark coverage is derived from current recorded benchmark observations.",
+        "Calibration rebuilt automatically for PG_LOCAL_SERVICE_OWNER_OP from 10 observations."
+      ],
+      "ownerPhase": {
+        "capitalizedMetric": "sde",
+        "capitalizationRateRange": {
+          "low": 0.2475,
+          "mid": 0.265,
+          "high": 0.2825
+        },
+        "marketMetric": "sde",
+        "marketMultipleRange": {
+          "low": 2.18,
+          "mid": 2.6,
+          "high": 3.02
+        },
+        "assetFloorRevenuePct": 0.07,
+        "workingCapitalTargetPct": 0.035,
+        "marketabilityFloor": 0.79,
+        "marketabilityCeiling": 0.87,
+        "dispersionPenaltyWeight": 0.2,
+        "reconciliationWeights": {
+          "capitalized_earnings": 0.62,
+          "market_multiple": 0.18,
+          "asset_approach": 0.2
+        }
+      }
+    }
+  }
+}

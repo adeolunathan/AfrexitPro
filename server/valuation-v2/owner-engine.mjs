@@ -1,0 +1,80 @@
+import { adaptOwnerRequest } from './owner-request-adapter.mjs';
+import { resolvePolicyGroup } from './policy-registry.mjs';
+import { buildEnterpriseAndEquityValues } from './modules/bridge.mjs';
+import { buildConfidenceAssessment } from './modules/confidence.mjs';
+import { buildHistoricalSummary } from './modules/history.mjs';
+import { selectOwnerMethods, reconcileApproaches } from './modules/method-selection.mjs';
+import { buildNormalizedMetrics } from './modules/normalization.mjs';
+import { buildAssumptions, buildOwnerResult, buildRedFlags } from './modules/output.mjs';
+import { isCanonicalRequest, validateCanonicalRequest, validateLegacyRawInput } from './modules/request-validation.mjs';
+import { buildReadinessAssessment, buildScorecard } from './modules/scorecards.mjs';
+import { buildMethodNormalizationImpacts, runSelectedApproaches } from './modules/approaches.mjs';
+
+const ENGINE_VERSION = 'owner-phase-skeleton-v0.4';
+
+function coerceRequest(rawInput) {
+  if (isCanonicalRequest(rawInput)) {
+    return rawInput;
+  }
+
+  validateLegacyRawInput(rawInput);
+  return adaptOwnerRequest(rawInput);
+}
+
+export function evaluateSubmission(rawInput) {
+  const request = coerceRequest(rawInput);
+  validateCanonicalRequest(request);
+
+  const policyResolution = resolvePolicyGroup(request.classification.level2);
+  const policyGroup = policyResolution.policyGroup;
+  request.classification.policyGroupId = policyResolution.policyGroupId;
+
+  const historicalSummary = buildHistoricalSummary(request);
+  const normalizedMetrics = buildNormalizedMetrics(request, policyGroup, historicalSummary);
+  const scorecard = buildScorecard(request);
+  const readinessAssessment = buildReadinessAssessment(request, scorecard);
+  const { methodOrder, selectedMethods } = selectOwnerMethods(request, policyGroup, normalizedMetrics, scorecard, historicalSummary);
+  const approaches = runSelectedApproaches(methodOrder, normalizedMetrics, request, policyGroup);
+  const methodNormalizationImpacts = buildMethodNormalizationImpacts(methodOrder, normalizedMetrics, request, policyGroup);
+  const reconciled = reconcileApproaches(policyGroup, approaches);
+  const confidenceAssessment = buildConfidenceAssessment(
+    request,
+    scorecard,
+    policyResolution,
+    request.normalization.schedule,
+    historicalSummary,
+    normalizedMetrics,
+    approaches,
+    policyGroup
+  );
+  const bridgedValues = buildEnterpriseAndEquityValues(
+    request,
+    reconciled,
+    readinessAssessment,
+    confidenceAssessment,
+    normalizedMetrics,
+    policyGroup
+  );
+  const redFlags = buildRedFlags(request, readinessAssessment, confidenceAssessment, normalizedMetrics, historicalSummary, selectedMethods);
+  const assumptions = buildAssumptions(request, selectedMethods, historicalSummary, normalizedMetrics, policyGroup);
+
+  return buildOwnerResult({
+    engineVersion: ENGINE_VERSION,
+    request,
+    policyGroup,
+    historicalSummary,
+    scorecard,
+    selectedMethods,
+    normalizedMetrics,
+    values: {
+      ...bridgedValues,
+      appliedWeights: reconciled.appliedWeights,
+    },
+    readinessAssessment,
+    confidenceAssessment,
+    redFlags,
+    assumptions,
+    approaches,
+    methodNormalizationImpacts,
+  });
+}

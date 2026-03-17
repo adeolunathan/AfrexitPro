@@ -1,236 +1,237 @@
 
 Which activity best describes the company?
 1. Production / Processing / Products
-Own products
-Food and drinks
-Clothing and textiles
-Furniture and household goods
-Electronics and household appliances
-Personal care and cosmetic products
-Leisure and sporting goods
-Laboratory equipment and supplies
-Pharmaceutical products
-Medical devices and health products
-Office and business equipment
-Building and construction materials
-Commercial kitchen appliances and equipment
-Automation solutions and industrial equipment
-Energy and environmental technology
-Defense and security
-Vehicles and vehicle parts
-Toys and children's products
-Musical instruments and equipment
-Pet products
-Garden and landscape products
-Packaging and packaging solutions
-Books and media
-Jewelry and watches
-Art and craft products
-Chemical products
-Industrial machinery and equipment
-Industrial tools and equipment
-Various consumer goods
-Various commercial products
-Various industrial products
-Various special products
-Own components / Own supplier parts
-High-tech components
-Specialized industrial components
-Standardized industrial components
-Complex assemblies and subsystems
-Simpler components and parts
-Innovative materials and composites
-Various components and suppliers
-Contract production for third parties
-High-tech contract manufacturing
-Specialized industrial contract manufacturing
-Standardized contract manufacturing
-Complex assembly production
-Prototype and small series production
-Various contract production
-Material processing
-Plastics processing
-Surface finishing and treatment
-Heat treatment and hardening
-Various material processing
-Production of basic materials and materials
-Metal production and processing
-Chemical products
-Plastic and rubber production
-Glass and ceramics
-Paper and pulp
-Wood and forestry products
-Various basic materials and materials
-Production / Processing / Products
-Agriculture and extraction of raw materials
-Various product development services for third parties
-Various production activities
+    Own products
+        Food and drinks
+        Clothing and textiles
+        Furniture and household goods
+        Electronics and household appliances
+        Personal care and cosmetic products
+        Leisure and sporting goods
+        Laboratory equipment and supplies
+        Pharmaceutical products
+        Medical devices and health products
+        Office and business equipment
+        Building and construction materials
+        Commercial kitchen appliances and equipment
+        Automation solutions and industrial equipment
+        Energy and environmental technology
+        Defense and security
+        Vehicles and vehicle parts
+        Toys and children's products
+        Musical instruments and equipment
+        Pet products
+        Garden and landscape products
+        Packaging and packaging solutions
+        Books and media
+        Jewelry and watches
+        Art and craft products
+        Chemical products
+        Industrial machinery and equipment
+        Industrial tools and equipment
+        Various consumer goods
+        Various commercial products
+        Various industrial products
+        Various special products
+    Own components / Own supplier parts
+        High-tech components
+        Specialized industrial components
+        Standardized industrial components
+        Complex assemblies and subsystems
+        Simpler components and parts
+        Innovative materials and composites
+        Various components and suppliers
+    Contract production for third parties
+        High-tech contract manufacturing
+        Specialized industrial contract manufacturing
+        Standardized contract manufacturing
+        Complex assembly production
+        Prototype and small series production
+        Various contract production
+    Material processing
+        Plastics processing
+        Surface finishing and treatment
+        Heat treatment and hardening
+        Various material processing
+    Production of basic materials and materials
+        Metal production and processing
+        Chemical products
+        Plastic and rubber production
+        Glass and ceramics
+        Paper and pulp
+        Wood and forestry products
+        Various basic materials and materials
+    Production / Processing / Products
+        Agriculture and extraction of raw materials
+        Various product development services for third parties
+        Various production activities
 
 
 Crafts / Construction / Engineering / Technical Services
-Mechanical Engineering and Plant Engineering
-Construction planning and construction management
-Construction activities
-Specialized installation work
-Finishing work
-Assembly and integration services
-Maintenance and repair
-Maintenance and repair of infrastructure and facilities
-Maintenance and repair of vehicles
-Maintenance and repair of equipment and machinery
-Maintenance and repair of various things
-Gardening and landscaping
-Technical and scientific investigations
-Facility Management / Building Technology
-Automation / Robotics
-Event technology and production
-Technical consulting services
-Various crafts
-Various technical services
-Trade / Sales / E-Commerce
-Retail store
-Retail chain
-Retail Franchisor
-Retail Franchisees
-Pharmacies and drug supply
-Wholesale
-Distributors
-Commercial representations
-Trade in vehicles
-Online shops
-Online marketplaces
-Subscription-based online trading
-Procurement and purchasing agencies
-Various consulting services
-Various trade and distribution
-Software / IT / Online Services
-Own software / Apps / SaaS
-Software development for third parties
-Hosting and data processing
-IT Consulting Services
-IT Security / Infrastructure Services
-Various online publications / blogs / news
-User-driven online platforms
-Online / Telemedical Health Services
-Various personal online services
-Various automated online services
-Various IT / Online Services
-Gastronomy / Accommodation
-Restaurants / Takeaways
-Cafés / Bars / Pubs
-Hotels, inns and guesthouses
-Catering services
-Nightclubs
-Camping sites
-Various consulting services
-Other gastronomy
-Other accommodation
-Transport / Logistics / Warehouse
-Transport and logistics in own execution
-Warehouse services
-Packaging services
-Various consulting services
-Various transport / logistics services
-Real Estate-Related Activities
-Real estate agency
-Management of real estate for third parties
-Facility Management / Building Technology
-Various cleaning services
-Various consulting services
-Various real estate-related services
-Financial services / insurance / rental
-Asset management / fund management
-Credit and leasing services
-Accounting and Trust
-Risk assessment and claims settlement
-Mediation of financial and insurance services
-Rental / purchase / sale of own real estate
-Insurance services
-Various consulting services
-Various financial services
-Various insurance services
-Rental of various things
+    Mechanical Engineering and Plant Engineering
+    Construction planning and construction management
+    Construction activities
+    Specialized installation work
+    Finishing work
+    Assembly and integration services
+    Maintenance and repair
+        Maintenance and repair of infrastructure and facilities
+        Maintenance and repair of vehicles
+        Maintenance and repair of equipment and machinery
+        Maintenance and repair of various things
+    Gardening and landscaping
+    Technical and scientific investigations
+    Facility Management / Building Technology
+    Automation / Robotics
+    Event technology and production
+    Technical consulting services
+    Various crafts
+    Various technical services
+    
+    Trade / Sales / E-Commerce
+        Retail store
+        Retail chain
+        Retail Franchisor
+        Retail Franchisees
+        Pharmacies and drug supply
+        Wholesale
+        Distributors
+        Commercial representations
+        Trade in vehicles
+        Online shops
+        Online marketplaces
+        Subscription-based online trading
+        Procurement and purchasing agencies
+        Various consulting services
+        Various trade and distribution
+    Software / IT / Online Services
+        Own software / Apps / SaaS
+        Software development for third parties
+        Hosting and data processing
+        IT Consulting Services
+        IT Security / Infrastructure Services
+        Various online publications / blogs / news
+        User-driven online platforms
+        Online / Telemedical Health Services
+        Various personal online services
+        Various automated online services
+        Various IT / Online Services
+    Gastronomy / Accommodation
+        Restaurants / Takeaways
+        Cafés / Bars / Pubs
+        Hotels, inns and guesthouses
+        Catering services
+        Nightclubs
+        Camping sites
+        Various consulting services
+        Other gastronomy
+        Other accommodation
+    Transport / Logistics / Warehouse
+        Transport and logistics in own execution
+        Warehouse services
+        Packaging services
+        Various consulting services
+        Various transport / logistics services
+    Real Estate-Related Activities
+        Real estate agency
+        Management of real estate for third parties
+        Facility Management / Building Technology
+        Various cleaning services
+        Various consulting services
+        Various real estate-related services
+    Financial services / insurance / rental
+        Asset management / fund management
+        Credit and leasing services
+        Accounting and Trust
+        Risk assessment and claims settlement
+        Mediation of financial and insurance services
+    Rental / purchase / sale of own real estate
+        Insurance services
+        Various consulting services
+        Various financial services
+        Various insurance services
+        Rental of various things
 
 
 More industries & services...
-Education / Further education / Training
-State-regulated training institutions
-Specialized educational / cultural centers
-Sports and exercise centers
-Small freelance education and training providers
-Various services for education, further education and training
-Health / Personal Care / Fitness
-Medical practices and specialist centres
-Hospitals and acute clinics
-Inpatient rehabilitation and care facilities
-Various outpatient therapy and healing methods
-Pharmacies and drug supply
-Mobile care and support services
-Online and telemedical health services
-Diagnostics and laboratory services
-Veterinary services
-Wellness and recreation centers
-Gyms and sports facilities
-Hairdresser / Personal care / Cosmetic services
-Various consulting services
-Various medical services
-Various services related to health / body care / fitness
-Consulting services / Agencies / Brokers
-Strategic Management Consulting
-IT Consulting Services
-Technical consulting services
-Accounting and Trust
-Legal, tax and accounting audit
-Marketing and communication agencies
-Creative and design agencies
-Real estate agencies
-Recruitment agencies
-Specialized personnel services
-Event Management Agencies
-Translation services
-Procurement and purchasing agencies
-Various brokerage and brokerage services
-Various agencies
-Various consulting services
-Creative Services / Design
-Creative and design agencies
-Specialized creative and design services
-Events / Event Services
-Event in your own name
-Event Management Agencies
-Event technology and production
-Catering services
-Various consulting services
-Various event services
-Care / Social Services
-Childcare and early childhood support
-Inpatient care facilities
-Outpatient care and support services
-Animal care and care
-Residential and transitional facilities
-Other care and social services
-Pet-related services
-Veterinary medicine
-Animal care and care
-Pest control
-Various services for animals
-Travel service / entertainment
-Travel agencies
-Tour operator
-Tourguiding and adventure offers
-Entertainment / leisure centers
-Various entertainment / travel services
-Scientific services
-Research and development
-Technical and scientific investigations
-Various scientific services
-Various agricultural services
-Recycling and waste management
-Printing and packaging services
-Safety inspections and installations
-Security services and detecters
-Publishing
-Various services
+    Education / Further education / Training
+        State-regulated training institutions
+        Specialized educational / cultural centers
+        Sports and exercise centers
+        Small freelance education and training providers
+        Various services for education, further education and training
+    Health / Personal Care / Fitness
+        Medical practices and specialist centres
+        Hospitals and acute clinics
+        Inpatient rehabilitation and care facilities
+        Various outpatient therapy and healing methods
+        Pharmacies and drug supply
+        Mobile care and support services
+        Online and telemedical health services
+        Diagnostics and laboratory services
+        Veterinary services
+        Wellness and recreation centers
+        Gyms and sports facilities
+        Hairdresser / Personal care / Cosmetic services
+        Various consulting services
+        Various medical services
+        Various services related to health / body care / fitness
+    Consulting services / Agencies / Brokers
+        Strategic Management Consulting
+        IT Consulting Services
+        Technical consulting services
+        Accounting and Trust
+        Legal, tax and accounting audit
+        Marketing and communication agencies
+        Creative and design agencies
+        Real estate agencies
+        Recruitment agencies
+        Specialized personnel services
+        Event Management Agencies
+        Translation services
+        Procurement and purchasing agencies
+        Various brokerage and brokerage services
+        Various agencies
+        Various consulting services
+    Creative Services / Design
+        Creative and design agencies
+        Specialized creative and design services
+    Events / Event Services
+        Event in your own name
+        Event Management Agencies
+        Event technology and production
+        Catering services
+        Various consulting services
+        Various event services
+    Care / Social Services
+        Childcare and early childhood support
+        Inpatient care facilities
+        Outpatient care and support services
+        Animal care and care
+        Residential and transitional facilities
+        Other care and social services
+    Pet-related services
+        Veterinary medicine
+        Animal care and care
+        Pest control
+        Various services for animals
+    Travel service / entertainment
+        Travel agencies
+        Tour operator
+        Tourguiding and adventure offers
+        Entertainment / leisure centers
+        Various entertainment / travel services
+    Scientific services
+        Research and development
+        Technical and scientific investigations
+        Various scientific services
+    Various agricultural services
+    Recycling and waste management
+    Printing and packaging services
+    Safety inspections and installations
+    Security services and detecters
+    Publishing
+    Various services
 
 
 How well does the industry you have just selected fit the actual activity of the company?

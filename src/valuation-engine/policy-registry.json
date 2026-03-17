@@ -1,0 +1,1426 @@
+{
+  "level1Definitions": [
+    {
+      "value": "agriculture",
+      "label": "Agriculture, Agribusiness, and Raw Materials"
+    },
+    {
+      "value": "manufacturing",
+      "label": "Manufacturing, Processing, and Industrial Products"
+    },
+    {
+      "value": "construction",
+      "label": "Construction, Engineering, and Technical Services"
+    },
+    {
+      "value": "trade",
+      "label": "Trade, Distribution, and Commerce"
+    },
+    {
+      "value": "software",
+      "label": "Software, IT, and Digital Services"
+    },
+    {
+      "value": "transport",
+      "label": "Transport, Logistics, and Mobility"
+    },
+    {
+      "value": "hospitality",
+      "label": "Food, Hospitality, and Tourism"
+    },
+    {
+      "value": "health",
+      "label": "Health, Pharma, and Personal Care"
+    },
+    {
+      "value": "education",
+      "label": "Education, Training, and Knowledge Services"
+    },
+    {
+      "value": "professional",
+      "label": "Financial, Professional, and Business Services"
+    },
+    {
+      "value": "real_estate",
+      "label": "Real Estate, Property, and Facility Services"
+    },
+    {
+      "value": "creative",
+      "label": "Creative, Media, Events, and Publishing"
+    },
+    {
+      "value": "local_services",
+      "label": "Personal, Community, and Specialized Local Services"
+    }
+  ],
+  "level2Definitions": [
+    {
+      "level1": "agriculture",
+      "value": "farming_primary",
+      "label": "Farming and primary production"
+    },
+    {
+      "level1": "agriculture",
+      "value": "livestock_aqua",
+      "label": "Livestock, poultry, dairy, and aquaculture"
+    },
+    {
+      "level1": "agriculture",
+      "value": "agro_processing",
+      "label": "Agro-processing"
+    },
+    {
+      "level1": "agriculture",
+      "value": "farm_inputs",
+      "label": "Farm inputs and agricultural services"
+    },
+    {
+      "level1": "agriculture",
+      "value": "raw_material_supply",
+      "label": "Raw-material extraction and supply"
+    },
+    {
+      "level1": "manufacturing",
+      "value": "food_beverage_manufacturing",
+      "label": "Food and beverage production"
+    },
+    {
+      "level1": "manufacturing",
+      "value": "consumer_goods_manufacturing",
+      "label": "Consumer goods manufacturing"
+    },
+    {
+      "level1": "manufacturing",
+      "value": "wood_household_products",
+      "label": "Furniture, wood, and household products"
+    },
+    {
+      "level1": "manufacturing",
+      "value": "building_fabricated_products",
+      "label": "Building materials and fabricated products"
+    },
+    {
+      "level1": "manufacturing",
+      "value": "chemicals_materials",
+      "label": "Chemicals, plastics, and industrial materials"
+    },
+    {
+      "level1": "manufacturing",
+      "value": "machinery_components",
+      "label": "Machinery, equipment, and industrial components"
+    },
+    {
+      "level1": "manufacturing",
+      "value": "contract_manufacturing",
+      "label": "Contract manufacturing and private-label production"
+    },
+    {
+      "level1": "manufacturing",
+      "value": "packaging_printing_products",
+      "label": "Packaging and printing products"
+    },
+    {
+      "level1": "construction",
+      "value": "building_construction",
+      "label": "Building construction"
+    },
+    {
+      "level1": "construction",
+      "value": "civil_infrastructure",
+      "label": "Civil works and infrastructure services"
+    },
+    {
+      "level1": "construction",
+      "value": "mep_installation",
+      "label": "Mechanical, electrical, and plumbing installation"
+    },
+    {
+      "level1": "construction",
+      "value": "fitout_finishing",
+      "label": "Interior fit-out and finishing"
+    },
+    {
+      "level1": "construction",
+      "value": "repair_technical_servicing",
+      "label": "Maintenance, repair, and technical servicing"
+    },
+    {
+      "level1": "construction",
+      "value": "engineering_project_supervision",
+      "label": "Engineering, design, and project supervision"
+    },
+    {
+      "level1": "construction",
+      "value": "power_automation",
+      "label": "Solar, power, and industrial automation services"
+    },
+    {
+      "level1": "trade",
+      "value": "retail_chain",
+      "label": "Retail stores and retail chains"
+    },
+    {
+      "level1": "trade",
+      "value": "wholesale_distribution",
+      "label": "Wholesale and distribution"
+    },
+    {
+      "level1": "trade",
+      "value": "import_export_trade",
+      "label": "Import, export, and trading"
+    },
+    {
+      "level1": "trade",
+      "value": "ecommerce_social_commerce",
+      "label": "E-commerce and social commerce"
+    },
+    {
+      "level1": "trade",
+      "value": "agents_franchise_distribution",
+      "label": "Marketplaces, agents, and franchise-led distribution"
+    },
+    {
+      "level1": "trade",
+      "value": "auto_equipment_trade",
+      "label": "Vehicle, spare-parts, and equipment trade"
+    },
+    {
+      "level1": "trade",
+      "value": "pharma_medical_trade",
+      "label": "Pharma and medical-product trade"
+    },
+    {
+      "level1": "software",
+      "value": "saas_owned_software",
+      "label": "SaaS and owned software products"
+    },
+    {
+      "level1": "software",
+      "value": "custom_software",
+      "label": "Custom software and product development"
+    },
+    {
+      "level1": "software",
+      "value": "it_support_security",
+      "label": "IT support, infrastructure, and cybersecurity"
+    },
+    {
+      "level1": "software",
+      "value": "cloud_data_services",
+      "label": "Cloud, hosting, and data services"
+    },
+    {
+      "level1": "software",
+      "value": "digital_platforms",
+      "label": "Digital platforms and online marketplaces"
+    },
+    {
+      "level1": "software",
+      "value": "digital_content_products",
+      "label": "Online content, media, and digital information products"
+    },
+    {
+      "level1": "transport",
+      "value": "haulage_freight",
+      "label": "Haulage and freight"
+    },
+    {
+      "level1": "transport",
+      "value": "last_mile_delivery",
+      "label": "Last-mile delivery and courier services"
+    },
+    {
+      "level1": "transport",
+      "value": "warehousing_fulfilment",
+      "label": "Warehousing and fulfilment"
+    },
+    {
+      "level1": "transport",
+      "value": "passenger_transport",
+      "label": "Passenger transport"
+    },
+    {
+      "level1": "transport",
+      "value": "fleet_mobility",
+      "label": "Fleet services and mobility operations"
+    },
+    {
+      "level1": "transport",
+      "value": "clearing_forwarding",
+      "label": "Clearing, forwarding, and logistics support"
+    },
+    {
+      "level1": "hospitality",
+      "value": "restaurants_food_service",
+      "label": "Restaurants, takeaways, and food service"
+    },
+    {
+      "level1": "hospitality",
+      "value": "cafes_bars_bakeries",
+      "label": "Cafes, bars, bakeries, and casual hospitality"
+    },
+    {
+      "level1": "hospitality",
+      "value": "catering_event_feeding",
+      "label": "Catering and event feeding"
+    },
+    {
+      "level1": "hospitality",
+      "value": "hotels_short_stay",
+      "label": "Hotels, guesthouses, and short-stay accommodation"
+    },
+    {
+      "level1": "hospitality",
+      "value": "travel_tours",
+      "label": "Travel, tours, and destination services"
+    },
+    {
+      "level1": "hospitality",
+      "value": "leisure_entertainment",
+      "label": "Leisure and entertainment venues"
+    },
+    {
+      "level1": "health",
+      "value": "clinics_hospitals",
+      "label": "Clinics, hospitals, and specialist care"
+    },
+    {
+      "level1": "health",
+      "value": "diagnostics_labs",
+      "label": "Diagnostics and laboratory services"
+    },
+    {
+      "level1": "health",
+      "value": "pharmacies_drug_retail",
+      "label": "Pharmacies and drug retail"
+    },
+    {
+      "level1": "health",
+      "value": "medical_products_devices",
+      "label": "Medical products and devices"
+    },
+    {
+      "level1": "health",
+      "value": "fitness_wellness",
+      "label": "Fitness, wellness, and recreation"
+    },
+    {
+      "level1": "health",
+      "value": "beauty_personal_care",
+      "label": "Beauty, grooming, and personal care"
+    },
+    {
+      "level1": "health",
+      "value": "veterinary_animal_health",
+      "label": "Veterinary and animal-health services"
+    },
+    {
+      "level1": "education",
+      "value": "schools_formal_education",
+      "label": "Schools and formal education"
+    },
+    {
+      "level1": "education",
+      "value": "tutoring_learning_centres",
+      "label": "Tutoring, test prep, and learning centres"
+    },
+    {
+      "level1": "education",
+      "value": "vocational_training",
+      "label": "Vocational and technical training"
+    },
+    {
+      "level1": "education",
+      "value": "corporate_training",
+      "label": "Corporate training and professional education"
+    },
+    {
+      "level1": "education",
+      "value": "edtech_digital_learning",
+      "label": "Edtech and digital learning"
+    },
+    {
+      "level1": "education",
+      "value": "research_assessment_services",
+      "label": "Research, assessment, and knowledge services"
+    },
+    {
+      "level1": "professional",
+      "value": "accounting_bookkeeping",
+      "label": "Accounting, tax, audit support, and bookkeeping"
+    },
+    {
+      "level1": "professional",
+      "value": "legal_compliance",
+      "label": "Legal, compliance, and secretariat support"
+    },
+    {
+      "level1": "professional",
+      "value": "strategy_consulting",
+      "label": "Strategy, operations, and management consulting"
+    },
+    {
+      "level1": "professional",
+      "value": "marketing_agencies",
+      "label": "Marketing, branding, and communications agencies"
+    },
+    {
+      "level1": "professional",
+      "value": "hr_recruitment",
+      "label": "HR, recruitment, and workforce services"
+    },
+    {
+      "level1": "professional",
+      "value": "insurance_risk_advisory",
+      "label": "Insurance, risk, and financial-advisory services"
+    },
+    {
+      "level1": "professional",
+      "value": "lending_asset_finance",
+      "label": "Lending, leasing, and asset-finance services"
+    },
+    {
+      "level1": "professional",
+      "value": "transaction_support",
+      "label": "Transaction support and deal advisory"
+    },
+    {
+      "level1": "real_estate",
+      "value": "real_estate_brokerage",
+      "label": "Real-estate brokerage and agency"
+    },
+    {
+      "level1": "real_estate",
+      "value": "property_management",
+      "label": "Property management"
+    },
+    {
+      "level1": "real_estate",
+      "value": "facility_management",
+      "label": "Facility management and building services"
+    },
+    {
+      "level1": "real_estate",
+      "value": "cleaning_hygiene",
+      "label": "Cleaning and hygiene services"
+    },
+    {
+      "level1": "real_estate",
+      "value": "security_safety",
+      "label": "Security and safety services"
+    },
+    {
+      "level1": "real_estate",
+      "value": "property_development_support",
+      "label": "Property development support services"
+    },
+    {
+      "level1": "creative",
+      "value": "design_creative_agency",
+      "label": "Design and creative agencies"
+    },
+    {
+      "level1": "creative",
+      "value": "media_production",
+      "label": "Media production and content studios"
+    },
+    {
+      "level1": "creative",
+      "value": "advertising_media_buying",
+      "label": "Advertising and media buying"
+    },
+    {
+      "level1": "creative",
+      "value": "event_management",
+      "label": "Event management and event operations"
+    },
+    {
+      "level1": "creative",
+      "value": "event_tech_rentals",
+      "label": "Event technology, rentals, and production support"
+    },
+    {
+      "level1": "creative",
+      "value": "publishing_information",
+      "label": "Publishing and information services"
+    },
+    {
+      "level1": "local_services",
+      "value": "laundry_household_support",
+      "label": "Laundry and household support services"
+    },
+    {
+      "level1": "local_services",
+      "value": "childcare_social_support",
+      "label": "Childcare, eldercare, and social support"
+    },
+    {
+      "level1": "local_services",
+      "value": "pet_animal_support",
+      "label": "Pet, animal, and veterinary support services"
+    },
+    {
+      "level1": "local_services",
+      "value": "pest_environmental_services",
+      "label": "Pest control and environmental local services"
+    },
+    {
+      "level1": "local_services",
+      "value": "repair_maintenance_consumer",
+      "label": "Repair and maintenance consumer services"
+    },
+    {
+      "level1": "local_services",
+      "value": "specialized_local_services",
+      "label": "Other specialized local service businesses"
+    }
+  ],
+  "policyGroups": {
+    "PG_AGRI_PRIMARY": {
+      "id": "PG_AGRI_PRIMARY",
+      "label": "Primary Agriculture and Raw Supply",
+      "primaryMethod": "capitalized_earnings",
+      "secondaryMethods": [
+        "market_multiple"
+      ],
+      "floorMethod": "asset_approach",
+      "benchmarkNeeds": [
+        "private_transaction_multiples",
+        "working_capital_norms",
+        "commodity_margin_norms"
+      ],
+      "riskModelFocus": [
+        "seasonality",
+        "commodity_price_volatility",
+        "weather_risk",
+        "records_quality"
+      ],
+      "ownerPhase": {
+        "capitalizedMetric": "adjustedEbit",
+        "capitalizationRateRange": {
+          "low": 0.22,
+          "mid": 0.28,
+          "high": 0.34
+        },
+        "marketMetric": "adjustedEbit",
+        "marketMultipleRange": {
+          "low": 2.2,
+          "mid": 2.9,
+          "high": 3.5
+        },
+        "assetFloorRevenuePct": 0.14,
+        "reconciliationWeights": {
+          "capitalized_earnings": 0.55,
+          "market_multiple": 0.25,
+          "asset_approach": 0.2
+        },
+        "workingCapitalTargetPct": 0.12,
+        "marketabilityFloor": 0.8,
+        "marketabilityCeiling": 0.93,
+        "dispersionPenaltyWeight": 0.22
+      }
+    },
+    "PG_AGRO_PROCESSING": {
+      "id": "PG_AGRO_PROCESSING",
+      "label": "Agro-processing",
+      "primaryMethod": "market_multiple",
+      "secondaryMethods": [
+        "capitalized_earnings"
+      ],
+      "floorMethod": "asset_approach",
+      "benchmarkNeeds": [
+        "transaction_multiples",
+        "ebitda_margin_norms",
+        "maintenance_capex_norms"
+      ],
+      "riskModelFocus": [
+        "raw_material_fx",
+        "energy_cost",
+        "throughput_stability",
+        "supplier_dependence"
+      ],
+      "ownerPhase": {
+        "marketMetric": "adjustedEbitda",
+        "marketMultipleRange": {
+          "low": 2.8,
+          "mid": 3.7,
+          "high": 4.6
+        },
+        "capitalizedMetric": "adjustedEbit",
+        "capitalizationRateRange": {
+          "low": 0.2,
+          "mid": 0.25,
+          "high": 0.31
+        },
+        "assetFloorRevenuePct": 0.18,
+        "reconciliationWeights": {
+          "market_multiple": 0.55,
+          "capitalized_earnings": 0.25,
+          "asset_approach": 0.2
+        },
+        "workingCapitalTargetPct": 0.16,
+        "marketabilityFloor": 0.81,
+        "marketabilityCeiling": 0.94,
+        "dispersionPenaltyWeight": 0.2
+      }
+    },
+    "PG_ASSET_HEAVY_MANUFACTURING": {
+      "id": "PG_ASSET_HEAVY_MANUFACTURING",
+      "label": "Asset-heavy Manufacturing",
+      "primaryMethod": "market_multiple",
+      "secondaryMethods": [
+        "asset_approach"
+      ],
+      "floorMethod": "asset_approach",
+      "benchmarkNeeds": [
+        "ebitda_multiples",
+        "replacement_cost_cues",
+        "working_capital_norms"
+      ],
+      "riskModelFocus": [
+        "capex_intensity",
+        "equipment_age",
+        "power_cost",
+        "fx_inputs"
+      ],
+      "ownerPhase": {
+        "marketMetric": "adjustedEbitda",
+        "marketMultipleRange": {
+          "low": 3,
+          "mid": 4,
+          "high": 5
+        },
+        "capitalizedMetric": "adjustedEbit",
+        "capitalizationRateRange": {
+          "low": 0.19,
+          "mid": 0.24,
+          "high": 0.29
+        },
+        "assetFloorRevenuePct": 0.2,
+        "reconciliationWeights": {
+          "market_multiple": 0.5,
+          "capitalized_earnings": 0.1,
+          "asset_approach": 0.4
+        },
+        "workingCapitalTargetPct": 0.18,
+        "marketabilityFloor": 0.82,
+        "marketabilityCeiling": 0.94,
+        "dispersionPenaltyWeight": 0.2
+      }
+    },
+    "PG_CONTRACT_MANUFACTURING": {
+      "id": "PG_CONTRACT_MANUFACTURING",
+      "label": "Contract Manufacturing",
+      "primaryMethod": "market_multiple",
+      "secondaryMethods": [
+        "capitalized_earnings"
+      ],
+      "floorMethod": "asset_approach",
+      "benchmarkNeeds": [
+        "contract_manufacturing_multiples",
+        "customer_concentration_norms",
+        "maintenance_capex_norms"
+      ],
+      "riskModelFocus": [
+        "customer_concentration",
+        "margin_pressure",
+        "contract_durability"
+      ],
+      "ownerPhase": {
+        "marketMetric": "adjustedEbitda",
+        "marketMultipleRange": {
+          "low": 3.2,
+          "mid": 4.2,
+          "high": 5
+        },
+        "capitalizedMetric": "adjustedEbit",
+        "capitalizationRateRange": {
+          "low": 0.19,
+          "mid": 0.24,
+          "high": 0.29
+        },
+        "assetFloorRevenuePct": 0.17,
+        "reconciliationWeights": {
+          "market_multiple": 0.6,
+          "capitalized_earnings": 0.25,
+          "asset_approach": 0.15
+        },
+        "workingCapitalTargetPct": 0.15,
+        "marketabilityFloor": 0.83,
+        "marketabilityCeiling": 0.95,
+        "dispersionPenaltyWeight": 0.18
+      }
+    },
+    "PG_PROJECT_CONTRACTING": {
+      "id": "PG_PROJECT_CONTRACTING",
+      "label": "Project Contracting and Engineering",
+      "primaryMethod": "capitalized_earnings",
+      "secondaryMethods": [
+        "market_multiple"
+      ],
+      "floorMethod": "asset_approach",
+      "benchmarkNeeds": [
+        "project_services_multiples",
+        "backlog_norms",
+        "margin_volatility_norms"
+      ],
+      "riskModelFocus": [
+        "project_timing",
+        "working_capital_swings",
+        "founder_dependence",
+        "contract_execution"
+      ],
+      "ownerPhase": {
+        "capitalizedMetric": "adjustedEbit",
+        "capitalizationRateRange": {
+          "low": 0.21,
+          "mid": 0.27,
+          "high": 0.33
+        },
+        "marketMetric": "adjustedEbitda",
+        "marketMultipleRange": {
+          "low": 2.8,
+          "mid": 3.6,
+          "high": 4.5
+        },
+        "assetFloorRevenuePct": 0.14,
+        "reconciliationWeights": {
+          "capitalized_earnings": 0.5,
+          "market_multiple": 0.3,
+          "asset_approach": 0.2
+        },
+        "workingCapitalTargetPct": 0.06,
+        "marketabilityFloor": 0.8,
+        "marketabilityCeiling": 0.94,
+        "dispersionPenaltyWeight": 0.2
+      }
+    },
+    "PG_TRADING_DISTRIBUTION": {
+      "id": "PG_TRADING_DISTRIBUTION",
+      "label": "Trading and Distribution",
+      "primaryMethod": "market_multiple",
+      "secondaryMethods": [
+        "capitalized_earnings"
+      ],
+      "floorMethod": "asset_approach",
+      "benchmarkNeeds": [
+        "distribution_multiples",
+        "gross_margin_norms",
+        "inventory_and_payable_norms"
+      ],
+      "riskModelFocus": [
+        "working_capital",
+        "fx_exposure",
+        "supplier_dependence",
+        "margin_compression"
+      ],
+      "ownerPhase": {
+        "marketMetric": "adjustedEbit",
+        "marketMultipleRange": {
+          "low": 2.6,
+          "mid": 3.4,
+          "high": 4.1
+        },
+        "capitalizedMetric": "adjustedEbit",
+        "capitalizationRateRange": {
+          "low": 0.22,
+          "mid": 0.28,
+          "high": 0.34
+        },
+        "assetFloorRevenuePct": 0.12,
+        "reconciliationWeights": {
+          "market_multiple": 0.55,
+          "capitalized_earnings": 0.25,
+          "asset_approach": 0.2
+        },
+        "workingCapitalTargetPct": 0.13,
+        "marketabilityFloor": 0.81,
+        "marketabilityCeiling": 0.94,
+        "dispersionPenaltyWeight": 0.2
+      }
+    },
+    "PG_RETAIL_COMMERCE": {
+      "id": "PG_RETAIL_COMMERCE",
+      "label": "Retail and Commerce",
+      "primaryMethod": "market_multiple",
+      "secondaryMethods": [
+        "capitalized_earnings"
+      ],
+      "floorMethod": "asset_approach",
+      "benchmarkNeeds": [
+        "retail_multiples",
+        "same_store_margin_norms",
+        "inventory_turns"
+      ],
+      "riskModelFocus": [
+        "inventory_risk",
+        "location_risk",
+        "footfall_volatility",
+        "informality"
+      ],
+      "ownerPhase": {
+        "marketMetric": "adjustedEbit",
+        "marketMultipleRange": {
+          "low": 2.4,
+          "mid": 3,
+          "high": 3.8
+        },
+        "capitalizedMetric": "adjustedEbit",
+        "capitalizationRateRange": {
+          "low": 0.23,
+          "mid": 0.29,
+          "high": 0.35
+        },
+        "assetFloorRevenuePct": 0.1,
+        "reconciliationWeights": {
+          "market_multiple": 0.55,
+          "capitalized_earnings": 0.2,
+          "asset_approach": 0.25
+        },
+        "workingCapitalTargetPct": 0.09,
+        "marketabilityFloor": 0.79,
+        "marketabilityCeiling": 0.92,
+        "dispersionPenaltyWeight": 0.22
+      }
+    },
+    "PG_RECURRING_SOFTWARE": {
+      "id": "PG_RECURRING_SOFTWARE",
+      "label": "Recurring Software and Digital Products",
+      "primaryMethod": "market_multiple",
+      "secondaryMethods": [
+        "dcf"
+      ],
+      "benchmarkNeeds": [
+        "revenue_multiples",
+        "growth_benchmarks",
+        "retention_benchmarks"
+      ],
+      "riskModelFocus": [
+        "churn",
+        "stickiness",
+        "cac_efficiency",
+        "product_differentiation"
+      ],
+      "ownerPhase": {
+        "marketMetric": "revenue",
+        "marketMultipleRange": {
+          "low": 0.9,
+          "mid": 1.8,
+          "high": 3.2
+        },
+        "dcfEnabled": false,
+        "reconciliationWeights": {
+          "market_multiple": 0.8,
+          "capitalized_earnings": 0,
+          "asset_approach": 0.2
+        },
+        "assetFloorRevenuePct": 0.06,
+        "workingCapitalTargetPct": 0.03,
+        "marketabilityFloor": 0.86,
+        "marketabilityCeiling": 0.99,
+        "dispersionPenaltyWeight": 0.14
+      }
+    },
+    "PG_PROJECT_SOFTWARE_IT": {
+      "id": "PG_PROJECT_SOFTWARE_IT",
+      "label": "Project Software, IT Services, and Support",
+      "primaryMethod": "market_multiple",
+      "secondaryMethods": [
+        "capitalized_earnings"
+      ],
+      "benchmarkNeeds": [
+        "it_services_multiples",
+        "utilization_norms",
+        "margin_norms"
+      ],
+      "riskModelFocus": [
+        "client_concentration",
+        "key_person_risk",
+        "recurring_share"
+      ],
+      "ownerPhase": {
+        "marketMetric": "adjustedEbitda",
+        "marketMultipleRange": {
+          "low": 3.2,
+          "mid": 4.1,
+          "high": 5.2
+        },
+        "capitalizedMetric": "sde",
+        "capitalizationRateRange": {
+          "low": 0.18,
+          "mid": 0.24,
+          "high": 0.3
+        },
+        "assetFloorRevenuePct": 0.08,
+        "reconciliationWeights": {
+          "market_multiple": 0.55,
+          "capitalized_earnings": 0.35,
+          "asset_approach": 0.1
+        },
+        "workingCapitalTargetPct": 0.05,
+        "marketabilityFloor": 0.84,
+        "marketabilityCeiling": 0.97,
+        "dispersionPenaltyWeight": 0.16
+      }
+    },
+    "PG_LOGISTICS_ASSET": {
+      "id": "PG_LOGISTICS_ASSET",
+      "label": "Logistics and Asset-backed Mobility",
+      "primaryMethod": "market_multiple",
+      "secondaryMethods": [
+        "asset_approach"
+      ],
+      "floorMethod": "asset_approach",
+      "benchmarkNeeds": [
+        "logistics_multiples",
+        "fleet_utilization_norms",
+        "fuel_cost_sensitivity"
+      ],
+      "riskModelFocus": [
+        "fleet_age",
+        "fuel_cost",
+        "driver_retention",
+        "maintenance_capex"
+      ],
+      "ownerPhase": {
+        "marketMetric": "adjustedEbitda",
+        "marketMultipleRange": {
+          "low": 2.8,
+          "mid": 3.7,
+          "high": 4.5
+        },
+        "capitalizedMetric": "adjustedEbit",
+        "capitalizationRateRange": {
+          "low": 0.21,
+          "mid": 0.27,
+          "high": 0.33
+        },
+        "assetFloorRevenuePct": 0.16,
+        "reconciliationWeights": {
+          "market_multiple": 0.5,
+          "capitalized_earnings": 0.1,
+          "asset_approach": 0.4
+        },
+        "workingCapitalTargetPct": 0.08,
+        "marketabilityFloor": 0.8,
+        "marketabilityCeiling": 0.93,
+        "dispersionPenaltyWeight": 0.2
+      }
+    },
+    "PG_HOSPITALITY_VENUE": {
+      "id": "PG_HOSPITALITY_VENUE",
+      "label": "Hospitality, Travel, and Leisure Venues",
+      "primaryMethod": "market_multiple",
+      "secondaryMethods": [
+        "capitalized_earnings"
+      ],
+      "floorMethod": "asset_approach",
+      "benchmarkNeeds": [
+        "venue_multiples",
+        "occupancy_turnover_norms",
+        "rent_norms"
+      ],
+      "riskModelFocus": [
+        "seasonality",
+        "location_dependence",
+        "lease_risk",
+        "brand_strength"
+      ],
+      "ownerPhase": {
+        "marketMetric": "adjustedEbitda",
+        "marketMultipleRange": {
+          "low": 2.7,
+          "mid": 3.5,
+          "high": 4.4
+        },
+        "capitalizedMetric": "adjustedEbit",
+        "capitalizationRateRange": {
+          "low": 0.21,
+          "mid": 0.27,
+          "high": 0.34
+        },
+        "assetFloorRevenuePct": 0.12,
+        "reconciliationWeights": {
+          "market_multiple": 0.55,
+          "capitalized_earnings": 0.25,
+          "asset_approach": 0.2
+        },
+        "workingCapitalTargetPct": 0.05,
+        "marketabilityFloor": 0.78,
+        "marketabilityCeiling": 0.92,
+        "dispersionPenaltyWeight": 0.22
+      }
+    },
+    "PG_HEALTHCARE_SERVICE": {
+      "id": "PG_HEALTHCARE_SERVICE",
+      "label": "Healthcare Services",
+      "primaryMethod": "market_multiple",
+      "secondaryMethods": [
+        "capitalized_earnings"
+      ],
+      "floorMethod": "asset_approach",
+      "benchmarkNeeds": [
+        "healthcare_service_multiples",
+        "utilization_norms",
+        "equipment_life_norms"
+      ],
+      "riskModelFocus": [
+        "regulatory_risk",
+        "key_practitioner_dependence",
+        "equipment_life"
+      ],
+      "ownerPhase": {
+        "marketMetric": "adjustedEbitda",
+        "marketMultipleRange": {
+          "low": 3.5,
+          "mid": 4.6,
+          "high": 5.8
+        },
+        "capitalizedMetric": "adjustedEbit",
+        "capitalizationRateRange": {
+          "low": 0.17,
+          "mid": 0.22,
+          "high": 0.27
+        },
+        "assetFloorRevenuePct": 0.16,
+        "reconciliationWeights": {
+          "market_multiple": 0.55,
+          "capitalized_earnings": 0.25,
+          "asset_approach": 0.2
+        },
+        "workingCapitalTargetPct": 0.07,
+        "marketabilityFloor": 0.84,
+        "marketabilityCeiling": 0.96,
+        "dispersionPenaltyWeight": 0.17
+      }
+    },
+    "PG_HEALTHCARE_DISTRIBUTION": {
+      "id": "PG_HEALTHCARE_DISTRIBUTION",
+      "label": "Healthcare Distribution and Retail",
+      "primaryMethod": "market_multiple",
+      "secondaryMethods": [
+        "asset_approach"
+      ],
+      "floorMethod": "asset_approach",
+      "benchmarkNeeds": [
+        "distribution_multiples",
+        "inventory_obsolescence_norms",
+        "fx_purchase_norms"
+      ],
+      "riskModelFocus": [
+        "inventory_obsolescence",
+        "fx_exposure",
+        "compliance"
+      ],
+      "ownerPhase": {
+        "marketMetric": "adjustedEbit",
+        "marketMultipleRange": {
+          "low": 2.9,
+          "mid": 3.8,
+          "high": 4.8
+        },
+        "capitalizedMetric": "adjustedEbit",
+        "capitalizationRateRange": {
+          "low": 0.2,
+          "mid": 0.25,
+          "high": 0.31
+        },
+        "assetFloorRevenuePct": 0.14,
+        "reconciliationWeights": {
+          "market_multiple": 0.55,
+          "capitalized_earnings": 0.15,
+          "asset_approach": 0.3
+        },
+        "workingCapitalTargetPct": 0.14,
+        "marketabilityFloor": 0.82,
+        "marketabilityCeiling": 0.94,
+        "dispersionPenaltyWeight": 0.19
+      }
+    },
+    "PG_EDUCATION_ENROLLMENT": {
+      "id": "PG_EDUCATION_ENROLLMENT",
+      "label": "Enrollment-based Education",
+      "primaryMethod": "capitalized_earnings",
+      "secondaryMethods": [
+        "market_multiple"
+      ],
+      "floorMethod": "asset_approach",
+      "benchmarkNeeds": [
+        "education_multiples",
+        "enrollment_retention_norms",
+        "capacity_utilization_norms"
+      ],
+      "riskModelFocus": [
+        "enrollment_concentration",
+        "compliance",
+        "capacity_utilization"
+      ],
+      "ownerPhase": {
+        "capitalizedMetric": "adjustedEbit",
+        "capitalizationRateRange": {
+          "low": 0.18,
+          "mid": 0.24,
+          "high": 0.3
+        },
+        "marketMetric": "adjustedEbitda",
+        "marketMultipleRange": {
+          "low": 3.1,
+          "mid": 4,
+          "high": 5
+        },
+        "assetFloorRevenuePct": 0.12,
+        "reconciliationWeights": {
+          "capitalized_earnings": 0.5,
+          "market_multiple": 0.3,
+          "asset_approach": 0.2
+        },
+        "workingCapitalTargetPct": 0.05,
+        "marketabilityFloor": 0.83,
+        "marketabilityCeiling": 0.95,
+        "dispersionPenaltyWeight": 0.18
+      }
+    },
+    "PG_PROFESSIONAL_OWNER_LED": {
+      "id": "PG_PROFESSIONAL_OWNER_LED",
+      "label": "Owner-led Professional Services",
+      "primaryMethod": "capitalized_earnings",
+      "secondaryMethods": [
+        "market_multiple"
+      ],
+      "benchmarkNeeds": [
+        "small_business_transaction_multiples",
+        "owner_replacement_comp",
+        "client_concentration_norms"
+      ],
+      "riskModelFocus": [
+        "founder_dependence",
+        "non_recurring_revenue",
+        "client_concentration"
+      ],
+      "ownerPhase": {
+        "capitalizedMetric": "sde",
+        "capitalizationRateRange": {
+          "low": 0.2,
+          "mid": 0.26,
+          "high": 0.33
+        },
+        "marketMetric": "sde",
+        "marketMultipleRange": {
+          "low": 2.6,
+          "mid": 3.5,
+          "high": 4.4
+        },
+        "assetFloorRevenuePct": 0.06,
+        "reconciliationWeights": {
+          "capitalized_earnings": 0.65,
+          "market_multiple": 0.25,
+          "asset_approach": 0.1
+        },
+        "workingCapitalTargetPct": 0.04,
+        "marketabilityFloor": 0.78,
+        "marketabilityCeiling": 0.92,
+        "dispersionPenaltyWeight": 0.2
+      }
+    },
+    "PG_PROFESSIONAL_PLATFORM": {
+      "id": "PG_PROFESSIONAL_PLATFORM",
+      "label": "Platform-style Professional Services",
+      "primaryMethod": "market_multiple",
+      "secondaryMethods": [
+        "capitalized_earnings"
+      ],
+      "benchmarkNeeds": [
+        "scaled_service_firm_multiples",
+        "management_depth_benchmarks",
+        "client_retention_norms"
+      ],
+      "riskModelFocus": [
+        "talent_retention",
+        "recurring_clients",
+        "delivery_scalability"
+      ],
+      "ownerPhase": {
+        "marketMetric": "adjustedEbitda",
+        "marketMultipleRange": {
+          "low": 3.4,
+          "mid": 4.4,
+          "high": 5.5
+        },
+        "capitalizedMetric": "adjustedEbit",
+        "capitalizationRateRange": {
+          "low": 0.18,
+          "mid": 0.23,
+          "high": 0.29
+        },
+        "assetFloorRevenuePct": 0.07,
+        "reconciliationWeights": {
+          "market_multiple": 0.55,
+          "capitalized_earnings": 0.35,
+          "asset_approach": 0.1
+        },
+        "workingCapitalTargetPct": 0.05,
+        "marketabilityFloor": 0.84,
+        "marketabilityCeiling": 0.96,
+        "dispersionPenaltyWeight": 0.17
+      }
+    },
+    "PG_REAL_ESTATE_SERVICE": {
+      "id": "PG_REAL_ESTATE_SERVICE",
+      "label": "Real Estate and Facility Services",
+      "primaryMethod": "market_multiple",
+      "secondaryMethods": [
+        "capitalized_earnings"
+      ],
+      "floorMethod": "asset_approach",
+      "benchmarkNeeds": [
+        "service_contract_multiples",
+        "contract_retention_norms",
+        "local_market_depth"
+      ],
+      "riskModelFocus": [
+        "contract_retention",
+        "local_market_depth",
+        "staff_dependence"
+      ],
+      "ownerPhase": {
+        "marketMetric": "adjustedEbitda",
+        "marketMultipleRange": {
+          "low": 2.8,
+          "mid": 3.7,
+          "high": 4.6
+        },
+        "capitalizedMetric": "adjustedEbit",
+        "capitalizationRateRange": {
+          "low": 0.2,
+          "mid": 0.26,
+          "high": 0.32
+        },
+        "assetFloorRevenuePct": 0.1,
+        "reconciliationWeights": {
+          "market_multiple": 0.55,
+          "capitalized_earnings": 0.25,
+          "asset_approach": 0.2
+        },
+        "workingCapitalTargetPct": 0.04,
+        "marketabilityFloor": 0.82,
+        "marketabilityCeiling": 0.94,
+        "dispersionPenaltyWeight": 0.18
+      }
+    },
+    "PG_PROPERTY_ASSET_NAV": {
+      "id": "PG_PROPERTY_ASSET_NAV",
+      "label": "Property Asset and Development Support",
+      "primaryMethod": "asset_approach",
+      "secondaryMethods": [
+        "capitalized_earnings"
+      ],
+      "floorMethod": "asset_approach",
+      "benchmarkNeeds": [
+        "nav_references",
+        "property_yield_benchmarks",
+        "construction_cost_cues"
+      ],
+      "riskModelFocus": [
+        "permits",
+        "absorption",
+        "fx_linked_costs",
+        "market_timing"
+      ],
+      "ownerPhase": {
+        "marketMetric": "revenue",
+        "marketMultipleRange": {
+          "low": 0.5,
+          "mid": 0.8,
+          "high": 1.2
+        },
+        "capitalizedMetric": "adjustedEbit",
+        "capitalizationRateRange": {
+          "low": 0.18,
+          "mid": 0.24,
+          "high": 0.3
+        },
+        "assetFloorRevenuePct": 0.22,
+        "reconciliationWeights": {
+          "market_multiple": 0.15,
+          "capitalized_earnings": 0.15,
+          "asset_approach": 0.7
+        },
+        "workingCapitalTargetPct": 0.1,
+        "marketabilityFloor": 0.8,
+        "marketabilityCeiling": 0.93,
+        "dispersionPenaltyWeight": 0.21
+      }
+    },
+    "PG_CREATIVE_AGENCY": {
+      "id": "PG_CREATIVE_AGENCY",
+      "label": "Creative and Agency Services",
+      "primaryMethod": "capitalized_earnings",
+      "secondaryMethods": [
+        "market_multiple"
+      ],
+      "benchmarkNeeds": [
+        "agency_multiples",
+        "utilization_norms",
+        "client_concentration_norms"
+      ],
+      "riskModelFocus": [
+        "key_client_risk",
+        "founder_brand_dependence",
+        "project_volatility"
+      ],
+      "ownerPhase": {
+        "capitalizedMetric": "sde",
+        "capitalizationRateRange": {
+          "low": 0.2,
+          "mid": 0.27,
+          "high": 0.34
+        },
+        "marketMetric": "adjustedEbitda",
+        "marketMultipleRange": {
+          "low": 2.8,
+          "mid": 3.6,
+          "high": 4.5
+        },
+        "assetFloorRevenuePct": 0.06,
+        "reconciliationWeights": {
+          "capitalized_earnings": 0.6,
+          "market_multiple": 0.3,
+          "asset_approach": 0.1
+        },
+        "workingCapitalTargetPct": 0.05,
+        "marketabilityFloor": 0.78,
+        "marketabilityCeiling": 0.92,
+        "dispersionPenaltyWeight": 0.21
+      }
+    },
+    "PG_LOCAL_SERVICE_OWNER_OP": {
+      "id": "PG_LOCAL_SERVICE_OWNER_OP",
+      "label": "Local Owner-operated Services",
+      "primaryMethod": "capitalized_earnings",
+      "secondaryMethods": [
+        "market_multiple"
+      ],
+      "floorMethod": "asset_approach",
+      "benchmarkNeeds": [
+        "small_business_transaction_multiples",
+        "owner_comp_benchmarks",
+        "local_demand_patterns"
+      ],
+      "riskModelFocus": [
+        "owner_dependence",
+        "informality",
+        "local_demand_concentration"
+      ],
+      "ownerPhase": {
+        "capitalizedMetric": "sde",
+        "capitalizationRateRange": {
+          "low": 0.22,
+          "mid": 0.29,
+          "high": 0.36
+        },
+        "marketMetric": "sde",
+        "marketMultipleRange": {
+          "low": 2.1,
+          "mid": 2.9,
+          "high": 3.6
+        },
+        "assetFloorRevenuePct": 0.08,
+        "reconciliationWeights": {
+          "capitalized_earnings": 0.65,
+          "market_multiple": 0.15,
+          "asset_approach": 0.2
+        },
+        "workingCapitalTargetPct": 0.04,
+        "marketabilityFloor": 0.77,
+        "marketabilityCeiling": 0.91,
+        "dispersionPenaltyWeight": 0.22
+      }
+    }
+  },
+  "level2PolicyMap": {
+    "farming_primary": "PG_AGRI_PRIMARY",
+    "livestock_aqua": "PG_AGRI_PRIMARY",
+    "agro_processing": "PG_AGRO_PROCESSING",
+    "farm_inputs": "PG_TRADING_DISTRIBUTION",
+    "raw_material_supply": "PG_AGRI_PRIMARY",
+    "food_beverage_manufacturing": "PG_ASSET_HEAVY_MANUFACTURING",
+    "consumer_goods_manufacturing": "PG_ASSET_HEAVY_MANUFACTURING",
+    "wood_household_products": "PG_ASSET_HEAVY_MANUFACTURING",
+    "building_fabricated_products": "PG_ASSET_HEAVY_MANUFACTURING",
+    "chemicals_materials": "PG_ASSET_HEAVY_MANUFACTURING",
+    "machinery_components": "PG_ASSET_HEAVY_MANUFACTURING",
+    "contract_manufacturing": "PG_CONTRACT_MANUFACTURING",
+    "packaging_printing_products": "PG_ASSET_HEAVY_MANUFACTURING",
+    "building_construction": "PG_PROJECT_CONTRACTING",
+    "civil_infrastructure": "PG_PROJECT_CONTRACTING",
+    "mep_installation": "PG_PROJECT_CONTRACTING",
+    "fitout_finishing": "PG_PROJECT_CONTRACTING",
+    "repair_technical_servicing": "PG_PROJECT_CONTRACTING",
+    "engineering_project_supervision": "PG_PROJECT_CONTRACTING",
+    "power_automation": "PG_PROJECT_CONTRACTING",
+    "retail_chain": "PG_RETAIL_COMMERCE",
+    "wholesale_distribution": "PG_TRADING_DISTRIBUTION",
+    "import_export_trade": "PG_TRADING_DISTRIBUTION",
+    "ecommerce_social_commerce": "PG_RETAIL_COMMERCE",
+    "agents_franchise_distribution": "PG_TRADING_DISTRIBUTION",
+    "auto_equipment_trade": "PG_TRADING_DISTRIBUTION",
+    "pharma_medical_trade": "PG_HEALTHCARE_DISTRIBUTION",
+    "saas_owned_software": "PG_RECURRING_SOFTWARE",
+    "custom_software": "PG_PROJECT_SOFTWARE_IT",
+    "it_support_security": "PG_PROJECT_SOFTWARE_IT",
+    "cloud_data_services": "PG_RECURRING_SOFTWARE",
+    "digital_platforms": "PG_RECURRING_SOFTWARE",
+    "digital_content_products": "PG_RECURRING_SOFTWARE",
+    "haulage_freight": "PG_LOGISTICS_ASSET",
+    "last_mile_delivery": "PG_LOGISTICS_ASSET",
+    "warehousing_fulfilment": "PG_LOGISTICS_ASSET",
+    "passenger_transport": "PG_LOGISTICS_ASSET",
+    "fleet_mobility": "PG_LOGISTICS_ASSET",
+    "clearing_forwarding": "PG_LOGISTICS_ASSET",
+    "restaurants_food_service": "PG_HOSPITALITY_VENUE",
+    "cafes_bars_bakeries": "PG_HOSPITALITY_VENUE",
+    "catering_event_feeding": "PG_HOSPITALITY_VENUE",
+    "hotels_short_stay": "PG_HOSPITALITY_VENUE",
+    "travel_tours": "PG_HOSPITALITY_VENUE",
+    "leisure_entertainment": "PG_HOSPITALITY_VENUE",
+    "clinics_hospitals": "PG_HEALTHCARE_SERVICE",
+    "diagnostics_labs": "PG_HEALTHCARE_SERVICE",
+    "pharmacies_drug_retail": "PG_HEALTHCARE_DISTRIBUTION",
+    "medical_products_devices": "PG_HEALTHCARE_DISTRIBUTION",
+    "fitness_wellness": "PG_LOCAL_SERVICE_OWNER_OP",
+    "beauty_personal_care": "PG_LOCAL_SERVICE_OWNER_OP",
+    "veterinary_animal_health": "PG_HEALTHCARE_SERVICE",
+    "schools_formal_education": "PG_EDUCATION_ENROLLMENT",
+    "tutoring_learning_centres": "PG_EDUCATION_ENROLLMENT",
+    "vocational_training": "PG_EDUCATION_ENROLLMENT",
+    "corporate_training": "PG_EDUCATION_ENROLLMENT",
+    "edtech_digital_learning": "PG_RECURRING_SOFTWARE",
+    "research_assessment_services": "PG_PROFESSIONAL_PLATFORM",
+    "accounting_bookkeeping": "PG_PROFESSIONAL_OWNER_LED",
+    "legal_compliance": "PG_PROFESSIONAL_OWNER_LED",
+    "strategy_consulting": "PG_PROFESSIONAL_OWNER_LED",
+    "marketing_agencies": "PG_CREATIVE_AGENCY",
+    "hr_recruitment": "PG_PROFESSIONAL_PLATFORM",
+    "insurance_risk_advisory": "PG_PROFESSIONAL_PLATFORM",
+    "lending_asset_finance": "PG_PROFESSIONAL_PLATFORM",
+    "transaction_support": "PG_PROFESSIONAL_OWNER_LED",
+    "real_estate_brokerage": "PG_REAL_ESTATE_SERVICE",
+    "property_management": "PG_REAL_ESTATE_SERVICE",
+    "facility_management": "PG_REAL_ESTATE_SERVICE",
+    "cleaning_hygiene": "PG_LOCAL_SERVICE_OWNER_OP",
+    "security_safety": "PG_REAL_ESTATE_SERVICE",
+    "property_development_support": "PG_PROPERTY_ASSET_NAV",
+    "design_creative_agency": "PG_CREATIVE_AGENCY",
+    "media_production": "PG_CREATIVE_AGENCY",
+    "advertising_media_buying": "PG_CREATIVE_AGENCY",
+    "event_management": "PG_CREATIVE_AGENCY",
+    "event_tech_rentals": "PG_CREATIVE_AGENCY",
+    "publishing_information": "PG_RECURRING_SOFTWARE",
+    "laundry_household_support": "PG_LOCAL_SERVICE_OWNER_OP",
+    "childcare_social_support": "PG_LOCAL_SERVICE_OWNER_OP",
+    "pet_animal_support": "PG_LOCAL_SERVICE_OWNER_OP",
+    "pest_environmental_services": "PG_LOCAL_SERVICE_OWNER_OP",
+    "repair_maintenance_consumer": "PG_LOCAL_SERVICE_OWNER_OP",
+    "specialized_local_services": "PG_LOCAL_SERVICE_OWNER_OP"
+  }
+}

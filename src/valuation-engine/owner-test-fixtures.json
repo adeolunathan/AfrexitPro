@@ -1,0 +1,466 @@
+{
+  "fixtures": [
+    {
+      "id": "owner-manufacturing-two-year",
+      "label": "Manufacturing owner case with two years of history",
+      "description": "Food-processing business with quantified normalization and working-capital inputs.",
+      "request": {
+        "meta": {
+          "requestId": "fixture-owner-manufacturing-two-year",
+          "mode": "owner",
+          "engineVersion": "fixture-v1",
+          "submittedAt": "2026-03-07T12:00:00.000Z",
+          "currency": "NGN",
+          "locale": "en-NG",
+          "source": "api",
+          "acknowledged": true,
+          "newsletterOptIn": false
+        },
+        "engagement": {
+          "purpose": "sale",
+          "urgency": "orderly",
+          "targetTransaction": "full_sale",
+          "standardOfValue": "fair_market_value",
+          "premiseOfValue": "going_concern",
+          "valuationDate": "2026-03-07"
+        },
+        "company": {
+          "businessName": "Northfield Foods",
+          "firstName": "Ada",
+          "email": "ada@example.com",
+          "whatsapp": "08012345678",
+          "legalStructure": "limited_company",
+          "ownerControlBand": "gt_75",
+          "operatingYearsBand": "5_10",
+          "primaryState": "lagos_mainland",
+          "businessSummary": "Packaged foods manufacturer selling through wholesalers and modern trade."
+        },
+        "classification": {
+          "level1": "manufacturing",
+          "level2": "food_beverage_manufacturing",
+          "industryFit": "mostly_fit",
+          "policyGroupId": "PG_ASSET_HEAVY_MANUFACTURING"
+        },
+        "operatingProfile": {
+          "catchmentArea": "multi_state",
+          "marketDemand": "steady_growth",
+          "growthOutlook": "moderate_growth",
+          "differentiation": "reliability",
+          "pricingPower": "some",
+          "customerConcentration": "manageable",
+          "bestCustomerRisk": "noticeable",
+          "founderRevenueDependence": "some",
+          "recurringRevenueShare": "some",
+          "revenueVisibility": "some_repeat",
+          "supplierTransferability": "manageable",
+          "hiringDifficulty": "feasible",
+          "fxExposure": "moderate",
+          "assetSeparation": "mostly",
+          "inventoryProfile": "7_30",
+          "workingCapitalHealth": "tight"
+        },
+        "financials": {
+          "historicals": [
+            {
+              "periodId": "latest_owner_input",
+              "label": "Latest annual owner input",
+              "months": 12,
+              "revenue": 250000000,
+              "operatingProfit": 35000000,
+              "receivables": 22000000,
+              "inventory": 31000000,
+              "payables": 18000000,
+              "maintenanceCapex": 6000000,
+              "cashBalance": 15000000,
+              "financialDebt": 25000000,
+              "sourceType": "owner_estimate",
+              "isRepresentative": true
+            },
+            {
+              "periodId": "prior_year_1",
+              "label": "Previous financial year",
+              "months": 12,
+              "revenue": 214000000,
+              "operatingProfit": 28000000,
+              "sourceType": "owner_estimate"
+            }
+          ],
+          "selectedRepresentativePeriodId": "latest_owner_input",
+          "sourceQuality": {
+            "yearsAvailable": 2,
+            "bookkeepingQuality": "spreadsheet",
+            "bankingQuality": "mostly_clean",
+            "traceablePaymentsShare": "50_79",
+            "proofReadiness": "organize_fast"
+          }
+        },
+        "normalization": {
+          "earningsBaseType": "ebit",
+          "selectedBasePeriodId": "latest_owner_input",
+          "schedule": [
+            {
+              "id": "owner-comp-total",
+              "category": "owner_comp",
+              "label": "Owner total compensation added back for SDE view",
+              "periodId": "latest_owner_input",
+              "reportedAmount": 18000000,
+              "normalizedAmount": 0,
+              "adjustmentAmount": 18000000,
+              "direction": "add_back",
+              "recurrence": "recurring",
+              "confidence": "low",
+              "evidenceLevel": "owner_statement",
+              "affects": "sde"
+            },
+            {
+              "id": "owner-comp-market-delta",
+              "category": "owner_comp",
+              "label": "Owner compensation normalized to market replacement cost",
+              "periodId": "latest_owner_input",
+              "reportedAmount": 18000000,
+              "normalizedAmount": 9000000,
+              "adjustmentAmount": 9000000,
+              "direction": "add_back",
+              "recurrence": "recurring",
+              "confidence": "low",
+              "evidenceLevel": "owner_statement",
+              "affects": "ebitda"
+            },
+            {
+              "id": "private-expenses",
+              "category": "personal_expense",
+              "label": "Personal or private expenses through the business",
+              "periodId": "latest_owner_input",
+              "reportedAmount": 1800000,
+              "adjustmentAmount": 1800000,
+              "direction": "add_back",
+              "recurrence": "recurring",
+              "confidence": "low",
+              "evidenceLevel": "owner_statement",
+              "affects": "ebitda"
+            }
+          ]
+        },
+        "bridge": {
+          "cashAndEquivalents": 15000000,
+          "interestBearingDebt": 25000000,
+          "shareholderLoans": 5000000
+        },
+        "readiness": {
+          "recordsQuality": "organize_fast",
+          "managementDepth": "trusted_manager",
+          "ownerAbsence2Weeks": "minor_issues",
+          "ownerAbsence3Months": "risky_but_possible",
+          "processDocumentation": "partly_documented",
+          "replacementDifficulty": "possible"
+        },
+        "evidence": {
+          "benchmarkCoverage": {
+            "publicCompsAvailable": false,
+            "transactionCompsAvailable": true,
+            "compensationBenchmarkAvailable": false,
+            "rentBenchmarkAvailable": false,
+            "workingCapitalBenchmarkAvailable": false
+          }
+        },
+        "controls": {}
+      },
+      "expectations": {
+        "policyGroupId": "PG_ASSET_HEAVY_MANUFACTURING",
+        "primaryMethod": "market_multiple",
+        "minConfidenceScore": 45,
+        "minReadinessScore": 60
+      }
+    },
+    {
+      "id": "owner-retail-one-year",
+      "label": "Retail owner case with one year of history",
+      "description": "Single-year retail chain case to verify one-year acceptance and wider-confidence behavior.",
+      "request": {
+        "meta": {
+          "requestId": "fixture-owner-retail-one-year",
+          "mode": "owner",
+          "engineVersion": "fixture-v1",
+          "submittedAt": "2026-03-07T12:00:00.000Z",
+          "currency": "NGN",
+          "locale": "en-NG",
+          "source": "api",
+          "acknowledged": true,
+          "newsletterOptIn": false
+        },
+        "engagement": {
+          "purpose": "internal_planning",
+          "urgency": "orderly",
+          "targetTransaction": "full_sale",
+          "standardOfValue": "fair_market_value",
+          "premiseOfValue": "going_concern",
+          "valuationDate": "2026-03-07"
+        },
+        "company": {
+          "businessName": "Oakline Retail",
+          "firstName": "Tola",
+          "email": "tola@example.com",
+          "whatsapp": "08098765432",
+          "legalStructure": "limited_company",
+          "ownerControlBand": "gt_75",
+          "operatingYearsBand": "3_5",
+          "primaryState": "abuja_fct",
+          "businessSummary": "Retail chain selling household and convenience goods."
+        },
+        "classification": {
+          "level1": "trade",
+          "level2": "retail_chain",
+          "industryFit": "mostly_fit",
+          "policyGroupId": "PG_RETAIL_COMMERCE"
+        },
+        "operatingProfile": {
+          "catchmentArea": "single_state",
+          "marketDemand": "flat",
+          "growthOutlook": "stable",
+          "differentiation": "reliability",
+          "pricingPower": "none",
+          "customerConcentration": "none_material",
+          "bestCustomerRisk": "minor",
+          "founderRevenueDependence": "very_little",
+          "recurringRevenueShare": "some",
+          "revenueVisibility": "good_repeat",
+          "supplierTransferability": "very_easy",
+          "hiringDifficulty": "feasible",
+          "fxExposure": "low",
+          "assetSeparation": "mostly",
+          "inventoryProfile": "30_90",
+          "workingCapitalHealth": "tight"
+        },
+        "financials": {
+          "historicals": [
+            {
+              "periodId": "latest_owner_input",
+              "label": "Latest annual owner input",
+              "months": 12,
+              "revenue": 178000000,
+              "operatingProfit": 22000000,
+              "receivables": 4000000,
+              "inventory": 26000000,
+              "payables": 13500000,
+              "maintenanceCapex": 2500000,
+              "cashBalance": 9000000,
+              "financialDebt": 12000000,
+              "sourceType": "owner_estimate",
+              "isRepresentative": true
+            }
+          ],
+          "selectedRepresentativePeriodId": "latest_owner_input",
+          "sourceQuality": {
+            "yearsAvailable": 1,
+            "bookkeepingQuality": "spreadsheet",
+            "bankingQuality": "mostly_clean",
+            "traceablePaymentsShare": "80_100",
+            "proofReadiness": "show_patterns"
+          }
+        },
+        "normalization": {
+          "earningsBaseType": "ebit",
+          "selectedBasePeriodId": "latest_owner_input",
+          "schedule": [
+            {
+              "id": "private-expenses",
+              "category": "personal_expense",
+              "label": "Owner personal expenses through the business",
+              "periodId": "latest_owner_input",
+              "reportedAmount": 950000,
+              "adjustmentAmount": 950000,
+              "direction": "add_back",
+              "recurrence": "partly_recurring",
+              "confidence": "medium",
+              "evidenceLevel": "owner_statement",
+              "affects": "ebitda"
+            }
+          ]
+        },
+        "bridge": {
+          "cashAndEquivalents": 9000000,
+          "interestBearingDebt": 12000000,
+          "shareholderLoans": 0
+        },
+        "readiness": {
+          "recordsQuality": "show_patterns",
+          "managementDepth": "founder_plus_support",
+          "ownerAbsence2Weeks": "minor_issues",
+          "ownerAbsence3Months": "risky_but_possible",
+          "processDocumentation": "partly_documented",
+          "replacementDifficulty": "possible"
+        },
+        "evidence": {
+          "benchmarkCoverage": {
+            "publicCompsAvailable": false,
+            "transactionCompsAvailable": true,
+            "workingCapitalBenchmarkAvailable": false
+          }
+        },
+        "controls": {}
+      },
+      "expectations": {
+        "policyGroupId": "PG_RETAIL_COMMERCE",
+        "primaryMethod": "market_multiple",
+        "maxConfidenceScore": 72,
+        "minReadinessScore": 50
+      }
+    },
+    {
+      "id": "owner-professional-two-year",
+      "label": "Professional services owner-led case",
+      "description": "Accounting and bookkeeping practice to test owner-led professional-service policy logic.",
+      "request": {
+        "meta": {
+          "requestId": "fixture-owner-professional-two-year",
+          "mode": "owner",
+          "engineVersion": "fixture-v1",
+          "submittedAt": "2026-03-07T12:00:00.000Z",
+          "currency": "NGN",
+          "locale": "en-NG",
+          "source": "api",
+          "acknowledged": true,
+          "newsletterOptIn": false
+        },
+        "engagement": {
+          "purpose": "sale",
+          "urgency": "orderly",
+          "targetTransaction": "partial_sale",
+          "standardOfValue": "fair_market_value",
+          "premiseOfValue": "going_concern",
+          "valuationDate": "2026-03-07"
+        },
+        "company": {
+          "businessName": "Harbour Ledger Advisory",
+          "firstName": "Chika",
+          "email": "chika@example.com",
+          "whatsapp": "08123456789",
+          "legalStructure": "limited_company",
+          "ownerControlBand": "51_75",
+          "operatingYearsBand": "5_10",
+          "primaryState": "lagos_island",
+          "businessSummary": "Accounting, bookkeeping, and outsourced finance support for SMEs."
+        },
+        "classification": {
+          "level1": "professional",
+          "level2": "accounting_bookkeeping",
+          "industryFit": "perfect_fit",
+          "policyGroupId": "PG_PROFESSIONAL_OWNER_LED"
+        },
+        "operatingProfile": {
+          "catchmentArea": "multi_state",
+          "marketDemand": "steady_growth",
+          "growthOutlook": "moderate_growth",
+          "differentiation": "hard_to_copy",
+          "pricingPower": "some",
+          "customerConcentration": "manageable",
+          "bestCustomerRisk": "noticeable",
+          "founderRevenueDependence": "large_share",
+          "recurringRevenueShare": "large_share",
+          "revenueVisibility": "contract_backed",
+          "supplierTransferability": "very_easy",
+          "hiringDifficulty": "difficult",
+          "fxExposure": "low",
+          "assetSeparation": "clear",
+          "workingCapitalHealth": "healthy"
+        },
+        "financials": {
+          "historicals": [
+            {
+              "periodId": "latest_owner_input",
+              "label": "Latest annual owner input",
+              "months": 12,
+              "revenue": 92000000,
+              "operatingProfit": 29000000,
+              "receivables": 12500000,
+              "inventory": 0,
+              "payables": 3500000,
+              "maintenanceCapex": 800000,
+              "cashBalance": 11000000,
+              "financialDebt": 3500000,
+              "sourceType": "owner_estimate",
+              "isRepresentative": true
+            },
+            {
+              "periodId": "prior_year_1",
+              "label": "Previous financial year",
+              "months": 12,
+              "revenue": 78000000,
+              "operatingProfit": 24000000,
+              "sourceType": "owner_estimate"
+            }
+          ],
+          "selectedRepresentativePeriodId": "latest_owner_input",
+          "sourceQuality": {
+            "yearsAvailable": 2,
+            "bookkeepingQuality": "software",
+            "bankingQuality": "clean",
+            "traceablePaymentsShare": "80_100",
+            "proofReadiness": "immediate"
+          }
+        },
+        "normalization": {
+          "earningsBaseType": "ebit",
+          "selectedBasePeriodId": "latest_owner_input",
+          "schedule": [
+            {
+              "id": "owner-comp-total",
+              "category": "owner_comp",
+              "label": "Owner total compensation added back for SDE view",
+              "periodId": "latest_owner_input",
+              "reportedAmount": 12000000,
+              "normalizedAmount": 0,
+              "adjustmentAmount": 12000000,
+              "direction": "add_back",
+              "recurrence": "recurring",
+              "confidence": "medium",
+              "evidenceLevel": "management_accounts",
+              "affects": "sde"
+            },
+            {
+              "id": "owner-comp-market-delta",
+              "category": "owner_comp",
+              "label": "Owner compensation normalized to market replacement cost",
+              "periodId": "latest_owner_input",
+              "reportedAmount": 12000000,
+              "normalizedAmount": 7000000,
+              "adjustmentAmount": 5000000,
+              "direction": "add_back",
+              "recurrence": "recurring",
+              "confidence": "medium",
+              "evidenceLevel": "management_accounts",
+              "affects": "ebitda"
+            }
+          ]
+        },
+        "bridge": {
+          "cashAndEquivalents": 11000000,
+          "interestBearingDebt": 3500000,
+          "shareholderLoans": 0
+        },
+        "readiness": {
+          "recordsQuality": "immediate",
+          "managementDepth": "founder_plus_support",
+          "ownerAbsence2Weeks": "minor_issues",
+          "ownerAbsence3Months": "risky_but_possible",
+          "processDocumentation": "partly_documented",
+          "replacementDifficulty": "difficult"
+        },
+        "evidence": {
+          "benchmarkCoverage": {
+            "publicCompsAvailable": false,
+            "transactionCompsAvailable": true,
+            "workingCapitalBenchmarkAvailable": false
+          }
+        },
+        "controls": {}
+      },
+      "expectations": {
+        "policyGroupId": "PG_PROFESSIONAL_OWNER_LED",
+        "primaryMethod": "capitalized_earnings",
+        "minConfidenceScore": 50,
+        "minReadinessScore": 55
+      }
+    }
+  ]
+}

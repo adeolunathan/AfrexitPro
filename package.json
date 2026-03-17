@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "valuation:v2:fixtures": "node scripts/valuation-engine/run-owner-fixtures.mjs",
+    "valuation:v2:fixtures:api": "node scripts/valuation-engine/run-owner-fixtures.mjs --mode api"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

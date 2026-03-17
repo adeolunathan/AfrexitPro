@@ -1,0 +1,3647 @@
+{
+  "benchmarkSets": [
+    {
+      "id": "BMK_OWNER_NG_RECURRING_SOFTWARE_2026Q1",
+      "policyGroupId": "PG_RECURRING_SOFTWARE",
+      "label": "Nigeria SME recurring software owner-mode benchmark set",
+      "mode": "owner",
+      "geography": "Nigeria",
+      "asOfDate": "2026-03-01",
+      "sourceMix": [
+        "curated_secondary",
+        "private_observation"
+      ],
+      "observations": [
+        {
+          "id": "RS-1",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 1,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_500m_revenue",
+          "observedAt": "2025-07-30",
+          "quality": "medium"
+        },
+        {
+          "id": "RS-2",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 1.3,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_500m_revenue",
+          "observedAt": "2025-10-18",
+          "quality": "medium"
+        },
+        {
+          "id": "RS-3",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 1.7,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_500m_revenue",
+          "observedAt": "2025-11-09",
+          "quality": "high"
+        },
+        {
+          "id": "RS-4",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 2.2,
+          "sourceKind": "public_comp",
+          "sizeBand": "sub_500m_revenue",
+          "observedAt": "2026-01-15",
+          "quality": "medium"
+        },
+        {
+          "id": "RS-5",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 2.8,
+          "sourceKind": "public_comp",
+          "sizeBand": "sub_500m_revenue",
+          "observedAt": "2026-02-10",
+          "quality": "medium"
+        },
+        {
+          "id": "RS-6",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.01,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_500m_revenue",
+          "observedAt": "2025-11-09",
+          "quality": "medium"
+        },
+        {
+          "id": "RS-7",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.03,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_500m_revenue",
+          "observedAt": "2026-01-15",
+          "quality": "medium"
+        },
+        {
+          "id": "RS-8",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.04,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_500m_revenue",
+          "observedAt": "2026-02-10",
+          "quality": "medium"
+        },
+        {
+          "id": "RS-9",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.89,
+          "sourceKind": "private_observation",
+          "sizeBand": "sub_500m_revenue",
+          "observedAt": "2025-12-04",
+          "quality": "low"
+        },
+        {
+          "id": "RS-10",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.95,
+          "sourceKind": "private_observation",
+          "sizeBand": "sub_500m_revenue",
+          "observedAt": "2026-02-01",
+          "quality": "medium"
+        }
+      ]
+    },
+    {
+      "id": "BMK_OWNER_NG_ASSET_HEAVY_MANUFACTURING_2026Q1",
+      "policyGroupId": "PG_ASSET_HEAVY_MANUFACTURING",
+      "label": "Nigeria SME asset-heavy manufacturing owner-mode benchmark set",
+      "mode": "owner",
+      "geography": "Nigeria",
+      "asOfDate": "2026-03-01",
+      "sourceMix": [
+        "curated_secondary",
+        "private_observation"
+      ],
+      "observations": [
+        {
+          "id": "AHM-1",
+          "metric": "market_multiple",
+          "basis": "adjustedEbitda",
+          "value": 3,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-06-12",
+          "quality": "medium"
+        },
+        {
+          "id": "AHM-2",
+          "metric": "market_multiple",
+          "basis": "adjustedEbitda",
+          "value": 3.4,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-08-20",
+          "quality": "medium"
+        },
+        {
+          "id": "AHM-3",
+          "metric": "market_multiple",
+          "basis": "adjustedEbitda",
+          "value": 4,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-11-01",
+          "quality": "high"
+        },
+        {
+          "id": "AHM-4",
+          "metric": "market_multiple",
+          "basis": "adjustedEbitda",
+          "value": 4.5,
+          "sourceKind": "public_comp",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2026-01-11",
+          "quality": "medium"
+        },
+        {
+          "id": "AHM-5",
+          "metric": "market_multiple",
+          "basis": "adjustedEbitda",
+          "value": 5.1,
+          "sourceKind": "public_comp",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2026-02-14",
+          "quality": "medium"
+        },
+        {
+          "id": "AHM-6",
+          "metric": "capitalization_rate",
+          "basis": "adjustedEbit",
+          "value": 0.21,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-08-20",
+          "quality": "medium"
+        },
+        {
+          "id": "AHM-7",
+          "metric": "capitalization_rate",
+          "basis": "adjustedEbit",
+          "value": 0.25,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-11-01",
+          "quality": "medium"
+        },
+        {
+          "id": "AHM-8",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.16,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-06-12",
+          "quality": "medium"
+        },
+        {
+          "id": "AHM-9",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.19,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2026-01-11",
+          "quality": "medium"
+        },
+        {
+          "id": "AHM-10",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.86,
+          "sourceKind": "private_observation",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2026-02-14",
+          "quality": "low"
+        }
+      ]
+    },
+    {
+      "id": "BMK_OWNER_NG_TRADING_DISTRIBUTION_2026Q1",
+      "policyGroupId": "PG_TRADING_DISTRIBUTION",
+      "label": "Nigeria SME trading and distribution owner-mode benchmark set",
+      "mode": "owner",
+      "geography": "Nigeria",
+      "asOfDate": "2026-03-01",
+      "sourceMix": [
+        "curated_secondary",
+        "private_observation"
+      ],
+      "observations": [
+        {
+          "id": "TD-1",
+          "metric": "market_multiple",
+          "basis": "adjustedEbit",
+          "value": 2.5,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-05-22",
+          "quality": "medium"
+        },
+        {
+          "id": "TD-2",
+          "metric": "market_multiple",
+          "basis": "adjustedEbit",
+          "value": 2.9,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-07-18",
+          "quality": "medium"
+        },
+        {
+          "id": "TD-3",
+          "metric": "market_multiple",
+          "basis": "adjustedEbit",
+          "value": 3.4,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-10-07",
+          "quality": "high"
+        },
+        {
+          "id": "TD-4",
+          "metric": "market_multiple",
+          "basis": "adjustedEbit",
+          "value": 3.8,
+          "sourceKind": "public_comp",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2026-01-09",
+          "quality": "medium"
+        },
+        {
+          "id": "TD-5",
+          "metric": "market_multiple",
+          "basis": "adjustedEbit",
+          "value": 4.2,
+          "sourceKind": "public_comp",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2026-02-05",
+          "quality": "medium"
+        },
+        {
+          "id": "TD-6",
+          "metric": "capitalization_rate",
+          "basis": "adjustedEbit",
+          "value": 0.24,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-07-18",
+          "quality": "medium"
+        },
+        {
+          "id": "TD-7",
+          "metric": "capitalization_rate",
+          "basis": "adjustedEbit",
+          "value": 0.29,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-10-07",
+          "quality": "medium"
+        },
+        {
+          "id": "TD-8",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.11,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-05-22",
+          "quality": "medium"
+        },
+        {
+          "id": "TD-9",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.14,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2026-01-09",
+          "quality": "medium"
+        },
+        {
+          "id": "TD-10",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.88,
+          "sourceKind": "private_observation",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2026-02-05",
+          "quality": "low"
+        }
+      ]
+    },
+    {
+      "id": "BMK_OWNER_NG_PROFESSIONAL_OWNER_LED_2026Q1",
+      "policyGroupId": "PG_PROFESSIONAL_OWNER_LED",
+      "label": "Nigeria SME owner-led professional services owner-mode benchmark set",
+      "mode": "owner",
+      "geography": "Nigeria",
+      "asOfDate": "2026-03-01",
+      "sourceMix": [
+        "curated_secondary",
+        "private_observation"
+      ],
+      "observations": [
+        {
+          "id": "POL-1",
+          "metric": "market_multiple",
+          "basis": "sde",
+          "value": 2.7,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_300m_revenue",
+          "observedAt": "2025-06-30",
+          "quality": "medium"
+        },
+        {
+          "id": "POL-2",
+          "metric": "market_multiple",
+          "basis": "sde",
+          "value": 3.1,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_300m_revenue",
+          "observedAt": "2025-09-04",
+          "quality": "medium"
+        },
+        {
+          "id": "POL-3",
+          "metric": "market_multiple",
+          "basis": "sde",
+          "value": 3.5,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_300m_revenue",
+          "observedAt": "2025-11-19",
+          "quality": "high"
+        },
+        {
+          "id": "POL-4",
+          "metric": "market_multiple",
+          "basis": "sde",
+          "value": 4,
+          "sourceKind": "public_comp",
+          "sizeBand": "sub_300m_revenue",
+          "observedAt": "2026-01-23",
+          "quality": "medium"
+        },
+        {
+          "id": "POL-5",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.23,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_300m_revenue",
+          "observedAt": "2025-06-30",
+          "quality": "medium"
+        },
+        {
+          "id": "POL-6",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.27,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_300m_revenue",
+          "observedAt": "2025-11-19",
+          "quality": "medium"
+        },
+        {
+          "id": "POL-7",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.03,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_300m_revenue",
+          "observedAt": "2025-09-04",
+          "quality": "medium"
+        },
+        {
+          "id": "POL-8",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.05,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_300m_revenue",
+          "observedAt": "2026-01-23",
+          "quality": "medium"
+        },
+        {
+          "id": "POL-9",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.81,
+          "sourceKind": "private_observation",
+          "sizeBand": "sub_300m_revenue",
+          "observedAt": "2025-12-08",
+          "quality": "low"
+        },
+        {
+          "id": "POL-10",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.89,
+          "sourceKind": "private_observation",
+          "sizeBand": "sub_300m_revenue",
+          "observedAt": "2026-02-18",
+          "quality": "low"
+        }
+      ]
+    },
+    {
+      "id": "BMK_OWNER_NG_LOCAL_SERVICE_OWNER_OP_2026Q1",
+      "policyGroupId": "PG_LOCAL_SERVICE_OWNER_OP",
+      "label": "Nigeria SME local owner-operated services owner-mode benchmark set",
+      "mode": "owner",
+      "geography": "Nigeria",
+      "asOfDate": "2026-03-01",
+      "sourceMix": [
+        "curated_secondary",
+        "private_observation"
+      ],
+      "observations": [
+        {
+          "id": "LS-1",
+          "metric": "market_multiple",
+          "basis": "sde",
+          "value": 2,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_200m_revenue",
+          "observedAt": "2025-05-11",
+          "quality": "medium"
+        },
+        {
+          "id": "LS-2",
+          "metric": "market_multiple",
+          "basis": "sde",
+          "value": 2.4,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_200m_revenue",
+          "observedAt": "2025-08-26",
+          "quality": "medium"
+        },
+        {
+          "id": "LS-3",
+          "metric": "market_multiple",
+          "basis": "sde",
+          "value": 2.8,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_200m_revenue",
+          "observedAt": "2025-10-30",
+          "quality": "high"
+        },
+        {
+          "id": "LS-4",
+          "metric": "market_multiple",
+          "basis": "sde",
+          "value": 3.2,
+          "sourceKind": "private_observation",
+          "sizeBand": "sub_200m_revenue",
+          "observedAt": "2026-01-19",
+          "quality": "medium"
+        },
+        {
+          "id": "LS-5",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.24,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_200m_revenue",
+          "observedAt": "2025-05-11",
+          "quality": "medium"
+        },
+        {
+          "id": "LS-6",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.29,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_200m_revenue",
+          "observedAt": "2025-10-30",
+          "quality": "medium"
+        },
+        {
+          "id": "LS-7",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.03,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_200m_revenue",
+          "observedAt": "2025-08-26",
+          "quality": "medium"
+        },
+        {
+          "id": "LS-8",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.04,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_200m_revenue",
+          "observedAt": "2026-01-19",
+          "quality": "medium"
+        },
+        {
+          "id": "LS-9",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.79,
+          "sourceKind": "private_observation",
+          "sizeBand": "sub_200m_revenue",
+          "observedAt": "2025-12-02",
+          "quality": "low"
+        },
+        {
+          "id": "LS-10",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.87,
+          "sourceKind": "private_observation",
+          "sizeBand": "sub_200m_revenue",
+          "observedAt": "2026-02-16",
+          "quality": "low"
+        }
+      ]
+    },
+    {
+      "id": "BMK_OWNER_NG_AGRI_PRIMARY_2026Q1",
+      "policyGroupId": "PG_AGRI_PRIMARY",
+      "label": "Primary Agriculture and Raw Supply transaction proxy benchmark set",
+      "mode": "owner",
+      "geography": "Sourceable private-market transaction proxy for Nigeria owner mode",
+      "asOfDate": "2026-03-07",
+      "sourceMix": [
+        "curated_transaction_proxy",
+        "curated_secondary"
+      ],
+      "sourceNotes": [
+        "This set is rebuilt from locally curated proxy values. It is not a live scrape of the listed external pages.",
+        "External URLs in this set are manual reference links from the sourcing pass and may become stale.",
+        "Agriculture page reports sold-business revenue and earnings multiple quartiles for the last five years.",
+        "These are still external small-business transaction proxies and should be replaced over time with Nigeria-native Afrexit observations."
+      ],
+      "sourceReferences": [
+        {
+          "id": "agri-bbs",
+          "label": "BizBuySell agriculture benchmark reference link",
+          "url": "https://www.bizbuysell.com/learning-center/valuation-benchmarks/agriculture-businesses/",
+          "sourceType": "reference_link",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "wc-curated",
+          "label": "Afrexit curated owner-mode working capital overlay",
+          "sourceType": "manual_entry",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "marketability-curated",
+          "label": "Afrexit curated owner-mode marketability overlay",
+          "sourceType": "manual_entry",
+          "lastVerifiedAt": "2026-03-07"
+        }
+      ],
+      "observations": [
+        {
+          "id": "agri_primary-market-1",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.42,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "agri-bbs"
+        },
+        {
+          "id": "agri_primary-market-2",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.66,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "agri-bbs"
+        },
+        {
+          "id": "agri_primary-market-3",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.86,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "high",
+          "sourceReferenceId": "agri-bbs"
+        },
+        {
+          "id": "agri_primary-market-4",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 1.17,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "agri-bbs"
+        },
+        {
+          "id": "agri_primary-caprate-1",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.5155,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "agri-bbs"
+        },
+        {
+          "id": "agri_primary-caprate-2",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3676,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "agri-bbs"
+        },
+        {
+          "id": "agri_primary-caprate-3",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3058,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "high",
+          "sourceReferenceId": "agri-bbs"
+        },
+        {
+          "id": "agri_primary-caprate-4",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.2481,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "agri-bbs"
+        },
+        {
+          "id": "agri_primary-working-capital-1",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.108,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "agri_primary-working-capital-2",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.12,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "agri_primary-working-capital-3",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.132,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "agri_primary-marketability-1",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.8,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        },
+        {
+          "id": "agri_primary-marketability-2",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.865,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        },
+        {
+          "id": "agri_primary-marketability-3",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.93,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        }
+      ]
+    },
+    {
+      "id": "BMK_OWNER_NG_AGRO_PROCESSING_2026Q1",
+      "policyGroupId": "PG_AGRO_PROCESSING",
+      "label": "Agro-processing transaction proxy benchmark set",
+      "mode": "owner",
+      "geography": "Sourceable private-market transaction proxy for Nigeria owner mode",
+      "asOfDate": "2026-03-07",
+      "sourceMix": [
+        "curated_transaction_proxy",
+        "curated_secondary"
+      ],
+      "sourceNotes": [
+        "This set is rebuilt from locally curated proxy values. It is not a live scrape of the listed external pages.",
+        "External URLs in this set are manual reference links from the sourcing pass and may become stale.",
+        "Anchored to sold-business averages on the manufacturing benchmarks page, including Food Products and overall Manufacturing.",
+        "Upper bounds remain constrained to the same published manufacturing-page context rather than public-company multiples.",
+        "These are still external small-business transaction proxies and should be replaced over time with Nigeria-native Afrexit observations."
+      ],
+      "sourceReferences": [
+        {
+          "id": "mfg-bbs",
+          "label": "BizBuySell manufacturing benchmark reference link",
+          "url": "https://www.bizbuysell.com/learning-center/valuation-benchmarks/manufacturing-businesses/",
+          "sourceType": "reference_link",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "wc-curated",
+          "label": "Afrexit curated owner-mode working capital overlay",
+          "sourceType": "manual_entry",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "marketability-curated",
+          "label": "Afrexit curated owner-mode marketability overlay",
+          "sourceType": "manual_entry",
+          "lastVerifiedAt": "2026-03-07"
+        }
+      ],
+      "observations": [
+        {
+          "id": "agro_processing-market-1",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.58,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "mfg-bbs"
+        },
+        {
+          "id": "agro_processing-market-2",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.63,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "mfg-bbs"
+        },
+        {
+          "id": "agro_processing-market-3",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.72,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "high",
+          "sourceReferenceId": "mfg-bbs"
+        },
+        {
+          "id": "agro_processing-market-4",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.8,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "mfg-bbs"
+        },
+        {
+          "id": "agro_processing-caprate-1",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.369,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "mfg-bbs"
+        },
+        {
+          "id": "agro_processing-caprate-2",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3497,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "mfg-bbs"
+        },
+        {
+          "id": "agro_processing-caprate-3",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3257,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "high",
+          "sourceReferenceId": "mfg-bbs"
+        },
+        {
+          "id": "agro_processing-caprate-4",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.2941,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "mfg-bbs"
+        },
+        {
+          "id": "agro_processing-working-capital-1",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.144,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "agro_processing-working-capital-2",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.16,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "agro_processing-working-capital-3",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.176,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "agro_processing-marketability-1",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.81,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        },
+        {
+          "id": "agro_processing-marketability-2",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.875,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        },
+        {
+          "id": "agro_processing-marketability-3",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.94,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        }
+      ]
+    },
+    {
+      "id": "BMK_OWNER_NG_CONTRACT_MANUFACTURING_2026Q1",
+      "policyGroupId": "PG_CONTRACT_MANUFACTURING",
+      "label": "Contract Manufacturing transaction proxy benchmark set",
+      "mode": "owner",
+      "geography": "Sourceable private-market transaction proxy for Nigeria owner mode",
+      "asOfDate": "2026-03-07",
+      "sourceMix": [
+        "curated_transaction_proxy",
+        "curated_secondary"
+      ],
+      "sourceNotes": [
+        "This set is rebuilt from locally curated proxy values. It is not a live scrape of the listed external pages.",
+        "External URLs in this set are manual reference links from the sourcing pass and may become stale.",
+        "Derived from sold-business Manufacturing, Industrial Machinery, and other manufacturing comparison rows on the BizBuySell benchmarks page.",
+        "These are still external small-business transaction proxies and should be replaced over time with Nigeria-native Afrexit observations."
+      ],
+      "sourceReferences": [
+        {
+          "id": "mfg-bbs",
+          "label": "BizBuySell manufacturing benchmark reference link",
+          "url": "https://www.bizbuysell.com/learning-center/valuation-benchmarks/manufacturing-businesses/",
+          "sourceType": "reference_link",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "wc-curated",
+          "label": "Afrexit curated owner-mode working capital overlay",
+          "sourceType": "manual_entry",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "marketability-curated",
+          "label": "Afrexit curated owner-mode marketability overlay",
+          "sourceType": "manual_entry",
+          "lastVerifiedAt": "2026-03-07"
+        }
+      ],
+      "observations": [
+        {
+          "id": "contract_manufacturing-market-1",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.56,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "mfg-bbs"
+        },
+        {
+          "id": "contract_manufacturing-market-2",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.72,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "mfg-bbs"
+        },
+        {
+          "id": "contract_manufacturing-market-3",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.8,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "mfg-bbs"
+        },
+        {
+          "id": "contract_manufacturing-market-4",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.92,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "mfg-bbs"
+        },
+        {
+          "id": "contract_manufacturing-caprate-1",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3571,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "mfg-bbs"
+        },
+        {
+          "id": "contract_manufacturing-caprate-2",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3257,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "mfg-bbs"
+        },
+        {
+          "id": "contract_manufacturing-caprate-3",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.2941,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "mfg-bbs"
+        },
+        {
+          "id": "contract_manufacturing-caprate-4",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.2381,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "mfg-bbs"
+        },
+        {
+          "id": "contract_manufacturing-working-capital-1",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.135,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "contract_manufacturing-working-capital-2",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.15,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "contract_manufacturing-working-capital-3",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.165,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "contract_manufacturing-marketability-1",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.83,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        },
+        {
+          "id": "contract_manufacturing-marketability-2",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.89,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        },
+        {
+          "id": "contract_manufacturing-marketability-3",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.95,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        }
+      ]
+    },
+    {
+      "id": "BMK_OWNER_NG_PROJECT_CONTRACTING_2026Q1",
+      "policyGroupId": "PG_PROJECT_CONTRACTING",
+      "label": "Project Contracting and Engineering transaction proxy benchmark set",
+      "mode": "owner",
+      "geography": "Sourceable private-market transaction proxy for Nigeria owner mode",
+      "asOfDate": "2026-03-07",
+      "sourceMix": [
+        "curated_transaction_proxy",
+        "curated_secondary"
+      ],
+      "sourceNotes": [
+        "This set is rebuilt from locally curated proxy values. It is not a live scrape of the listed external pages.",
+        "External URLs in this set are manual reference links from the sourcing pass and may become stale.",
+        "Architecture and engineering sold-business benchmarks provide explicit revenue and earnings quartiles usable as owner-mode project contracting proxies.",
+        "These are still external small-business transaction proxies and should be replaced over time with Nigeria-native Afrexit observations."
+      ],
+      "sourceReferences": [
+        {
+          "id": "arch-bbs",
+          "label": "BizBuySell architecture and engineering benchmark reference link",
+          "url": "https://www.bizbuysell.com/learning-center/valuation-benchmarks/architecture-and-engineering-businesses/",
+          "sourceType": "reference_link",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "tables-bbs",
+          "label": "BizBuySell insight report data tables reference link",
+          "url": "https://www.bizbuysell.com/insight-report-data-tables/",
+          "sourceType": "reference_link",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "wc-curated",
+          "label": "Afrexit curated owner-mode working capital overlay",
+          "sourceType": "manual_entry",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "marketability-curated",
+          "label": "Afrexit curated owner-mode marketability overlay",
+          "sourceType": "manual_entry",
+          "lastVerifiedAt": "2026-03-07"
+        }
+      ],
+      "observations": [
+        {
+          "id": "project_contracting-market-1",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.47,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "arch-bbs"
+        },
+        {
+          "id": "project_contracting-market-2",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.66,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "arch-bbs"
+        },
+        {
+          "id": "project_contracting-market-3",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.74,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "high",
+          "sourceReferenceId": "arch-bbs"
+        },
+        {
+          "id": "project_contracting-market-4",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.9,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "arch-bbs"
+        },
+        {
+          "id": "project_contracting-caprate-1",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.5464,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "tables-bbs"
+        },
+        {
+          "id": "project_contracting-caprate-2",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.4032,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "tables-bbs"
+        },
+        {
+          "id": "project_contracting-caprate-3",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3861,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "high",
+          "sourceReferenceId": "tables-bbs"
+        },
+        {
+          "id": "project_contracting-caprate-4",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3175,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "tables-bbs"
+        },
+        {
+          "id": "project_contracting-working-capital-1",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.054,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "project_contracting-working-capital-2",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.06,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "project_contracting-working-capital-3",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.066,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "project_contracting-marketability-1",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.8,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        },
+        {
+          "id": "project_contracting-marketability-2",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.87,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        },
+        {
+          "id": "project_contracting-marketability-3",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.94,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        }
+      ]
+    },
+    {
+      "id": "BMK_OWNER_NG_RETAIL_COMMERCE_2026Q1",
+      "policyGroupId": "PG_RETAIL_COMMERCE",
+      "label": "Retail and Commerce transaction proxy benchmark set",
+      "mode": "owner",
+      "geography": "Sourceable private-market transaction proxy for Nigeria owner mode",
+      "asOfDate": "2026-03-07",
+      "sourceMix": [
+        "curated_transaction_proxy",
+        "curated_secondary"
+      ],
+      "sourceNotes": [
+        "This set is rebuilt from locally curated proxy values. It is not a live scrape of the listed external pages.",
+        "External URLs in this set are manual reference links from the sourcing pass and may become stale.",
+        "Retail page reports sold-business revenue and earnings quartiles for the last five years.",
+        "These are still external small-business transaction proxies and should be replaced over time with Nigeria-native Afrexit observations."
+      ],
+      "sourceReferences": [
+        {
+          "id": "retail-bbs",
+          "label": "BizBuySell retail benchmark reference link",
+          "url": "https://www.bizbuysell.com/learning-center/valuation-benchmarks/retail-businesses/",
+          "sourceType": "reference_link",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "wc-curated",
+          "label": "Afrexit curated owner-mode working capital overlay",
+          "sourceType": "manual_entry",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "marketability-curated",
+          "label": "Afrexit curated owner-mode marketability overlay",
+          "sourceType": "manual_entry",
+          "lastVerifiedAt": "2026-03-07"
+        }
+      ],
+      "observations": [
+        {
+          "id": "retail_commerce-market-1",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.29,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "retail-bbs"
+        },
+        {
+          "id": "retail_commerce-market-2",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.43,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "retail-bbs"
+        },
+        {
+          "id": "retail_commerce-market-3",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.53,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "high",
+          "sourceReferenceId": "retail-bbs"
+        },
+        {
+          "id": "retail_commerce-market-4",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.67,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "retail-bbs"
+        },
+        {
+          "id": "retail_commerce-caprate-1",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.6173,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "retail-bbs"
+        },
+        {
+          "id": "retail_commerce-caprate-2",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.4425,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "retail-bbs"
+        },
+        {
+          "id": "retail_commerce-caprate-3",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3817,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "high",
+          "sourceReferenceId": "retail-bbs"
+        },
+        {
+          "id": "retail_commerce-caprate-4",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3247,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "retail-bbs"
+        },
+        {
+          "id": "retail_commerce-working-capital-1",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.081,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "retail_commerce-working-capital-2",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.09,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "retail_commerce-working-capital-3",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.099,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "retail_commerce-marketability-1",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.79,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        },
+        {
+          "id": "retail_commerce-marketability-2",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.855,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        },
+        {
+          "id": "retail_commerce-marketability-3",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.92,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        }
+      ]
+    },
+    {
+      "id": "BMK_OWNER_NG_PROJECT_SOFTWARE_IT_2026Q1",
+      "policyGroupId": "PG_PROJECT_SOFTWARE_IT",
+      "label": "Project Software, IT Services, and Support transaction proxy benchmark set",
+      "mode": "owner",
+      "geography": "Sourceable private-market transaction proxy for Nigeria owner mode",
+      "asOfDate": "2026-03-07",
+      "sourceMix": [
+        "curated_transaction_proxy",
+        "curated_secondary"
+      ],
+      "sourceNotes": [
+        "This set is rebuilt from locally curated proxy values. It is not a live scrape of the listed external pages.",
+        "External URLs in this set are manual reference links from the sourcing pass and may become stale.",
+        "Technology pack blends sold-business averages for IT/software services, all technology, graphic/web design, and websites/e-commerce.",
+        "This is still a proxy for Nigeria owner mode and should be replaced over time with Nigeria-native service tech observations.",
+        "These are still external small-business transaction proxies and should be replaced over time with Nigeria-native Afrexit observations."
+      ],
+      "sourceReferences": [
+        {
+          "id": "tech-bbs",
+          "label": "BizBuySell technology benchmark reference link",
+          "url": "https://www.bizbuysell.com/learning-center/valuation-benchmarks/technology-businesses/",
+          "sourceType": "reference_link",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "wc-curated",
+          "label": "Afrexit curated owner-mode working capital overlay",
+          "sourceType": "manual_entry",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "marketability-curated",
+          "label": "Afrexit curated owner-mode marketability overlay",
+          "sourceType": "manual_entry",
+          "lastVerifiedAt": "2026-03-07"
+        }
+      ],
+      "observations": [
+        {
+          "id": "project_software_it-market-1",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.98,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "tech-bbs"
+        },
+        {
+          "id": "project_software_it-market-2",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 1.07,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "tech-bbs"
+        },
+        {
+          "id": "project_software_it-market-3",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 1.1,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "tech-bbs"
+        },
+        {
+          "id": "project_software_it-market-4",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 1.66,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "tech-bbs"
+        },
+        {
+          "id": "project_software_it-caprate-1",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3759,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "tech-bbs"
+        },
+        {
+          "id": "project_software_it-caprate-2",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3333,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "tech-bbs"
+        },
+        {
+          "id": "project_software_it-caprate-3",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3145,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "tech-bbs"
+        },
+        {
+          "id": "project_software_it-caprate-4",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3021,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "tech-bbs"
+        },
+        {
+          "id": "project_software_it-working-capital-1",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.045,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "project_software_it-working-capital-2",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.05,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "project_software_it-working-capital-3",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.055,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "project_software_it-marketability-1",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.84,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        },
+        {
+          "id": "project_software_it-marketability-2",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.905,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        },
+        {
+          "id": "project_software_it-marketability-3",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.97,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        }
+      ]
+    },
+    {
+      "id": "BMK_OWNER_NG_LOGISTICS_ASSET_2026Q1",
+      "policyGroupId": "PG_LOGISTICS_ASSET",
+      "label": "Logistics and Asset-backed Mobility transaction proxy benchmark set",
+      "mode": "owner",
+      "geography": "Sourceable private-market transaction proxy for Nigeria owner mode",
+      "asOfDate": "2026-03-07",
+      "sourceMix": [
+        "curated_transaction_proxy",
+        "curated_secondary"
+      ],
+      "sourceNotes": [
+        "This set is rebuilt from locally curated proxy values. It is not a live scrape of the listed external pages.",
+        "External URLs in this set are manual reference links from the sourcing pass and may become stale.",
+        "Transport pack is anchored to trucking-company sold-business benchmarks from BizBuySell insight tables, with the midpoint expanded conservatively for broader owner-mode logistics use.",
+        "These are still external small-business transaction proxies and should be replaced over time with Nigeria-native Afrexit observations."
+      ],
+      "sourceReferences": [
+        {
+          "id": "tables-bbs",
+          "label": "BizBuySell insight report data tables reference link",
+          "url": "https://www.bizbuysell.com/insight-report-data-tables/",
+          "sourceType": "reference_link",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "wc-curated",
+          "label": "Afrexit curated owner-mode working capital overlay",
+          "sourceType": "manual_entry",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "marketability-curated",
+          "label": "Afrexit curated owner-mode marketability overlay",
+          "sourceType": "manual_entry",
+          "lastVerifiedAt": "2026-03-07"
+        }
+      ],
+      "observations": [
+        {
+          "id": "logistics_asset-market-1",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.71,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "tables-bbs"
+        },
+        {
+          "id": "logistics_asset-market-2",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.8,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "tables-bbs"
+        },
+        {
+          "id": "logistics_asset-market-3",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.9,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "tables-bbs"
+        },
+        {
+          "id": "logistics_asset-market-4",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.98,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "tables-bbs"
+        },
+        {
+          "id": "logistics_asset-caprate-1",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3891,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "tables-bbs"
+        },
+        {
+          "id": "logistics_asset-caprate-2",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3125,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "tables-bbs"
+        },
+        {
+          "id": "logistics_asset-caprate-3",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.2611,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "tables-bbs"
+        },
+        {
+          "id": "logistics_asset-caprate-4",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.2439,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "tables-bbs"
+        },
+        {
+          "id": "logistics_asset-working-capital-1",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.072,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "logistics_asset-working-capital-2",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.08,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "logistics_asset-working-capital-3",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.088,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "logistics_asset-marketability-1",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.8,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        },
+        {
+          "id": "logistics_asset-marketability-2",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.865,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        },
+        {
+          "id": "logistics_asset-marketability-3",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.93,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        }
+      ]
+    },
+    {
+      "id": "BMK_OWNER_NG_HOSPITALITY_VENUE_2026Q1",
+      "policyGroupId": "PG_HOSPITALITY_VENUE",
+      "label": "Hospitality, Travel, and Leisure Venues transaction proxy benchmark set",
+      "mode": "owner",
+      "geography": "Sourceable private-market transaction proxy for Nigeria owner mode",
+      "asOfDate": "2026-03-07",
+      "sourceMix": [
+        "curated_transaction_proxy",
+        "curated_secondary"
+      ],
+      "sourceNotes": [
+        "This set is rebuilt from locally curated proxy values. It is not a live scrape of the listed external pages.",
+        "External URLs in this set are manual reference links from the sourcing pass and may become stale.",
+        "Hospitality owner mode blends restaurant and catering sold-business benchmarks from BizBuySell.",
+        "These are still external small-business transaction proxies and should be replaced over time with Nigeria-native Afrexit observations."
+      ],
+      "sourceReferences": [
+        {
+          "id": "restaurant-bbs",
+          "label": "BizBuySell restaurant benchmark reference link",
+          "url": "https://www.bizbuysell.com/learning-center/valuation-benchmarks/restaurant-businesses/",
+          "sourceType": "reference_link",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "catering-bbs",
+          "label": "BizBuySell catering benchmark reference link",
+          "url": "https://www.bizbuysell.com/learning-center/valuation-benchmarks/catering-businesses/",
+          "sourceType": "reference_link",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "wc-curated",
+          "label": "Afrexit curated owner-mode working capital overlay",
+          "sourceType": "manual_entry",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "marketability-curated",
+          "label": "Afrexit curated owner-mode marketability overlay",
+          "sourceType": "manual_entry",
+          "lastVerifiedAt": "2026-03-07"
+        }
+      ],
+      "observations": [
+        {
+          "id": "hospitality_venue-market-1",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.23,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "restaurant-bbs"
+        },
+        {
+          "id": "hospitality_venue-market-2",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.33,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "restaurant-bbs"
+        },
+        {
+          "id": "hospitality_venue-market-3",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.44,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "restaurant-bbs"
+        },
+        {
+          "id": "hospitality_venue-market-4",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.55,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "restaurant-bbs"
+        },
+        {
+          "id": "hospitality_venue-caprate-1",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.7463,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "catering-bbs"
+        },
+        {
+          "id": "hospitality_venue-caprate-2",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.5405,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "catering-bbs"
+        },
+        {
+          "id": "hospitality_venue-caprate-3",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.5,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "catering-bbs"
+        },
+        {
+          "id": "hospitality_venue-caprate-4",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3953,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "catering-bbs"
+        },
+        {
+          "id": "hospitality_venue-working-capital-1",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.045,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "hospitality_venue-working-capital-2",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.05,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "hospitality_venue-working-capital-3",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.055,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "hospitality_venue-marketability-1",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.78,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        },
+        {
+          "id": "hospitality_venue-marketability-2",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.85,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        },
+        {
+          "id": "hospitality_venue-marketability-3",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.92,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        }
+      ]
+    },
+    {
+      "id": "BMK_OWNER_NG_HEALTHCARE_SERVICE_2026Q1",
+      "policyGroupId": "PG_HEALTHCARE_SERVICE",
+      "label": "Healthcare Services transaction proxy benchmark set",
+      "mode": "owner",
+      "geography": "Sourceable private-market transaction proxy for Nigeria owner mode",
+      "asOfDate": "2026-03-07",
+      "sourceMix": [
+        "curated_transaction_proxy",
+        "curated_secondary"
+      ],
+      "sourceNotes": [
+        "This set is rebuilt from locally curated proxy values. It is not a live scrape of the listed external pages.",
+        "External URLs in this set are manual reference links from the sourcing pass and may become stale.",
+        "Healthcare pack blends all-healthcare, home-health, dental, and medical-billing sold-business comparisons to avoid pure public-comp anchoring.",
+        "These are still external small-business transaction proxies and should be replaced over time with Nigeria-native Afrexit observations."
+      ],
+      "sourceReferences": [
+        {
+          "id": "health-bbs",
+          "label": "BizBuySell healthcare benchmark reference link",
+          "url": "https://www.bizbuysell.com/learning-center/valuation-benchmarks/healthcare-businesses/",
+          "sourceType": "reference_link",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "medical-billing-bbs",
+          "label": "BizBuySell medical billing benchmark reference link",
+          "url": "https://www.bizbuysell.com/learning-center/valuation-benchmarks/medical-billing-businesses/",
+          "sourceType": "reference_link",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "wc-curated",
+          "label": "Afrexit curated owner-mode working capital overlay",
+          "sourceType": "manual_entry",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "marketability-curated",
+          "label": "Afrexit curated owner-mode marketability overlay",
+          "sourceType": "manual_entry",
+          "lastVerifiedAt": "2026-03-07"
+        }
+      ],
+      "observations": [
+        {
+          "id": "healthcare_service-market-1",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.69,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "health-bbs"
+        },
+        {
+          "id": "healthcare_service-market-2",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.79,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "health-bbs"
+        },
+        {
+          "id": "healthcare_service-market-3",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 1.06,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "health-bbs"
+        },
+        {
+          "id": "healthcare_service-market-4",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 1.24,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "health-bbs"
+        },
+        {
+          "id": "healthcare_service-caprate-1",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3745,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "medical-billing-bbs"
+        },
+        {
+          "id": "healthcare_service-caprate-2",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.369,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "medical-billing-bbs"
+        },
+        {
+          "id": "healthcare_service-caprate-3",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.2755,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "medical-billing-bbs"
+        },
+        {
+          "id": "healthcare_service-caprate-4",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.2083,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "medical-billing-bbs"
+        },
+        {
+          "id": "healthcare_service-working-capital-1",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.063,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "healthcare_service-working-capital-2",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.07,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "healthcare_service-working-capital-3",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.077,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "healthcare_service-marketability-1",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.84,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        },
+        {
+          "id": "healthcare_service-marketability-2",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.9,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        },
+        {
+          "id": "healthcare_service-marketability-3",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.96,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        }
+      ]
+    },
+    {
+      "id": "BMK_OWNER_NG_HEALTHCARE_DISTRIBUTION_2026Q1",
+      "policyGroupId": "PG_HEALTHCARE_DISTRIBUTION",
+      "label": "Healthcare Distribution and Retail transaction proxy benchmark set",
+      "mode": "owner",
+      "geography": "Sourceable private-market transaction proxy for Nigeria owner mode",
+      "asOfDate": "2026-03-07",
+      "sourceMix": [
+        "curated_transaction_proxy",
+        "curated_secondary"
+      ],
+      "sourceNotes": [
+        "This set is rebuilt from locally curated proxy values. It is not a live scrape of the listed external pages.",
+        "External URLs in this set are manual reference links from the sourcing pass and may become stale.",
+        "Healthcare distribution uses pharmacy/retail and healthcare sold-business comparisons as the closest sourceable owner-mode proxy.",
+        "These are still external small-business transaction proxies and should be replaced over time with Nigeria-native Afrexit observations."
+      ],
+      "sourceReferences": [
+        {
+          "id": "retail-bbs",
+          "label": "BizBuySell retail benchmark reference link",
+          "url": "https://www.bizbuysell.com/learning-center/valuation-benchmarks/retail-businesses/",
+          "sourceType": "reference_link",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "health-bbs",
+          "label": "BizBuySell healthcare benchmark reference link",
+          "url": "https://www.bizbuysell.com/learning-center/valuation-benchmarks/healthcare-businesses/",
+          "sourceType": "reference_link",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "wc-curated",
+          "label": "Afrexit curated owner-mode working capital overlay",
+          "sourceType": "manual_entry",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "marketability-curated",
+          "label": "Afrexit curated owner-mode marketability overlay",
+          "sourceType": "manual_entry",
+          "lastVerifiedAt": "2026-03-07"
+        }
+      ],
+      "observations": [
+        {
+          "id": "healthcare_distribution-market-1",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.42,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "retail-bbs"
+        },
+        {
+          "id": "healthcare_distribution-market-2",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.53,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "retail-bbs"
+        },
+        {
+          "id": "healthcare_distribution-market-3",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.69,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "retail-bbs"
+        },
+        {
+          "id": "healthcare_distribution-market-4",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.79,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "retail-bbs"
+        },
+        {
+          "id": "healthcare_distribution-caprate-1",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.4425,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "health-bbs"
+        },
+        {
+          "id": "healthcare_distribution-caprate-2",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3745,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "health-bbs"
+        },
+        {
+          "id": "healthcare_distribution-caprate-3",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3584,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "health-bbs"
+        },
+        {
+          "id": "healthcare_distribution-caprate-4",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3226,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "health-bbs"
+        },
+        {
+          "id": "healthcare_distribution-working-capital-1",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.126,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "healthcare_distribution-working-capital-2",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.14,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "healthcare_distribution-working-capital-3",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.154,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "healthcare_distribution-marketability-1",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.82,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        },
+        {
+          "id": "healthcare_distribution-marketability-2",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.88,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        },
+        {
+          "id": "healthcare_distribution-marketability-3",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.94,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        }
+      ]
+    },
+    {
+      "id": "BMK_OWNER_NG_EDUCATION_ENROLLMENT_2026Q1",
+      "policyGroupId": "PG_EDUCATION_ENROLLMENT",
+      "label": "Enrollment-based Education transaction proxy benchmark set",
+      "mode": "owner",
+      "geography": "Sourceable private-market transaction proxy for Nigeria owner mode",
+      "asOfDate": "2026-03-07",
+      "sourceMix": [
+        "curated_transaction_proxy",
+        "curated_secondary"
+      ],
+      "sourceNotes": [
+        "This set is rebuilt from locally curated proxy values. It is not a live scrape of the listed external pages.",
+        "External URLs in this set are manual reference links from the sourcing pass and may become stale.",
+        "Service-business sold benchmarks are being used as a proxy where a narrower sold-business page was not sourceable during this refresh.",
+        "These are still external small-business transaction proxies and should be replaced over time with Nigeria-native Afrexit observations."
+      ],
+      "sourceReferences": [
+        {
+          "id": "service-bbs",
+          "label": "BizBuySell service benchmark reference link",
+          "url": "https://www.bizbuysell.com/learning-center/valuation-benchmarks/service-businesses/",
+          "sourceType": "reference_link",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "wc-curated",
+          "label": "Afrexit curated owner-mode working capital overlay",
+          "sourceType": "manual_entry",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "marketability-curated",
+          "label": "Afrexit curated owner-mode marketability overlay",
+          "sourceType": "manual_entry",
+          "lastVerifiedAt": "2026-03-07"
+        }
+      ],
+      "observations": [
+        {
+          "id": "education_enrollment-market-1",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.48,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "service-bbs"
+        },
+        {
+          "id": "education_enrollment-market-2",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.71,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "service-bbs"
+        },
+        {
+          "id": "education_enrollment-market-3",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.82,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "high",
+          "sourceReferenceId": "service-bbs"
+        },
+        {
+          "id": "education_enrollment-market-4",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 1.04,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "service-bbs"
+        },
+        {
+          "id": "education_enrollment-caprate-1",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.5714,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "service-bbs"
+        },
+        {
+          "id": "education_enrollment-caprate-2",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.4202,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "service-bbs"
+        },
+        {
+          "id": "education_enrollment-caprate-3",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3876,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "high",
+          "sourceReferenceId": "service-bbs"
+        },
+        {
+          "id": "education_enrollment-caprate-4",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3195,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "service-bbs"
+        },
+        {
+          "id": "education_enrollment-working-capital-1",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.045,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "education_enrollment-working-capital-2",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.05,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "education_enrollment-working-capital-3",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.055,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "education_enrollment-marketability-1",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.83,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        },
+        {
+          "id": "education_enrollment-marketability-2",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.89,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        },
+        {
+          "id": "education_enrollment-marketability-3",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.95,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        }
+      ]
+    },
+    {
+      "id": "BMK_OWNER_NG_PROFESSIONAL_PLATFORM_2026Q1",
+      "policyGroupId": "PG_PROFESSIONAL_PLATFORM",
+      "label": "Platform-style Professional Services transaction proxy benchmark set",
+      "mode": "owner",
+      "geography": "Sourceable private-market transaction proxy for Nigeria owner mode",
+      "asOfDate": "2026-03-07",
+      "sourceMix": [
+        "curated_transaction_proxy",
+        "curated_secondary"
+      ],
+      "sourceNotes": [
+        "This set is rebuilt from locally curated proxy values. It is not a live scrape of the listed external pages.",
+        "External URLs in this set are manual reference links from the sourcing pass and may become stale.",
+        "Professional platform businesses are anchored to sold financial/accounting-service benchmarks rather than public-company proxies.",
+        "These are still external small-business transaction proxies and should be replaced over time with Nigeria-native Afrexit observations."
+      ],
+      "sourceReferences": [
+        {
+          "id": "financial-bbs",
+          "label": "BizBuySell financial services benchmark reference link",
+          "url": "https://www.bizbuysell.com/learning-center/valuation-benchmarks/financial-services-businesses/",
+          "sourceType": "reference_link",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "service-bbs",
+          "label": "BizBuySell service benchmark reference link",
+          "url": "https://www.bizbuysell.com/learning-center/valuation-benchmarks/service-businesses/",
+          "sourceType": "reference_link",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "wc-curated",
+          "label": "Afrexit curated owner-mode working capital overlay",
+          "sourceType": "manual_entry",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "marketability-curated",
+          "label": "Afrexit curated owner-mode marketability overlay",
+          "sourceType": "manual_entry",
+          "lastVerifiedAt": "2026-03-07"
+        }
+      ],
+      "observations": [
+        {
+          "id": "professional_platform-market-1",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 1.03,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "financial-bbs"
+        },
+        {
+          "id": "professional_platform-market-2",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 1.3,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "financial-bbs"
+        },
+        {
+          "id": "professional_platform-market-3",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 1.45,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "high",
+          "sourceReferenceId": "financial-bbs"
+        },
+        {
+          "id": "professional_platform-market-4",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 1.59,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "financial-bbs"
+        },
+        {
+          "id": "professional_platform-caprate-1",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3717,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "service-bbs"
+        },
+        {
+          "id": "professional_platform-caprate-2",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.289,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "service-bbs"
+        },
+        {
+          "id": "professional_platform-caprate-3",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.2747,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "high",
+          "sourceReferenceId": "service-bbs"
+        },
+        {
+          "id": "professional_platform-caprate-4",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.2688,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "service-bbs"
+        },
+        {
+          "id": "professional_platform-working-capital-1",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.045,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "professional_platform-working-capital-2",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.05,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "professional_platform-working-capital-3",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.055,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "professional_platform-marketability-1",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.84,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        },
+        {
+          "id": "professional_platform-marketability-2",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.9,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        },
+        {
+          "id": "professional_platform-marketability-3",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.96,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        }
+      ]
+    },
+    {
+      "id": "BMK_OWNER_NG_REAL_ESTATE_SERVICE_2026Q1",
+      "policyGroupId": "PG_REAL_ESTATE_SERVICE",
+      "label": "Real Estate and Facility Services transaction proxy benchmark set",
+      "mode": "owner",
+      "geography": "Sourceable private-market transaction proxy for Nigeria owner mode",
+      "asOfDate": "2026-03-07",
+      "sourceMix": [
+        "curated_transaction_proxy",
+        "curated_secondary"
+      ],
+      "sourceNotes": [
+        "This set is rebuilt from locally curated proxy values. It is not a live scrape of the listed external pages.",
+        "External URLs in this set are manual reference links from the sourcing pass and may become stale.",
+        "Property-management and adjacent facility-service sold-business benchmarks are the closest sourceable owner-mode proxy currently available.",
+        "These are still external small-business transaction proxies and should be replaced over time with Nigeria-native Afrexit observations."
+      ],
+      "sourceReferences": [
+        {
+          "id": "tables-bbs",
+          "label": "BizBuySell insight report data tables reference link",
+          "url": "https://www.bizbuysell.com/insight-report-data-tables/",
+          "sourceType": "reference_link",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "service-bbs",
+          "label": "BizBuySell service benchmark reference link",
+          "url": "https://www.bizbuysell.com/learning-center/valuation-benchmarks/service-businesses/",
+          "sourceType": "reference_link",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "wc-curated",
+          "label": "Afrexit curated owner-mode working capital overlay",
+          "sourceType": "manual_entry",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "marketability-curated",
+          "label": "Afrexit curated owner-mode marketability overlay",
+          "sourceType": "manual_entry",
+          "lastVerifiedAt": "2026-03-07"
+        }
+      ],
+      "observations": [
+        {
+          "id": "real_estate_service-market-1",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.82,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "tables-bbs"
+        },
+        {
+          "id": "real_estate_service-market-2",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.85,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "tables-bbs"
+        },
+        {
+          "id": "real_estate_service-market-3",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.93,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "high",
+          "sourceReferenceId": "tables-bbs"
+        },
+        {
+          "id": "real_estate_service-market-4",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 1.02,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "tables-bbs"
+        },
+        {
+          "id": "real_estate_service-caprate-1",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3876,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "service-bbs"
+        },
+        {
+          "id": "real_estate_service-caprate-2",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3704,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "service-bbs"
+        },
+        {
+          "id": "real_estate_service-caprate-3",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3663,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "high",
+          "sourceReferenceId": "service-bbs"
+        },
+        {
+          "id": "real_estate_service-caprate-4",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3279,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "service-bbs"
+        },
+        {
+          "id": "real_estate_service-working-capital-1",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.036,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "real_estate_service-working-capital-2",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.04,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "real_estate_service-working-capital-3",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.044,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "real_estate_service-marketability-1",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.82,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        },
+        {
+          "id": "real_estate_service-marketability-2",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.88,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        },
+        {
+          "id": "real_estate_service-marketability-3",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.94,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        }
+      ]
+    },
+    {
+      "id": "BMK_OWNER_NG_PROPERTY_ASSET_NAV_2026Q1",
+      "policyGroupId": "PG_PROPERTY_ASSET_NAV",
+      "label": "Property Asset and Development Support transaction proxy benchmark set",
+      "mode": "owner",
+      "geography": "Sourceable private-market transaction proxy for Nigeria owner mode",
+      "asOfDate": "2026-03-07",
+      "sourceMix": [
+        "curated_transaction_proxy",
+        "curated_secondary"
+      ],
+      "sourceNotes": [
+        "This set is rebuilt from locally curated proxy values. It is not a live scrape of the listed external pages.",
+        "External URLs in this set are manual reference links from the sourcing pass and may become stale.",
+        "Property-management and adjacent facility-service sold-business benchmarks are the closest sourceable owner-mode proxy currently available.",
+        "These are still external small-business transaction proxies and should be replaced over time with Nigeria-native Afrexit observations."
+      ],
+      "sourceReferences": [
+        {
+          "id": "tables-bbs",
+          "label": "BizBuySell insight report data tables reference link",
+          "url": "https://www.bizbuysell.com/insight-report-data-tables/",
+          "sourceType": "reference_link",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "service-bbs",
+          "label": "BizBuySell service benchmark reference link",
+          "url": "https://www.bizbuysell.com/learning-center/valuation-benchmarks/service-businesses/",
+          "sourceType": "reference_link",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "wc-curated",
+          "label": "Afrexit curated owner-mode working capital overlay",
+          "sourceType": "manual_entry",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "marketability-curated",
+          "label": "Afrexit curated owner-mode marketability overlay",
+          "sourceType": "manual_entry",
+          "lastVerifiedAt": "2026-03-07"
+        }
+      ],
+      "observations": [
+        {
+          "id": "property_asset_nav-market-1",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.82,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "tables-bbs"
+        },
+        {
+          "id": "property_asset_nav-market-2",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.85,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "tables-bbs"
+        },
+        {
+          "id": "property_asset_nav-market-3",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.93,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "high",
+          "sourceReferenceId": "tables-bbs"
+        },
+        {
+          "id": "property_asset_nav-market-4",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 1.02,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "tables-bbs"
+        },
+        {
+          "id": "property_asset_nav-caprate-1",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3876,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "service-bbs"
+        },
+        {
+          "id": "property_asset_nav-caprate-2",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3704,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "service-bbs"
+        },
+        {
+          "id": "property_asset_nav-caprate-3",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3663,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "high",
+          "sourceReferenceId": "service-bbs"
+        },
+        {
+          "id": "property_asset_nav-caprate-4",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3279,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "service-bbs"
+        },
+        {
+          "id": "property_asset_nav-working-capital-1",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.09,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "property_asset_nav-working-capital-2",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.1,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "property_asset_nav-working-capital-3",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.11,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "property_asset_nav-marketability-1",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.8,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        },
+        {
+          "id": "property_asset_nav-marketability-2",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.865,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        },
+        {
+          "id": "property_asset_nav-marketability-3",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.93,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        }
+      ]
+    },
+    {
+      "id": "BMK_OWNER_NG_CREATIVE_AGENCY_2026Q1",
+      "policyGroupId": "PG_CREATIVE_AGENCY",
+      "label": "Creative and Agency Services transaction proxy benchmark set",
+      "mode": "owner",
+      "geography": "Sourceable private-market transaction proxy for Nigeria owner mode",
+      "asOfDate": "2026-03-07",
+      "sourceMix": [
+        "curated_transaction_proxy",
+        "curated_secondary"
+      ],
+      "sourceNotes": [
+        "This set is rebuilt from locally curated proxy values. It is not a live scrape of the listed external pages.",
+        "External URLs in this set are manual reference links from the sourcing pass and may become stale.",
+        "Creative-agency owner mode uses sold-business service and graphic/web design comparisons because direct Nigeria agency transaction evidence is still sparse.",
+        "These are still external small-business transaction proxies and should be replaced over time with Nigeria-native Afrexit observations."
+      ],
+      "sourceReferences": [
+        {
+          "id": "service-bbs",
+          "label": "BizBuySell service benchmark reference link",
+          "url": "https://www.bizbuysell.com/learning-center/valuation-benchmarks/service-businesses/",
+          "sourceType": "reference_link",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "tech-bbs",
+          "label": "BizBuySell technology benchmark reference link",
+          "url": "https://www.bizbuysell.com/learning-center/valuation-benchmarks/technology-businesses/",
+          "sourceType": "reference_link",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "wc-curated",
+          "label": "Afrexit curated owner-mode working capital overlay",
+          "sourceType": "manual_entry",
+          "lastVerifiedAt": "2026-03-07"
+        },
+        {
+          "id": "marketability-curated",
+          "label": "Afrexit curated owner-mode marketability overlay",
+          "sourceType": "manual_entry",
+          "lastVerifiedAt": "2026-03-07"
+        }
+      ],
+      "observations": [
+        {
+          "id": "creative_agency-market-1",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.48,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "service-bbs"
+        },
+        {
+          "id": "creative_agency-market-2",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 0.82,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "service-bbs"
+        },
+        {
+          "id": "creative_agency-market-3",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 1,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "high",
+          "sourceReferenceId": "service-bbs"
+        },
+        {
+          "id": "creative_agency-market-4",
+          "metric": "market_multiple",
+          "basis": "revenue",
+          "value": 1.04,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "service-bbs"
+        },
+        {
+          "id": "creative_agency-caprate-1",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.5714,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "tech-bbs"
+        },
+        {
+          "id": "creative_agency-caprate-2",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.4202,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "tech-bbs"
+        },
+        {
+          "id": "creative_agency-caprate-3",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3876,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "high",
+          "sourceReferenceId": "tech-bbs"
+        },
+        {
+          "id": "creative_agency-caprate-4",
+          "metric": "capitalization_rate",
+          "basis": "sde",
+          "value": 0.3759,
+          "sourceKind": "transaction",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "tech-bbs"
+        },
+        {
+          "id": "creative_agency-working-capital-1",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.045,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "creative_agency-working-capital-2",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.05,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "creative_agency-working-capital-3",
+          "metric": "working_capital_pct",
+          "basis": "revenue",
+          "value": 0.055,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "wc-curated",
+          "notes": "Working-capital targets remain curated until a stronger private-market working-capital dataset is accumulated."
+        },
+        {
+          "id": "creative_agency-marketability-1",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.78,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        },
+        {
+          "id": "creative_agency-marketability-2",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.85,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "medium",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        },
+        {
+          "id": "creative_agency-marketability-3",
+          "metric": "marketability_factor",
+          "basis": "enterprise_value",
+          "value": 0.92,
+          "sourceKind": "curated_secondary",
+          "sizeBand": "sub_1bn_revenue",
+          "observedAt": "2025-12-31",
+          "quality": "low",
+          "sourceReferenceId": "marketability-curated",
+          "notes": "Marketability factors remain a curated owner-mode overlay until Afrexit has enough internal Nigeria transaction evidence."
+        }
+      ]
+    }
+  ]
+}

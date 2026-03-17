@@ -1,0 +1,878 @@
+{
+  "fixtures": [
+    {
+      "id": "owner-recurring-software-two-year",
+      "label": "Recurring software with two years of history",
+      "description": "Subscription-led software business with strong transferability and modest owner normalization.",
+      "request": {
+        "meta": {
+          "requestId": "fixture-owner-recurring-software-two-year",
+          "mode": "owner",
+          "engineVersion": "fixture-v1",
+          "submittedAt": "2026-03-07T12:00:00.000Z",
+          "currency": "NGN",
+          "locale": "en-NG",
+          "source": "api",
+          "acknowledged": true,
+          "newsletterOptIn": false
+        },
+        "engagement": {
+          "purpose": "sale",
+          "urgency": "orderly",
+          "targetTransaction": "full_sale",
+          "standardOfValue": "fair_market_value",
+          "premiseOfValue": "going_concern",
+          "valuationDate": "2026-03-07"
+        },
+        "company": {
+          "businessName": "SignalStack Cloud",
+          "firstName": "Lara",
+          "email": "lara@example.com",
+          "whatsapp": "08030000001",
+          "legalStructure": "limited_company",
+          "ownerControlBand": "gt_75",
+          "operatingYearsBand": "3_5",
+          "primaryState": "lagos_island",
+          "businessSummary": "Subscription-based workflow software for growing Nigerian businesses."
+        },
+        "classification": {
+          "level1": "software",
+          "level2": "saas_owned_software",
+          "industryFit": "perfect_fit",
+          "policyGroupId": "PG_RECURRING_SOFTWARE"
+        },
+        "operatingProfile": {
+          "catchmentArea": "national_multi_base",
+          "marketDemand": "strong_growth",
+          "growthOutlook": "strong_growth",
+          "differentiation": "hard_to_copy",
+          "pricingPower": "premium",
+          "customerConcentration": "manageable",
+          "bestCustomerRisk": "minor",
+          "founderRevenueDependence": "some",
+          "recurringRevenueShare": "large_share",
+          "revenueVisibility": "contract_backed",
+          "supplierTransferability": "very_easy",
+          "hiringDifficulty": "difficult",
+          "fxExposure": "moderate",
+          "assetSeparation": "clear",
+          "inventoryProfile": "service_business",
+          "workingCapitalHealth": "healthy"
+        },
+        "financials": {
+          "historicals": [
+            {
+              "periodId": "latest_owner_input",
+              "label": "Latest annual owner input",
+              "months": 12,
+              "revenue": 132000000,
+              "operatingProfit": 36000000,
+              "receivables": 9000000,
+              "payables": 7000000,
+              "maintenanceCapex": 3500000,
+              "cashBalance": 28000000,
+              "financialDebt": 5000000,
+              "sourceType": "management_accounts",
+              "isRepresentative": true
+            },
+            {
+              "periodId": "prior_year_1",
+              "label": "Previous financial year",
+              "months": 12,
+              "revenue": 94000000,
+              "operatingProfit": 22000000,
+              "maintenanceCapex": 2500000,
+              "sourceType": "management_accounts"
+            }
+          ],
+          "selectedRepresentativePeriodId": "latest_owner_input",
+          "sourceQuality": {
+            "yearsAvailable": 2,
+            "bookkeepingQuality": "software",
+            "bankingQuality": "clean",
+            "traceablePaymentsShare": "80_100",
+            "proofReadiness": "immediate"
+          }
+        },
+        "normalization": {
+          "earningsBaseType": "ebit",
+          "selectedBasePeriodId": "latest_owner_input",
+          "schedule": [
+            {
+              "id": "owner-comp-market-delta",
+              "category": "owner_comp",
+              "label": "Founder compensation normalized to market replacement cost",
+              "periodId": "latest_owner_input",
+              "reportedAmount": 14000000,
+              "normalizedAmount": 9000000,
+              "adjustmentAmount": 5000000,
+              "direction": "add_back",
+              "recurrence": "recurring",
+              "confidence": "medium",
+              "evidenceLevel": "management_accounts",
+              "affects": "ebitda"
+            }
+          ]
+        },
+        "bridge": {
+          "cashAndEquivalents": 28000000,
+          "interestBearingDebt": 5000000,
+          "shareholderLoans": 0
+        },
+        "readiness": {
+          "recordsQuality": "immediate",
+          "managementDepth": "trusted_manager",
+          "ownerAbsence2Weeks": "smooth",
+          "ownerAbsence3Months": "limited_disruption",
+          "processDocumentation": "documented_multi",
+          "replacementDifficulty": "possible"
+        },
+        "evidence": {
+          "benchmarkCoverage": {
+            "publicCompsAvailable": true,
+            "transactionCompsAvailable": true,
+            "workingCapitalBenchmarkAvailable": true,
+            "compensationBenchmarkAvailable": false,
+            "rentBenchmarkAvailable": false
+          }
+        },
+        "controls": {}
+      },
+      "expectations": {
+        "policyGroupId": "PG_RECURRING_SOFTWARE",
+        "primaryMethod": "market_multiple",
+        "minConfidenceScore": 55,
+        "minReadinessScore": 72
+      }
+    },
+    {
+      "id": "owner-project-it-two-year",
+      "label": "Project IT services with two years of history",
+      "description": "Custom software and support business with maintainable earnings and modest customer concentration.",
+      "request": {
+        "meta": {
+          "requestId": "fixture-owner-project-it-two-year",
+          "mode": "owner",
+          "engineVersion": "fixture-v1",
+          "submittedAt": "2026-03-07T12:00:00.000Z",
+          "currency": "NGN",
+          "locale": "en-NG",
+          "source": "api",
+          "acknowledged": true,
+          "newsletterOptIn": false
+        },
+        "engagement": {
+          "purpose": "sale",
+          "urgency": "orderly",
+          "targetTransaction": "full_sale",
+          "standardOfValue": "fair_market_value",
+          "premiseOfValue": "going_concern",
+          "valuationDate": "2026-03-07"
+        },
+        "company": {
+          "businessName": "BlueMesh Systems",
+          "firstName": "Femi",
+          "email": "femi@example.com",
+          "whatsapp": "08030000002",
+          "legalStructure": "limited_company",
+          "ownerControlBand": "51_75",
+          "operatingYearsBand": "5_10",
+          "primaryState": "abuja_fct",
+          "businessSummary": "Enterprise software implementation and managed IT support provider."
+        },
+        "classification": {
+          "level1": "software",
+          "level2": "custom_software",
+          "industryFit": "mostly_fit",
+          "policyGroupId": "PG_PROJECT_SOFTWARE_IT"
+        },
+        "operatingProfile": {
+          "catchmentArea": "national_single_base",
+          "marketDemand": "steady_growth",
+          "growthOutlook": "moderate_growth",
+          "differentiation": "reliability",
+          "pricingPower": "some",
+          "customerConcentration": "manageable",
+          "bestCustomerRisk": "noticeable",
+          "founderRevenueDependence": "some",
+          "recurringRevenueShare": "meaningful",
+          "revenueVisibility": "some_repeat",
+          "supplierTransferability": "manageable",
+          "hiringDifficulty": "difficult",
+          "fxExposure": "low",
+          "assetSeparation": "mostly",
+          "inventoryProfile": "service_business",
+          "workingCapitalHealth": "healthy"
+        },
+        "financials": {
+          "historicals": [
+            {
+              "periodId": "latest_owner_input",
+              "label": "Latest annual owner input",
+              "months": 12,
+              "revenue": 205000000,
+              "operatingProfit": 31000000,
+              "receivables": 26000000,
+              "payables": 12000000,
+              "maintenanceCapex": 4500000,
+              "cashBalance": 18000000,
+              "financialDebt": 10000000,
+              "sourceType": "management_accounts",
+              "isRepresentative": true
+            },
+            {
+              "periodId": "prior_year_1",
+              "label": "Previous financial year",
+              "months": 12,
+              "revenue": 171000000,
+              "operatingProfit": 25000000,
+              "maintenanceCapex": 3200000,
+              "sourceType": "management_accounts"
+            }
+          ],
+          "selectedRepresentativePeriodId": "latest_owner_input",
+          "sourceQuality": {
+            "yearsAvailable": 2,
+            "bookkeepingQuality": "software",
+            "bankingQuality": "mostly_clean",
+            "traceablePaymentsShare": "80_100",
+            "proofReadiness": "organize_fast"
+          }
+        },
+        "normalization": {
+          "earningsBaseType": "ebit",
+          "selectedBasePeriodId": "latest_owner_input",
+          "schedule": [
+            {
+              "id": "private-expenses",
+              "category": "personal_expense",
+              "label": "Director personal costs through the business",
+              "periodId": "latest_owner_input",
+              "reportedAmount": 1200000,
+              "adjustmentAmount": 1200000,
+              "direction": "add_back",
+              "recurrence": "partly_recurring",
+              "confidence": "medium",
+              "evidenceLevel": "management_accounts",
+              "affects": "ebitda"
+            }
+          ]
+        },
+        "bridge": {
+          "cashAndEquivalents": 18000000,
+          "interestBearingDebt": 10000000,
+          "shareholderLoans": 0
+        },
+        "readiness": {
+          "recordsQuality": "organize_fast",
+          "managementDepth": "trusted_manager",
+          "ownerAbsence2Weeks": "smooth",
+          "ownerAbsence3Months": "limited_disruption",
+          "processDocumentation": "partly_documented",
+          "replacementDifficulty": "possible"
+        },
+        "evidence": {
+          "benchmarkCoverage": {
+            "publicCompsAvailable": true,
+            "transactionCompsAvailable": true,
+            "workingCapitalBenchmarkAvailable": true
+          }
+        },
+        "controls": {}
+      },
+      "expectations": {
+        "policyGroupId": "PG_PROJECT_SOFTWARE_IT",
+        "primaryMethod": "market_multiple",
+        "minConfidenceScore": 52,
+        "minReadinessScore": 65
+      }
+    },
+    {
+      "id": "owner-logistics-two-year",
+      "label": "Logistics fleet business with two years of history",
+      "description": "Asset-backed haulage business with debt, capex, and working-capital sensitivity.",
+      "request": {
+        "meta": {
+          "requestId": "fixture-owner-logistics-two-year",
+          "mode": "owner",
+          "engineVersion": "fixture-v1",
+          "submittedAt": "2026-03-07T12:00:00.000Z",
+          "currency": "NGN",
+          "locale": "en-NG",
+          "source": "api",
+          "acknowledged": true,
+          "newsletterOptIn": false
+        },
+        "engagement": {
+          "purpose": "sale",
+          "urgency": "orderly",
+          "targetTransaction": "full_sale",
+          "standardOfValue": "fair_market_value",
+          "premiseOfValue": "going_concern",
+          "valuationDate": "2026-03-07"
+        },
+        "company": {
+          "businessName": "IronRoute Haulage",
+          "firstName": "Chika",
+          "email": "chika@example.com",
+          "whatsapp": "08030000003",
+          "legalStructure": "limited_company",
+          "ownerControlBand": "gt_75",
+          "operatingYearsBand": "5_10",
+          "primaryState": "port_harcourt",
+          "businessSummary": "Regional haulage operator serving FMCG and industrial clients."
+        },
+        "classification": {
+          "level1": "transport",
+          "level2": "haulage_freight",
+          "industryFit": "mostly_fit",
+          "policyGroupId": "PG_LOGISTICS_ASSET"
+        },
+        "operatingProfile": {
+          "catchmentArea": "multi_state",
+          "marketDemand": "steady_growth",
+          "growthOutlook": "stable",
+          "differentiation": "reliability",
+          "pricingPower": "some",
+          "customerConcentration": "high",
+          "bestCustomerRisk": "major",
+          "founderRevenueDependence": "some",
+          "recurringRevenueShare": "meaningful",
+          "revenueVisibility": "some_repeat",
+          "supplierTransferability": "manageable",
+          "hiringDifficulty": "difficult",
+          "fxExposure": "moderate",
+          "assetSeparation": "clear",
+          "inventoryProfile": "7_30",
+          "workingCapitalHealth": "under_pressure"
+        },
+        "financials": {
+          "historicals": [
+            {
+              "periodId": "latest_owner_input",
+              "label": "Latest annual owner input",
+              "months": 12,
+              "revenue": 420000000,
+              "operatingProfit": 46000000,
+              "receivables": 64000000,
+              "inventory": 9000000,
+              "payables": 27000000,
+              "maintenanceCapex": 18000000,
+              "cashBalance": 20000000,
+              "financialDebt": 90000000,
+              "sourceType": "management_accounts",
+              "isRepresentative": true
+            },
+            {
+              "periodId": "prior_year_1",
+              "label": "Previous financial year",
+              "months": 12,
+              "revenue": 396000000,
+              "operatingProfit": 41000000,
+              "maintenanceCapex": 15000000,
+              "sourceType": "management_accounts"
+            }
+          ],
+          "selectedRepresentativePeriodId": "latest_owner_input",
+          "sourceQuality": {
+            "yearsAvailable": 2,
+            "bookkeepingQuality": "software",
+            "bankingQuality": "mostly_clean",
+            "traceablePaymentsShare": "80_100",
+            "proofReadiness": "organize_fast"
+          }
+        },
+        "normalization": {
+          "earningsBaseType": "ebit",
+          "selectedBasePeriodId": "latest_owner_input",
+          "schedule": [
+            {
+              "id": "one-off-repair",
+              "category": "one_off_expense",
+              "label": "Major non-recurring truck overhaul expense",
+              "periodId": "latest_owner_input",
+              "reportedAmount": 6500000,
+              "adjustmentAmount": 6500000,
+              "direction": "add_back",
+              "recurrence": "non_recurring",
+              "confidence": "medium",
+              "evidenceLevel": "management_accounts",
+              "affects": "ebitda"
+            }
+          ]
+        },
+        "bridge": {
+          "cashAndEquivalents": 20000000,
+          "interestBearingDebt": 90000000,
+          "shareholderLoans": 10000000
+        },
+        "readiness": {
+          "recordsQuality": "organize_fast",
+          "managementDepth": "founder_plus_support",
+          "ownerAbsence2Weeks": "minor_issues",
+          "ownerAbsence3Months": "very_difficult",
+          "processDocumentation": "partly_documented",
+          "replacementDifficulty": "difficult"
+        },
+        "evidence": {
+          "benchmarkCoverage": {
+            "publicCompsAvailable": false,
+            "transactionCompsAvailable": true,
+            "workingCapitalBenchmarkAvailable": true
+          }
+        },
+        "controls": {}
+      },
+      "expectations": {
+        "policyGroupId": "PG_LOGISTICS_ASSET",
+        "primaryMethod": "market_multiple",
+        "minConfidenceScore": 40,
+        "minReadinessScore": 50
+      }
+    },
+    {
+      "id": "owner-hospitality-two-year",
+      "label": "Hospitality venue with two years of history",
+      "description": "Restaurant group case with venue economics, normalized owner costs, and moderate transferability.",
+      "request": {
+        "meta": {
+          "requestId": "fixture-owner-hospitality-two-year",
+          "mode": "owner",
+          "engineVersion": "fixture-v1",
+          "submittedAt": "2026-03-07T12:00:00.000Z",
+          "currency": "NGN",
+          "locale": "en-NG",
+          "source": "api",
+          "acknowledged": true,
+          "newsletterOptIn": false
+        },
+        "engagement": {
+          "purpose": "sale",
+          "urgency": "orderly",
+          "targetTransaction": "full_sale",
+          "standardOfValue": "fair_market_value",
+          "premiseOfValue": "going_concern",
+          "valuationDate": "2026-03-07"
+        },
+        "company": {
+          "businessName": "Palm House Kitchen",
+          "firstName": "Moyo",
+          "email": "moyo@example.com",
+          "whatsapp": "08030000004",
+          "legalStructure": "limited_company",
+          "ownerControlBand": "gt_75",
+          "operatingYearsBand": "3_5",
+          "primaryState": "lagos_mainland",
+          "businessSummary": "Neighbourhood restaurant and catering brand with two profitable outlets."
+        },
+        "classification": {
+          "level1": "hospitality",
+          "level2": "restaurants_food_service",
+          "industryFit": "mostly_fit",
+          "policyGroupId": "PG_HOSPITALITY_VENUE"
+        },
+        "operatingProfile": {
+          "catchmentArea": "single_state",
+          "marketDemand": "steady_growth",
+          "growthOutlook": "moderate_growth",
+          "differentiation": "reliability",
+          "pricingPower": "some",
+          "customerConcentration": "none_material",
+          "bestCustomerRisk": "minor",
+          "founderRevenueDependence": "some",
+          "recurringRevenueShare": "meaningful",
+          "revenueVisibility": "good_repeat",
+          "supplierTransferability": "manageable",
+          "hiringDifficulty": "feasible",
+          "fxExposure": "moderate",
+          "assetSeparation": "mostly",
+          "inventoryProfile": "7_30",
+          "workingCapitalHealth": "tight"
+        },
+        "financials": {
+          "historicals": [
+            {
+              "periodId": "latest_owner_input",
+              "label": "Latest annual owner input",
+              "months": 12,
+              "revenue": 188000000,
+              "operatingProfit": 24000000,
+              "receivables": 3000000,
+              "inventory": 12000000,
+              "payables": 7000000,
+              "maintenanceCapex": 7000000,
+              "cashBalance": 8000000,
+              "financialDebt": 18000000,
+              "sourceType": "management_accounts",
+              "isRepresentative": true
+            },
+            {
+              "periodId": "prior_year_1",
+              "label": "Previous financial year",
+              "months": 12,
+              "revenue": 161000000,
+              "operatingProfit": 19000000,
+              "maintenanceCapex": 5000000,
+              "sourceType": "management_accounts"
+            }
+          ],
+          "selectedRepresentativePeriodId": "latest_owner_input",
+          "sourceQuality": {
+            "yearsAvailable": 2,
+            "bookkeepingQuality": "spreadsheet",
+            "bankingQuality": "mostly_clean",
+            "traceablePaymentsShare": "80_100",
+            "proofReadiness": "show_patterns"
+          }
+        },
+        "normalization": {
+          "earningsBaseType": "ebit",
+          "selectedBasePeriodId": "latest_owner_input",
+          "schedule": [
+            {
+              "id": "owner-comp-market-delta",
+              "category": "owner_comp",
+              "label": "Owner front-of-house pay normalized to market replacement cost",
+              "periodId": "latest_owner_input",
+              "reportedAmount": 9000000,
+              "normalizedAmount": 4500000,
+              "adjustmentAmount": 4500000,
+              "direction": "add_back",
+              "recurrence": "recurring",
+              "confidence": "medium",
+              "evidenceLevel": "management_accounts",
+              "affects": "ebitda"
+            }
+          ]
+        },
+        "bridge": {
+          "cashAndEquivalents": 8000000,
+          "interestBearingDebt": 18000000,
+          "shareholderLoans": 0
+        },
+        "readiness": {
+          "recordsQuality": "show_patterns",
+          "managementDepth": "founder_plus_support",
+          "ownerAbsence2Weeks": "minor_issues",
+          "ownerAbsence3Months": "risky_but_possible",
+          "processDocumentation": "partly_documented",
+          "replacementDifficulty": "possible"
+        },
+        "evidence": {
+          "benchmarkCoverage": {
+            "publicCompsAvailable": false,
+            "transactionCompsAvailable": true,
+            "workingCapitalBenchmarkAvailable": true
+          }
+        },
+        "controls": {}
+      },
+      "expectations": {
+        "policyGroupId": "PG_HOSPITALITY_VENUE",
+        "primaryMethod": "market_multiple",
+        "minConfidenceScore": 40,
+        "minReadinessScore": 58
+      }
+    },
+    {
+      "id": "owner-local-service-two-year",
+      "label": "Local owner-operated service with two years of history",
+      "description": "Cleaning and facility support business that should remain earnings-led in owner mode.",
+      "request": {
+        "meta": {
+          "requestId": "fixture-owner-local-service-two-year",
+          "mode": "owner",
+          "engineVersion": "fixture-v1",
+          "submittedAt": "2026-03-07T12:00:00.000Z",
+          "currency": "NGN",
+          "locale": "en-NG",
+          "source": "api",
+          "acknowledged": true,
+          "newsletterOptIn": false
+        },
+        "engagement": {
+          "purpose": "sale",
+          "urgency": "orderly",
+          "targetTransaction": "full_sale",
+          "standardOfValue": "fair_market_value",
+          "premiseOfValue": "going_concern",
+          "valuationDate": "2026-03-07"
+        },
+        "company": {
+          "businessName": "BrightMop Services",
+          "firstName": "Ngozi",
+          "email": "ngozi@example.com",
+          "whatsapp": "08030000005",
+          "legalStructure": "limited_company",
+          "ownerControlBand": "gt_75",
+          "operatingYearsBand": "3_5",
+          "primaryState": "lagos_mainland",
+          "businessSummary": "Commercial cleaning and hygiene services for offices and residential estates."
+        },
+        "classification": {
+          "level1": "services",
+          "level2": "cleaning_hygiene",
+          "industryFit": "mostly_fit",
+          "policyGroupId": "PG_LOCAL_SERVICE_OWNER_OP"
+        },
+        "operatingProfile": {
+          "catchmentArea": "single_state",
+          "marketDemand": "steady_growth",
+          "growthOutlook": "moderate_growth",
+          "differentiation": "reliability",
+          "pricingPower": "some",
+          "customerConcentration": "manageable",
+          "bestCustomerRisk": "noticeable",
+          "founderRevenueDependence": "large_share",
+          "recurringRevenueShare": "meaningful",
+          "revenueVisibility": "contract_backed",
+          "supplierTransferability": "very_easy",
+          "hiringDifficulty": "feasible",
+          "fxExposure": "low",
+          "assetSeparation": "mostly",
+          "inventoryProfile": "service_business",
+          "workingCapitalHealth": "healthy"
+        },
+        "financials": {
+          "historicals": [
+            {
+              "periodId": "latest_owner_input",
+              "label": "Latest annual owner input",
+              "months": 12,
+              "revenue": 92000000,
+              "operatingProfit": 16500000,
+              "receivables": 11000000,
+              "payables": 5000000,
+              "maintenanceCapex": 1000000,
+              "cashBalance": 7000000,
+              "financialDebt": 2000000,
+              "sourceType": "management_accounts",
+              "isRepresentative": true
+            },
+            {
+              "periodId": "prior_year_1",
+              "label": "Previous financial year",
+              "months": 12,
+              "revenue": 79000000,
+              "operatingProfit": 13000000,
+              "maintenanceCapex": 700000,
+              "sourceType": "management_accounts"
+            }
+          ],
+          "selectedRepresentativePeriodId": "latest_owner_input",
+          "sourceQuality": {
+            "yearsAvailable": 2,
+            "bookkeepingQuality": "spreadsheet",
+            "bankingQuality": "mostly_clean",
+            "traceablePaymentsShare": "80_100",
+            "proofReadiness": "organize_fast"
+          }
+        },
+        "normalization": {
+          "earningsBaseType": "ebit",
+          "selectedBasePeriodId": "latest_owner_input",
+          "schedule": [
+            {
+              "id": "owner-comp-total",
+              "category": "owner_comp",
+              "label": "Owner manager pay added back for SDE view",
+              "periodId": "latest_owner_input",
+              "reportedAmount": 7000000,
+              "normalizedAmount": 0,
+              "adjustmentAmount": 7000000,
+              "direction": "add_back",
+              "recurrence": "recurring",
+              "confidence": "medium",
+              "evidenceLevel": "management_accounts",
+              "affects": "sde"
+            },
+            {
+              "id": "owner-comp-market-delta",
+              "category": "owner_comp",
+              "label": "Owner pay normalized to market replacement cost",
+              "periodId": "latest_owner_input",
+              "reportedAmount": 7000000,
+              "normalizedAmount": 4200000,
+              "adjustmentAmount": 2800000,
+              "direction": "add_back",
+              "recurrence": "recurring",
+              "confidence": "medium",
+              "evidenceLevel": "management_accounts",
+              "affects": "ebitda"
+            }
+          ]
+        },
+        "bridge": {
+          "cashAndEquivalents": 7000000,
+          "interestBearingDebt": 2000000,
+          "shareholderLoans": 0
+        },
+        "readiness": {
+          "recordsQuality": "organize_fast",
+          "managementDepth": "founder_plus_support",
+          "ownerAbsence2Weeks": "minor_issues",
+          "ownerAbsence3Months": "risky_but_possible",
+          "processDocumentation": "partly_documented",
+          "replacementDifficulty": "difficult"
+        },
+        "evidence": {
+          "benchmarkCoverage": {
+            "publicCompsAvailable": false,
+            "transactionCompsAvailable": true,
+            "workingCapitalBenchmarkAvailable": true
+          }
+        },
+        "controls": {}
+      },
+      "expectations": {
+        "policyGroupId": "PG_LOCAL_SERVICE_OWNER_OP",
+        "primaryMethod": "capitalized_earnings",
+        "minConfidenceScore": 40,
+        "minReadinessScore": 58
+      }
+    },
+    {
+      "id": "owner-healthcare-service-two-year",
+      "label": "Healthcare service provider with two years of history",
+      "description": "Diagnostic and outpatient healthcare business with equipment, compliance, and recurring demand.",
+      "request": {
+        "meta": {
+          "requestId": "fixture-owner-healthcare-service-two-year",
+          "mode": "owner",
+          "engineVersion": "fixture-v1",
+          "submittedAt": "2026-03-07T12:00:00.000Z",
+          "currency": "NGN",
+          "locale": "en-NG",
+          "source": "api",
+          "acknowledged": true,
+          "newsletterOptIn": false
+        },
+        "engagement": {
+          "purpose": "sale",
+          "urgency": "orderly",
+          "targetTransaction": "full_sale",
+          "standardOfValue": "fair_market_value",
+          "premiseOfValue": "going_concern",
+          "valuationDate": "2026-03-07"
+        },
+        "company": {
+          "businessName": "PrimeCare Diagnostics",
+          "firstName": "Ikenna",
+          "email": "ikenna@example.com",
+          "whatsapp": "08030000006",
+          "legalStructure": "limited_company",
+          "ownerControlBand": "gt_75",
+          "operatingYearsBand": "5_10",
+          "primaryState": "abuja_fct",
+          "businessSummary": "Diagnostics and outpatient clinic with repeat referral demand."
+        },
+        "classification": {
+          "level1": "healthcare",
+          "level2": "diagnostics_labs",
+          "industryFit": "mostly_fit",
+          "policyGroupId": "PG_HEALTHCARE_SERVICE"
+        },
+        "operatingProfile": {
+          "catchmentArea": "single_state",
+          "marketDemand": "strong_growth",
+          "growthOutlook": "moderate_growth",
+          "differentiation": "reliability",
+          "pricingPower": "some",
+          "customerConcentration": "none_material",
+          "bestCustomerRisk": "minor",
+          "founderRevenueDependence": "some",
+          "recurringRevenueShare": "meaningful",
+          "revenueVisibility": "good_repeat",
+          "supplierTransferability": "uncertain",
+          "hiringDifficulty": "difficult",
+          "fxExposure": "moderate",
+          "assetSeparation": "clear",
+          "inventoryProfile": "7_30",
+          "workingCapitalHealth": "tight"
+        },
+        "financials": {
+          "historicals": [
+            {
+              "periodId": "latest_owner_input",
+              "label": "Latest annual owner input",
+              "months": 12,
+              "revenue": 315000000,
+              "operatingProfit": 52000000,
+              "receivables": 24000000,
+              "inventory": 18000000,
+              "payables": 12000000,
+              "maintenanceCapex": 14000000,
+              "cashBalance": 22000000,
+              "financialDebt": 28000000,
+              "sourceType": "management_accounts",
+              "isRepresentative": true
+            },
+            {
+              "periodId": "prior_year_1",
+              "label": "Previous financial year",
+              "months": 12,
+              "revenue": 271000000,
+              "operatingProfit": 42000000,
+              "maintenanceCapex": 10000000,
+              "sourceType": "management_accounts"
+            }
+          ],
+          "selectedRepresentativePeriodId": "latest_owner_input",
+          "sourceQuality": {
+            "yearsAvailable": 2,
+            "bookkeepingQuality": "software",
+            "bankingQuality": "clean",
+            "traceablePaymentsShare": "80_100",
+            "proofReadiness": "immediate"
+          }
+        },
+        "normalization": {
+          "earningsBaseType": "ebit",
+          "selectedBasePeriodId": "latest_owner_input",
+          "schedule": [
+            {
+              "id": "one-off-setup",
+              "category": "one_off_expense",
+              "label": "Non-recurring site setup expense",
+              "periodId": "latest_owner_input",
+              "reportedAmount": 4000000,
+              "adjustmentAmount": 4000000,
+              "direction": "add_back",
+              "recurrence": "non_recurring",
+              "confidence": "medium",
+              "evidenceLevel": "management_accounts",
+              "affects": "ebitda"
+            }
+          ]
+        },
+        "bridge": {
+          "cashAndEquivalents": 22000000,
+          "interestBearingDebt": 28000000,
+          "shareholderLoans": 0
+        },
+        "readiness": {
+          "recordsQuality": "immediate",
+          "managementDepth": "trusted_manager",
+          "ownerAbsence2Weeks": "smooth",
+          "ownerAbsence3Months": "limited_disruption",
+          "processDocumentation": "documented_multi",
+          "replacementDifficulty": "possible"
+        },
+        "evidence": {
+          "benchmarkCoverage": {
+            "publicCompsAvailable": false,
+            "transactionCompsAvailable": true,
+            "workingCapitalBenchmarkAvailable": true
+          }
+        },
+        "controls": {}
+      },
+      "expectations": {
+        "policyGroupId": "PG_HEALTHCARE_SERVICE",
+        "primaryMethod": "market_multiple",
+        "minConfidenceScore": 50,
+        "minReadinessScore": 68
+      }
+    }
+  ]
+}
