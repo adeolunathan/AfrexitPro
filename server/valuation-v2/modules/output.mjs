@@ -84,6 +84,8 @@ export function buildOwnerResult({
   assumptions,
   approaches,
   methodNormalizationImpacts,
+  branchQuality,
+  geographyAdjustment,
 }) {
   const rating = ratingFromReadiness(readinessAssessment.overallScore);
   const warnings = [...redFlags];
@@ -219,6 +221,7 @@ export function buildOwnerResult({
           normalizedMid: roundIfNumber(impact.normalizedMid),
           deltaMid: roundIfNumber(impact.deltaMid),
         })),
+        qualitativeAdjustments: values.qualitativeAdjustments,
       },
     },
     readinessAssessment,
@@ -228,6 +231,15 @@ export function buildOwnerResult({
     audit: {
       warnings,
       validationPassed: true,
+      qualitativeAdjustments: {
+        geographyBucket: geographyAdjustment?.geographyBucket,
+        normalizedPrimaryState: geographyAdjustment?.normalizedPrimaryState,
+        geographyAdjustmentFactor: geographyAdjustment?.geographyAdjustmentFactor,
+        branchFamily: branchQuality?.branchFamily,
+        branchQualityFactor: branchQuality?.branchQualityFactor,
+        branchSignalScore: branchQuality?.branchSignalScore,
+        branchSignals: branchQuality?.branchSignals,
+      },
     },
   };
 }

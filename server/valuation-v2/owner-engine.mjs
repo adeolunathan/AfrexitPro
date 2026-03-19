@@ -9,8 +9,9 @@ import { buildAssumptions, buildOwnerResult, buildRedFlags } from './modules/out
 import { isCanonicalRequest, validateCanonicalRequest, validateLegacyRawInput } from './modules/request-validation.mjs';
 import { buildReadinessAssessment, buildScorecard } from './modules/scorecards.mjs';
 import { buildMethodNormalizationImpacts, runSelectedApproaches } from './modules/approaches.mjs';
+import { buildBranchQualityAdjustment, buildGeographyAdjustment } from './modules/qualitative-adjustments.mjs';
 
-const ENGINE_VERSION = 'owner-phase-skeleton-v0.4';
+const ENGINE_VERSION = 'owner-phase-skeleton-v0.5';
 
 function coerceRequest(rawInput) {
   if (isCanonicalRequest(rawInput)) {
@@ -31,11 +32,13 @@ export function evaluateSubmission(rawInput) {
 
   const historicalSummary = buildHistoricalSummary(request);
   const normalizedMetrics = buildNormalizedMetrics(request, policyGroup, historicalSummary);
+  const branchQuality = buildBranchQualityAdjustment(request);
+  const geographyAdjustment = buildGeographyAdjustment(request.company.primaryState);
   const scorecard = buildScorecard(request);
   const readinessAssessment = buildReadinessAssessment(request, scorecard);
   const { methodOrder, selectedMethods } = selectOwnerMethods(request, policyGroup, normalizedMetrics, scorecard, historicalSummary);
-  const approaches = runSelectedApproaches(methodOrder, normalizedMetrics, request, policyGroup);
-  const methodNormalizationImpacts = buildMethodNormalizationImpacts(methodOrder, normalizedMetrics, request, policyGroup);
+  const approaches = runSelectedApproaches(methodOrder, normalizedMetrics, request, policyGroup, branchQuality);
+  const methodNormalizationImpacts = buildMethodNormalizationImpacts(methodOrder, normalizedMetrics, request, policyGroup, branchQuality);
   const reconciled = reconcileApproaches(policyGroup, approaches);
   const confidenceAssessment = buildConfidenceAssessment(
     request,
@@ -53,7 +56,9 @@ export function evaluateSubmission(rawInput) {
     readinessAssessment,
     confidenceAssessment,
     normalizedMetrics,
-    policyGroup
+    policyGroup,
+    geographyAdjustment,
+    branchQuality
   );
   const redFlags = buildRedFlags(request, readinessAssessment, confidenceAssessment, normalizedMetrics, historicalSummary, selectedMethods);
   const assumptions = buildAssumptions(request, selectedMethods, historicalSummary, normalizedMetrics, policyGroup);
@@ -76,5 +81,7 @@ export function evaluateSubmission(rawInput) {
     assumptions,
     approaches,
     methodNormalizationImpacts,
+    branchQuality,
+    geographyAdjustment,
   });
 }

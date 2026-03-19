@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { submitValuation } from './api/valuation';
 import { LandingPage } from './sections/LandingPage';
 import { LoadingPage } from './sections/LoadingPage';
-import { Questionnaire } from './sections/Questionnaire';
+import { ContinuousQuestionnaire } from './sections/ContinuousQuestionnaire';
 import { ResultsPage } from './sections/ResultsPage';
 import { DisclaimerPage } from './sections/DisclaimerPage';
 import { TermsPage } from './sections/TermsPage';
@@ -103,7 +103,7 @@ export function App() {
           {error}
         </div>
       ) : null}
-      <Questionnaire
+      <ContinuousQuestionnaire
         formData={formData}
         onUpdate={updateFormData}
         onSubmit={handleSubmit}

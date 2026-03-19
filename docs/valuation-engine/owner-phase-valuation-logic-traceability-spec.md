@@ -1,8 +1,8 @@
 # Owner-Phase Valuation Logic Traceability Specification
 
 Status: auditability and explainability document for Phase 1 owner mode  
-Applies to engine version: `owner-phase-skeleton-v0.4`  
-Last updated: March 8, 2026
+Applies to engine version: `owner-phase-skeleton-v0.5`  
+Last updated: March 19, 2026
 
 ## 1. Phase Status
 
@@ -22,31 +22,33 @@ What still prevents Phase 1 from being called complete:
 
 This document exists so the engine is not a black box. It makes the current mechanics auditable, including the questions that do not yet move value directly.
 
+For the adaptive questionnaire keep/fix/drop decisions, conditional resolver rules, and question-to-canonical mapping inventory, see [Adaptive Questionnaire Audit And Target Matrix](/Users/deolunathan/Downloads/BB/AfrexitPro/docs/questionnaires/adaptive-questionnaire-audit-and-target-matrix.md).
+
 ## 2. Engine Flow
 
 The owner-phase engine runs in this order:
 
-1. Intake binding: [owner-intake.ts](/Users/deolunathan/Downloads/BB/AfrExit/AfrexitApp/src/valuation-engine/owner-intake.ts)
+1. Intake binding: [owner-intake.ts](/Users/deolunathan/Downloads/BB/AfrexitPro/src/valuation-engine/owner-intake.ts)
    Converts V2 form fields into the canonical request schema.
-2. Validation: [request-validation.mjs](/Users/deolunathan/Downloads/BB/AfrExit/AfrexitApp/server/valuation-v2/modules/request-validation.mjs)
+2. Validation: [request-validation.mjs](/Users/deolunathan/Downloads/BB/AfrexitPro/server/valuation-v2/modules/request-validation.mjs)
    Checks required owner, company, classification, and minimum financial fields.
-3. Policy resolution: [policy-registry.mjs](/Users/deolunathan/Downloads/BB/AfrExit/AfrexitApp/server/valuation-v2/policy-registry.mjs)
+3. Policy resolution: [policy-registry.mjs](/Users/deolunathan/Downloads/BB/AfrexitPro/server/valuation-v2/policy-registry.mjs)
    Resolves `level2` into a `policyGroupId` and hydrates calibration data.
-4. Historical analysis: [history.mjs](/Users/deolunathan/Downloads/BB/AfrExit/AfrexitApp/server/valuation-v2/modules/history.mjs)
+4. Historical analysis: [history.mjs](/Users/deolunathan/Downloads/BB/AfrexitPro/server/valuation-v2/modules/history.mjs)
    Builds the representative revenue and operating-profit view from `1-3` years of owner history.
-5. Normalization: [normalization.mjs](/Users/deolunathan/Downloads/BB/AfrExit/AfrexitApp/server/valuation-v2/modules/normalization.mjs)
+5. Normalization: [normalization.mjs](/Users/deolunathan/Downloads/BB/AfrexitPro/server/valuation-v2/modules/normalization.mjs)
    Converts owner-entered adjustments into normalized earnings and working-capital metrics.
-6. Scorecards and readiness: [scorecards.mjs](/Users/deolunathan/Downloads/BB/AfrExit/AfrexitApp/server/valuation-v2/modules/scorecards.mjs)
+6. Scorecards and readiness: [scorecards.mjs](/Users/deolunathan/Downloads/BB/AfrexitPro/server/valuation-v2/modules/scorecards.mjs)
    Computes qualitative scores for market position, records quality, transferability, and readiness.
-7. Method selection and reconciliation: [method-selection.mjs](/Users/deolunathan/Downloads/BB/AfrExit/AfrexitApp/server/valuation-v2/modules/method-selection.mjs)
+7. Method selection and reconciliation: [method-selection.mjs](/Users/deolunathan/Downloads/BB/AfrexitPro/server/valuation-v2/modules/method-selection.mjs)
    Chooses market, capitalized earnings, and/or asset floor methods from the policy group and current business profile.
-8. Valuation approaches: [approaches.mjs](/Users/deolunathan/Downloads/BB/AfrExit/AfrexitApp/server/valuation-v2/modules/approaches.mjs)
+8. Valuation approaches: [approaches.mjs](/Users/deolunathan/Downloads/BB/AfrexitPro/server/valuation-v2/modules/approaches.mjs)
    Runs the chosen approach formulas and also calculates normalization impact by method.
-9. Confidence: [confidence.mjs](/Users/deolunathan/Downloads/BB/AfrExit/AfrexitApp/server/valuation-v2/modules/confidence.mjs)
+9. Confidence: [confidence.mjs](/Users/deolunathan/Downloads/BB/AfrexitPro/server/valuation-v2/modules/confidence.mjs)
    Builds the confidence score and range width from data quality, benchmark quality, historical depth, and method dispersion.
-10. EV to equity bridge: [bridge.mjs](/Users/deolunathan/Downloads/BB/AfrExit/AfrexitApp/server/valuation-v2/modules/bridge.mjs)
+10. EV to equity bridge: [bridge.mjs](/Users/deolunathan/Downloads/BB/AfrexitPro/server/valuation-v2/modules/bridge.mjs)
     Converts reconciled enterprise value into equity value and achievable-today value.
-11. Output assembly: [output.mjs](/Users/deolunathan/Downloads/BB/AfrExit/AfrexitApp/server/valuation-v2/modules/output.mjs)
+11. Output assembly: [output.mjs](/Users/deolunathan/Downloads/BB/AfrexitPro/server/valuation-v2/modules/output.mjs)
     Builds the final inspectable result, including history, normalization line items, methods, readiness, confidence, and red flags.
 
 ## 3. Core Formulas
@@ -59,7 +61,7 @@ The current owner-phase engine blends up to `3` periods using a weighted average
 - previous year: `30%`
 - two years ago: `20%`
 
-This is implemented in [history.mjs](/Users/deolunathan/Downloads/BB/AfrExit/AfrexitApp/server/valuation-v2/modules/history.mjs).
+This is implemented in [history.mjs](/Users/deolunathan/Downloads/BB/AfrexitPro/server/valuation-v2/modules/history.mjs).
 
 Representative metrics:
 
@@ -79,7 +81,7 @@ These are based on variation in revenue and operating margin across the availabl
 
 ### 3.3 Normalized earnings
 
-Normalization begins with owner-entered line items and aggregates them by earnings layer in [normalization.mjs](/Users/deolunathan/Downloads/BB/AfrExit/AfrexitApp/server/valuation-v2/modules/normalization.mjs):
+Normalization begins with owner-entered line items and aggregates them by earnings layer in [normalization.mjs](/Users/deolunathan/Downloads/BB/AfrexitPro/server/valuation-v2/modules/normalization.mjs):
 
 - `adjustedEbit = operatingProfit + ebitAdjustments`
 - `adjustedEbitda = adjustedEbit + depreciationAmortization`
@@ -93,7 +95,7 @@ Working-capital terms:
 
 ### 3.4 Method formulas
 
-Market approach in [approaches.mjs](/Users/deolunathan/Downloads/BB/AfrExit/AfrexitApp/server/valuation-v2/modules/approaches.mjs):
+Market approach in [approaches.mjs](/Users/deolunathan/Downloads/BB/AfrexitPro/server/valuation-v2/modules/approaches.mjs):
 
 - `value = chosenMetric * marketMultipleRange`
 
@@ -120,7 +122,7 @@ This is not a simple average. It is policy-driven and method-specific.
 
 The engine separates fundamental value from achievable-today value.
 
-In [bridge.mjs](/Users/deolunathan/Downloads/BB/AfrExit/AfrexitApp/server/valuation-v2/modules/bridge.mjs):
+In [bridge.mjs](/Users/deolunathan/Downloads/BB/AfrexitPro/server/valuation-v2/modules/bridge.mjs):
 
 - `marketabilityFactor = clamp(floor + readinessOverallScore / 520, floor, ceiling)`
 - `achievableTodayEnterpriseValue = fundamentalEnterpriseValue * marketabilityFactor`
@@ -159,22 +161,22 @@ Confidence is built from:
 
 Range width then widens or tightens from confidence.
 
-The exact weighting lives in [confidence.mjs](/Users/deolunathan/Downloads/BB/AfrExit/AfrexitApp/server/valuation-v2/modules/confidence.mjs).
+The exact weighting lives in [confidence.mjs](/Users/deolunathan/Downloads/BB/AfrexitPro/server/valuation-v2/modules/confidence.mjs).
 
 ## 4. Traceability Legend
 
 Short names used below:
 
-- `Bind`: intake binding in [owner-intake.ts](/Users/deolunathan/Downloads/BB/AfrExit/AfrexitApp/src/valuation-engine/owner-intake.ts)
-- `Hist`: historical summary in [history.mjs](/Users/deolunathan/Downloads/BB/AfrExit/AfrexitApp/server/valuation-v2/modules/history.mjs)
-- `Norm`: normalization schedule or normalized metrics in [owner-intake.ts](/Users/deolunathan/Downloads/BB/AfrExit/AfrexitApp/src/valuation-engine/owner-intake.ts) and [normalization.mjs](/Users/deolunathan/Downloads/BB/AfrExit/AfrexitApp/server/valuation-v2/modules/normalization.mjs)
-- `Score`: scorecard in [scorecards.mjs](/Users/deolunathan/Downloads/BB/AfrExit/AfrexitApp/server/valuation-v2/modules/scorecards.mjs)
-- `Ready`: readiness assessment in [scorecards.mjs](/Users/deolunathan/Downloads/BB/AfrExit/AfrexitApp/server/valuation-v2/modules/scorecards.mjs)
-- `Methods`: method selection in [method-selection.mjs](/Users/deolunathan/Downloads/BB/AfrExit/AfrexitApp/server/valuation-v2/modules/method-selection.mjs)
-- `Appr`: valuation approaches in [approaches.mjs](/Users/deolunathan/Downloads/BB/AfrExit/AfrexitApp/server/valuation-v2/modules/approaches.mjs)
-- `Conf`: confidence in [confidence.mjs](/Users/deolunathan/Downloads/BB/AfrExit/AfrexitApp/server/valuation-v2/modules/confidence.mjs)
-- `Bridge`: EV to equity bridge in [bridge.mjs](/Users/deolunathan/Downloads/BB/AfrExit/AfrexitApp/server/valuation-v2/modules/bridge.mjs)
-- `Result`: output surface in [output.mjs](/Users/deolunathan/Downloads/BB/AfrExit/AfrexitApp/server/valuation-v2/modules/output.mjs)
+- `Bind`: intake binding in [owner-intake.ts](/Users/deolunathan/Downloads/BB/AfrexitPro/src/valuation-engine/owner-intake.ts)
+- `Hist`: historical summary in [history.mjs](/Users/deolunathan/Downloads/BB/AfrexitPro/server/valuation-v2/modules/history.mjs)
+- `Norm`: normalization schedule or normalized metrics in [owner-intake.ts](/Users/deolunathan/Downloads/BB/AfrexitPro/src/valuation-engine/owner-intake.ts) and [normalization.mjs](/Users/deolunathan/Downloads/BB/AfrexitPro/server/valuation-v2/modules/normalization.mjs)
+- `Score`: scorecard in [scorecards.mjs](/Users/deolunathan/Downloads/BB/AfrexitPro/server/valuation-v2/modules/scorecards.mjs)
+- `Ready`: readiness assessment in [scorecards.mjs](/Users/deolunathan/Downloads/BB/AfrexitPro/server/valuation-v2/modules/scorecards.mjs)
+- `Methods`: method selection in [method-selection.mjs](/Users/deolunathan/Downloads/BB/AfrexitPro/server/valuation-v2/modules/method-selection.mjs)
+- `Appr`: valuation approaches in [approaches.mjs](/Users/deolunathan/Downloads/BB/AfrexitPro/server/valuation-v2/modules/approaches.mjs)
+- `Conf`: confidence in [confidence.mjs](/Users/deolunathan/Downloads/BB/AfrexitPro/server/valuation-v2/modules/confidence.mjs)
+- `Bridge`: EV to equity bridge in [bridge.mjs](/Users/deolunathan/Downloads/BB/AfrexitPro/server/valuation-v2/modules/bridge.mjs)
+- `Result`: output surface in [output.mjs](/Users/deolunathan/Downloads/BB/AfrexitPro/server/valuation-v2/modules/output.mjs)
 
 ## 5. Question Traceability Matrix
 
@@ -185,9 +187,9 @@ Short names used below:
 | `level1` - broad sector | `classification.level1` | `Bind`, validation, `Result` | Classification context only in `v0.4`. It does not currently change method selection or value math directly. |
 | `level2` - main revenue model | `classification.level2` | `Bind`, policy resolution, `Methods`, `Norm`, `Bridge`, `Conf`, `Result` | Strongest structural driver. Resolves the policy group and therefore controls method set, multiples, cap rates, working-capital target, marketability bounds, reconciliation weights, and dispersion penalty weight. |
 | `industryFit` - fit of classification | `classification.industryFit` | `Score`, `Result` | Feeds `marketPosition` score only. Summary signal today, not direct value or confidence math. |
-| `businessSummary` - what the business does | `company.businessSummary` | `Bind`, `Result` | Metadata and audit context only. No direct valuation effect in `v0.4`. |
-| `primaryState` - main location | `company.primaryState` | `Bind`, `Result` | Metadata only in `v0.4`. No direct valuation effect yet. |
-| `operatingYears` - years in operation | `company.operatingYearsBand` | `Bind`, `Result` | Metadata only in `v0.4`. Not yet a value or confidence input. |
+| `businessSummary` - what the business does | `company.businessSummary` | `Bind`, `Result` | Metadata and audit context only. In the adaptive flow this may be populated from the `businessDescription` question. |
+| `primaryState` - main location | `company.primaryState` | `Bind`, `Bridge`, `Result` | In `v0.5`, location now affects achievable-today value through a modest geography factor. It still does not change fundamental enterprise value or policy-group selection. |
+| `operatingYears` - years in operation | `company.operatingYearsBand` | `Bind`, `Ready`, `Conf`, `Result` | In `v0.5`, operating history now affects readiness and confidence modestly. It still does not directly change method multiples or cap rates. |
 | `legalStructure` - legal form | `company.legalStructure` | `Score`, `Ready`, `Bridge`, `Result` | Feeds `transactionReadiness` and `ownershipClarity`. Through readiness overall it indirectly changes achievable-today value via the marketability factor. |
 | `ownerControl` - ownership/control band | `company.ownerControlBand` | `Score`, `Ready`, `Bridge`, `Result` | Same pattern as `legalStructure`: indirect effect on achievable-today value through readiness and ownership clarity. |
 
@@ -284,13 +286,11 @@ Short names used below:
 
 ## 6. Questions That Do Not Currently Move Headline Value Math
 
-These questions are still worth collecting, but in `v0.4` they do not directly change the final headline achievable-today range:
+These questions are still worth collecting, but in `v0.5` they do not directly change the final headline achievable-today range:
 
 - `level1`
 - `industryFit`
 - `businessSummary`
-- `primaryState`
-- `operatingYears`
 - `catchmentArea`
 - `differentiation`
 - `pricingPower`
@@ -310,8 +310,8 @@ This section is intentionally blunt.
 ### 7.1 What is true
 
 - the current owner-phase engine does use explicit benchmark and calibration files:
-  - [benchmark-data.json](/Users/deolunathan/Downloads/BB/AfrExit/AfrexitApp/src/valuation-engine/benchmark-data.json)
-  - [calibration-table.json](/Users/deolunathan/Downloads/BB/AfrExit/AfrexitApp/src/valuation-engine/calibration-table.json)
+  - [benchmark-data.json](/Users/deolunathan/Downloads/BB/AfrexitPro/src/valuation-engine/benchmark-data.json)
+  - [calibration-table.json](/Users/deolunathan/Downloads/BB/AfrexitPro/src/valuation-engine/calibration-table.json)
 - the benchmark loader does compute evidence score, freshness, source mix, and source reliability from those files
 - internal Afrexit observations can now be captured and ingested into calibration
 
@@ -321,7 +321,7 @@ This section is intentionally blunt.
 - it does not parse current pages on each run
 - the quartile and proxy values in the private-market refresh path are currently hardcoded in local `PACKS`
 
-That logic lives in [refresh-private-market-benchmarks.mjs](/Users/deolunathan/Downloads/BB/AfrExit/AfrexitApp/scripts/valuation-engine/refresh-private-market-benchmarks.mjs).
+That logic lives in [refresh-private-market-benchmarks.mjs](/Users/deolunathan/Downloads/BB/AfrexitPro/scripts/valuation-engine/refresh-private-market-benchmarks.mjs).
 
 ### 7.3 Why the broken links matter
 

@@ -1,73 +1,60 @@
-# React + TypeScript + Vite
+# AfrexitPro
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Owner-first valuation app for Nigerian SMEs.
 
-Currently, two official plugins are available:
+This repository currently contains:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- a React + Vite frontend in the repo root
+- a local valuation backend in `server/valuation-v2`
+- the canonical valuation-engine plan in `docs/valuation-engine/afrexit-valuation-engine-master-plan.md`
+- the adaptive questionnaire product draft in `docs/ADAPTIVE_QUESTIONNAIRE_PRD.md`
 
-## React Compiler
+## Current Status
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Based on the master plan, the owner-phase valuation foundation is already in place:
 
-## Expanding the ESLint configuration
+- canonical request/result contracts exist
+- the shared policy registry is wired on frontend and backend
+- the owner-mode backend is modularized around request validation, normalization, method selection, approaches, bridge, confidence, history, and output
+- benchmark/admin workflows, internal observations, and regression fixtures already exist
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Current active work in this repo is the next UX layer on top of that foundation:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- adaptive questionnaire flow
+- partial valuation updates during intake
+- richer multi-year financial intake
+- ongoing benchmark provenance cleanup and calibration refinement
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Run Locally
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. Install dependencies:
+
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. Start the full local stack:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
 ```
+
+3. Open:
+
+- main app: `http://localhost:5173/`
+- V2 lab entry: `http://localhost:5173/valuation-v2.html`
+- local backend: `http://localhost:8788/`
+
+## Useful Scripts
+
+- `npm run dev` starts frontend and backend together
+- `npm run dev:frontend` starts only the Vite frontend
+- `npm run dev:backend` starts only the local valuation backend
+- `npm run valuation:v2:fixtures` runs owner-mode regression fixtures against local modules
+- `npm run valuation:v2:fixtures:api` runs owner-mode regression fixtures against the local API
+
+## Notes
+
+- The V2 backend is local-only and intentionally separate from any live estimator flow.
+- Frontend API calls default to `http://localhost:8788` unless `VITE_VALUATION_API_URL` is set.
+- Backend port defaults to `8788` unless `VALUATION_V2_PORT` is set.

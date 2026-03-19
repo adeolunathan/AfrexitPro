@@ -57,7 +57,11 @@
           "fxExposure": "moderate",
           "assetSeparation": "mostly",
           "inventoryProfile": "7_30",
-          "workingCapitalHealth": "tight"
+          "workingCapitalHealth": "tight",
+          "capacityUtilization": "70_90",
+          "equipmentAgeCondition": "good",
+          "rawMaterialPriceExposure": "significant",
+          "qualityCertifications": "local"
         },
         "financials": {
           "historicals": [
@@ -204,7 +208,7 @@
           "legalStructure": "limited_company",
           "ownerControlBand": "gt_75",
           "operatingYearsBand": "3_5",
-          "primaryState": "abuja_fct",
+          "primaryState": "fct",
           "businessSummary": "Retail chain selling household and convenience goods."
         },
         "classification": {
@@ -229,7 +233,11 @@
           "fxExposure": "low",
           "assetSeparation": "mostly",
           "inventoryProfile": "30_90",
-          "workingCapitalHealth": "tight"
+          "workingCapitalHealth": "tight",
+          "grossMarginStability": "stable",
+          "supplierConcentration": "moderate",
+          "shrinkageSpoilage": "moderate",
+          "peakSeasonDependency": "slight"
         },
         "financials": {
           "historicals": [
@@ -362,7 +370,10 @@
           "hiringDifficulty": "difficult",
           "fxExposure": "low",
           "assetSeparation": "clear",
-          "workingCapitalHealth": "healthy"
+          "workingCapitalHealth": "healthy",
+          "staffUtilization": "60_80",
+          "keyPersonDependencies": "one",
+          "pricingPowerVsMarket": "premium"
         },
         "financials": {
           "historicals": [

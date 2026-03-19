@@ -5,44 +5,71 @@ import { resolveFrontendPolicyGroup } from './policy-registry';
 type OwnerFieldValueType = 'string' | 'number' | 'boolean';
 
 export type OwnerFieldId =
+  // Anchor phase
   | 'level1'
   | 'level2'
   | 'industryFit'
+  | 'businessDescription'
   | 'businessSummary'
   | 'primaryState'
   | 'operatingYears'
   | 'legalStructure'
   | 'ownerControl'
-  | 'catchmentArea'
-  | 'marketDemand'
-  | 'growthOutlook'
-  | 'differentiation'
-  | 'pricingPower'
   | 'transactionGoal'
   | 'transactionTimeline'
   | 'revenueLatest'
+  | 'revenuePrevious1'
+  | 'revenuePrevious2'
   | 'operatingProfitLatest'
-  | 'revenuePrev1'
-  | 'operatingProfitPrev1'
-  | 'revenuePrev2'
-  | 'operatingProfitPrev2'
+  | 'operatingProfitPrevious1'
+  | 'operatingProfitPrevious2'
+  | 'catchmentArea'
+  | 'pricingPower'
   | 'proofReadiness'
-  | 'traceablePaymentsShare'
-  | 'bankingQuality'
-  | 'financeTracking'
-  | 'ownerAbsence2Weeks'
-  | 'ownerAbsence3Months'
-  | 'managementDepth'
-  | 'processDocumentation'
-  | 'replacementDifficulty'
-  | 'hiringDifficulty'
-  | 'customerConcentration'
-  | 'bestCustomerRisk'
+  | 'marketDemand'
+  // Branch: Product/Retail
+  | 'inventoryValueLatest'
+  | 'inventoryProfile'
+  | 'grossMarginStability'
+  | 'supplierConcentration'
+  | 'shrinkageSpoilage'
+  | 'peakSeasonDependency'
+  // Branch: Professional Services
   | 'founderRevenueDependence'
   | 'recurringRevenueShare'
   | 'revenueVisibility'
+  | 'staffUtilization'
+  | 'keyPersonDependencies'
+  | 'pricingPowerVsMarket'
+  // Branch: Manufacturing
+  | 'capacityUtilization'
+  | 'equipmentAgeCondition'
+  | 'maintenanceCapexLatest'
+  | 'customerConcentration'
+  | 'rawMaterialPriceExposure'
+  | 'qualityCertifications'
+  // Closing phase
+  | 'traceablePaymentsShare'
+  | 'bankingQuality'
+  | 'financeTracking'
+  | 'cashFlowPosition'
+  | 'ownerAbsence2Weeks'
+  | 'ownerAbsence3Months'
+  | 'ownerCustomerRelationship'
+  | 'managementIndependence'
+  | 'managementDepth'
+  | 'processDocumentation'
+  | 'replacementDifficulty'
+  | 'employeeTenure'
+  | 'laborMarketDifficulty'
+  | 'recruitmentForGrowth'
+  | 'growthPotential'
+  | 'hiringDifficulty'
+  | 'customerConcentration'
+  | 'bestCustomerImpact'
+  | 'bestCustomerRisk'
+  | 'partnerDependency'
   | 'supplierTransferability'
-  | 'inventoryProfile'
   | 'workingCapitalHealth'
   | 'assetSeparation'
   | 'fxExposure'
@@ -56,19 +83,27 @@ export type OwnerFieldId =
   | 'oneOffExpenseAmount'
   | 'oneOffIncomeAmount'
   | 'nonCoreIncomeAmount'
+  | 'annualDepreciation'
   | 'receivablesLatest'
-  | 'inventoryValueLatest'
   | 'payablesLatest'
-  | 'maintenanceCapexLatest'
   | 'cashBalance'
   | 'financialDebt'
   | 'shareholderLoans'
+  | 'previousOffer'
+  | 'previousOfferAmount'
   | 'firstName'
   | 'businessName'
   | 'email'
   | 'whatsapp'
   | 'termsAccepted'
-  | 'newsletterOptIn';
+  | 'newsletterOptIn'
+  // Legacy fields (kept for compatibility)
+  | 'growthOutlook'
+  | 'differentiation'
+  | 'revenuePrev1'
+  | 'operatingProfitPrev1'
+  | 'revenuePrev2'
+  | 'operatingProfitPrev2';
 
 interface OwnerFieldBinding {
   canonicalPath: string;
@@ -79,6 +114,7 @@ export const ownerFieldBindings: Record<OwnerFieldId, OwnerFieldBinding> = {
   level1: { canonicalPath: 'classification.level1', valueType: 'string' },
   level2: { canonicalPath: 'classification.level2', valueType: 'string' },
   industryFit: { canonicalPath: 'classification.industryFit', valueType: 'string' },
+  businessDescription: { canonicalPath: 'company.businessSummary', valueType: 'string' },
   businessSummary: { canonicalPath: 'company.businessSummary', valueType: 'string' },
   primaryState: { canonicalPath: 'company.primaryState', valueType: 'string' },
   operatingYears: { canonicalPath: 'company.operatingYearsBand', valueType: 'string' },
@@ -92,7 +128,11 @@ export const ownerFieldBindings: Record<OwnerFieldId, OwnerFieldBinding> = {
   transactionGoal: { canonicalPath: 'engagement.purpose', valueType: 'string' },
   transactionTimeline: { canonicalPath: 'engagement.urgency', valueType: 'string' },
   revenueLatest: { canonicalPath: 'financials.historicals[0].revenue', valueType: 'number' },
+  revenuePrevious1: { canonicalPath: 'financials.historicals[1].revenue', valueType: 'number' },
+  revenuePrevious2: { canonicalPath: 'financials.historicals[2].revenue', valueType: 'number' },
   operatingProfitLatest: { canonicalPath: 'financials.historicals[0].operatingProfit', valueType: 'number' },
+  operatingProfitPrevious1: { canonicalPath: 'financials.historicals[1].operatingProfit', valueType: 'number' },
+  operatingProfitPrevious2: { canonicalPath: 'financials.historicals[2].operatingProfit', valueType: 'number' },
   revenuePrev1: { canonicalPath: 'financials.historicals[1].revenue', valueType: 'number' },
   operatingProfitPrev1: { canonicalPath: 'financials.historicals[1].operatingProfit', valueType: 'number' },
   revenuePrev2: { canonicalPath: 'financials.historicals[2].revenue', valueType: 'number' },
@@ -101,14 +141,23 @@ export const ownerFieldBindings: Record<OwnerFieldId, OwnerFieldBinding> = {
   traceablePaymentsShare: { canonicalPath: 'financials.sourceQuality.traceablePaymentsShare', valueType: 'string' },
   bankingQuality: { canonicalPath: 'financials.sourceQuality.bankingQuality', valueType: 'string' },
   financeTracking: { canonicalPath: 'financials.sourceQuality.bookkeepingQuality', valueType: 'string' },
+  cashFlowPosition: { canonicalPath: 'financials.cashFlowPosition', valueType: 'string' },
   ownerAbsence2Weeks: { canonicalPath: 'readiness.ownerAbsence2Weeks', valueType: 'string' },
   ownerAbsence3Months: { canonicalPath: 'readiness.ownerAbsence3Months', valueType: 'string' },
+  ownerCustomerRelationship: { canonicalPath: 'operatingProfile.founderRevenueDependence', valueType: 'string' },
+  managementIndependence: { canonicalPath: 'readiness.managementIndependence', valueType: 'string' },
   managementDepth: { canonicalPath: 'readiness.managementDepth', valueType: 'string' },
   processDocumentation: { canonicalPath: 'readiness.processDocumentation', valueType: 'string' },
   replacementDifficulty: { canonicalPath: 'readiness.replacementDifficulty', valueType: 'string' },
+  employeeTenure: { canonicalPath: 'operatingProfile.employeeTenure', valueType: 'string' },
+  laborMarketDifficulty: { canonicalPath: 'operatingProfile.hiringDifficulty', valueType: 'string' },
+  recruitmentForGrowth: { canonicalPath: 'operatingProfile.recruitmentForGrowth', valueType: 'string' },
+  growthPotential: { canonicalPath: 'operatingProfile.growthOutlook', valueType: 'string' },
   hiringDifficulty: { canonicalPath: 'operatingProfile.hiringDifficulty', valueType: 'string' },
   customerConcentration: { canonicalPath: 'operatingProfile.customerConcentration', valueType: 'string' },
+  bestCustomerImpact: { canonicalPath: 'operatingProfile.bestCustomerRisk', valueType: 'string' },
   bestCustomerRisk: { canonicalPath: 'operatingProfile.bestCustomerRisk', valueType: 'string' },
+  partnerDependency: { canonicalPath: 'operatingProfile.supplierTransferability', valueType: 'string' },
   founderRevenueDependence: { canonicalPath: 'operatingProfile.founderRevenueDependence', valueType: 'string' },
   recurringRevenueShare: { canonicalPath: 'operatingProfile.recurringRevenueShare', valueType: 'string' },
   revenueVisibility: { canonicalPath: 'operatingProfile.revenueVisibility', valueType: 'string' },
@@ -127,6 +176,7 @@ export const ownerFieldBindings: Record<OwnerFieldId, OwnerFieldBinding> = {
   oneOffExpenseAmount: { canonicalPath: 'normalization.schedule.one_off_expenses', valueType: 'number' },
   oneOffIncomeAmount: { canonicalPath: 'normalization.schedule.one_off_income', valueType: 'number' },
   nonCoreIncomeAmount: { canonicalPath: 'normalization.schedule.non_core_income', valueType: 'number' },
+  annualDepreciation: { canonicalPath: 'financials.historicals[0].depreciationAmortization', valueType: 'number' },
   receivablesLatest: { canonicalPath: 'financials.historicals[0].receivables', valueType: 'number' },
   inventoryValueLatest: { canonicalPath: 'financials.historicals[0].inventory', valueType: 'number' },
   payablesLatest: { canonicalPath: 'financials.historicals[0].payables', valueType: 'number' },
@@ -134,12 +184,28 @@ export const ownerFieldBindings: Record<OwnerFieldId, OwnerFieldBinding> = {
   cashBalance: { canonicalPath: 'bridge.cashAndEquivalents', valueType: 'number' },
   financialDebt: { canonicalPath: 'bridge.interestBearingDebt', valueType: 'number' },
   shareholderLoans: { canonicalPath: 'bridge.shareholderLoans', valueType: 'number' },
+  previousOffer: { canonicalPath: 'engagement.previousOfferStatus', valueType: 'string' },
+  previousOfferAmount: { canonicalPath: 'engagement.previousOfferAmount', valueType: 'number' },
   firstName: { canonicalPath: 'company.firstName', valueType: 'string' },
   businessName: { canonicalPath: 'company.businessName', valueType: 'string' },
   email: { canonicalPath: 'company.email', valueType: 'string' },
   whatsapp: { canonicalPath: 'company.whatsapp', valueType: 'string' },
   termsAccepted: { canonicalPath: 'meta.acknowledged', valueType: 'boolean' },
   newsletterOptIn: { canonicalPath: 'meta.newsletterOptIn', valueType: 'boolean' },
+  // Branch: Product/Retail
+  grossMarginStability: { canonicalPath: 'operatingProfile.grossMarginStability', valueType: 'string' },
+  supplierConcentration: { canonicalPath: 'operatingProfile.supplierConcentration', valueType: 'string' },
+  shrinkageSpoilage: { canonicalPath: 'operatingProfile.shrinkageSpoilage', valueType: 'string' },
+  peakSeasonDependency: { canonicalPath: 'operatingProfile.peakSeasonDependency', valueType: 'string' },
+  // Branch: Professional Services
+  staffUtilization: { canonicalPath: 'operatingProfile.staffUtilization', valueType: 'string' },
+  keyPersonDependencies: { canonicalPath: 'operatingProfile.keyPersonDependencies', valueType: 'string' },
+  pricingPowerVsMarket: { canonicalPath: 'operatingProfile.pricingPowerVsMarket', valueType: 'string' },
+  // Branch: Manufacturing
+  capacityUtilization: { canonicalPath: 'operatingProfile.capacityUtilization', valueType: 'string' },
+  equipmentAgeCondition: { canonicalPath: 'operatingProfile.equipmentAgeCondition', valueType: 'string' },
+  rawMaterialPriceExposure: { canonicalPath: 'operatingProfile.rawMaterialPriceExposure', valueType: 'string' },
+  qualityCertifications: { canonicalPath: 'operatingProfile.qualityCertifications', valueType: 'string' },
 };
 
 function toNumber(value: string | boolean | undefined) {
@@ -162,6 +228,217 @@ function buildRequestId() {
   return `owner-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
+function normalizePrimaryState(value: string | boolean | undefined) {
+  const normalized = String(value ?? '').trim().toLowerCase();
+  if (!normalized) return 'lagos_mainland';
+
+  const aliases: Record<string, string> = {
+    abuja_fct: 'fct',
+    abuja: 'fct',
+    port_harcourt: 'rivers',
+  };
+
+  return aliases[normalized] || normalized;
+}
+
+function normalizeIndustryFit(value: string | boolean | undefined): ValuationRequest['classification']['industryFit'] {
+  switch (String(value ?? '').trim()) {
+    case 'perfect_fit':
+      return 'perfect_fit';
+    case 'good_fit':
+    case 'mostly_fit':
+    case 'hybrid':
+      return 'mostly_fit';
+    case 'partial_fit':
+      return 'partial_fit';
+    case 'poor_fit':
+      return 'poor_fit';
+    default:
+      return 'not_sure';
+  }
+}
+
+function normalizeCatchmentArea(value: string | boolean | undefined) {
+  switch (String(value ?? '').trim()) {
+    case 'local_single':
+      return 'local_city';
+    case 'regional_multi':
+      return 'multi_state';
+    case 'national_single':
+      return 'national_single_base';
+    case 'international_single':
+    case 'international_multi':
+      return 'international';
+    case 'local_city':
+    case 'single_state':
+    case 'multi_state':
+    case 'national_single_base':
+    case 'national_multi_base':
+    case 'international':
+      return String(value);
+    default:
+      return 'local_city';
+  }
+}
+
+function normalizePricingPower(value: string | boolean | undefined) {
+  switch (String(value ?? '').trim()) {
+    case 'market_price':
+    case 'price_competition':
+      return 'none';
+    case 'slight_premium':
+      return 'some';
+    case 'significant_premium':
+      return 'premium';
+    case 'strong_premium':
+    case 'premium':
+    case 'some':
+    case 'none':
+    case 'not_sure':
+      return String(value);
+    default:
+      return 'not_sure';
+  }
+}
+
+function normalizeGrowthOutlook(value: string | boolean | undefined) {
+  switch (String(value ?? '').trim()) {
+    case 'current_market':
+    case 'new_markets':
+      return 'strong_growth';
+    case 'limited':
+      return 'stable';
+    case 'uncertain':
+      return 'not_sure';
+    case 'strong_growth':
+    case 'moderate_growth':
+    case 'stable':
+    case 'decline':
+    case 'not_sure':
+      return String(value);
+    default:
+      return 'not_sure';
+  }
+}
+
+function normalizeHiringDifficulty(value: string | boolean | undefined) {
+  switch (String(value ?? '').trim()) {
+    case 'no_shortage':
+      return 'easy';
+    case 'competition':
+      return 'feasible';
+    case 'severe_shortage':
+      return 'severe';
+    case 'easy':
+    case 'feasible':
+    case 'difficult':
+    case 'severe':
+      return String(value);
+    default:
+      return 'feasible';
+  }
+}
+
+function normalizeCustomerConcentration(value: string | boolean | undefined) {
+  switch (String(value ?? '').trim()) {
+    case 'no_material':
+    case 'none_material':
+      return 'none_material';
+    case 'lt_20':
+      return 'manageable';
+    case '20_50':
+    case 'high':
+      return 'high';
+    case '50_80':
+    case 'gt_80':
+    case 'extreme':
+      return 'extreme';
+    case 'manageable':
+    case 'not_sure':
+      return String(value);
+    default:
+      return 'not_sure';
+  }
+}
+
+function deriveBestCustomerRisk(customerConcentration: string) {
+  switch (customerConcentration) {
+    case 'none_material':
+      return 'minor';
+    case 'manageable':
+      return 'noticeable';
+    case 'high':
+      return 'major';
+    case 'extreme':
+      return 'severe';
+    default:
+      return 'noticeable';
+  }
+}
+
+function normalizeBestCustomerRisk(
+  value: string | boolean | undefined,
+  customerConcentration: string
+): 'minor' | 'noticeable' | 'major' | 'severe' {
+  switch (String(value ?? '').trim()) {
+    case 'minor':
+    case 'noticeable':
+    case 'major':
+    case 'severe':
+      return String(value) as 'minor' | 'noticeable' | 'major' | 'severe';
+    default:
+      return deriveBestCustomerRisk(customerConcentration) as 'minor' | 'noticeable' | 'major' | 'severe';
+  }
+}
+
+function normalizeSupplierTransferability(value: string | boolean | undefined) {
+  switch (String(value ?? '').trim()) {
+    case 'no_dependency':
+    case 'replaceable_weeks':
+      return 'very_easy';
+    case 'replaceable_year':
+      return 'uncertain';
+    case 'difficult_replace':
+      return 'very_difficult';
+    case 'very_easy':
+    case 'manageable':
+    case 'uncertain':
+    case 'very_difficult':
+      return String(value);
+    default:
+      return 'manageable';
+  }
+}
+
+function normalizeFounderDependence(value: string | boolean | undefined) {
+  switch (String(value ?? '').trim()) {
+    case 'brand_not_personal':
+      return 'very_little';
+    case 'knows_not_expected':
+      return 'some';
+    case 'expects_involvement':
+      return 'large_share';
+    case 'buying_owner':
+      return 'most';
+    case 'very_little':
+    case 'some':
+    case 'large_share':
+    case 'most':
+      return String(value);
+    default:
+      return 'some';
+  }
+}
+
+function normalizePreviousOfferStatus(value: string | boolean | undefined) {
+  const normalized = String(value ?? '').trim();
+  if (normalized === 'yes' || normalized === 'expressions' || normalized === 'no') {
+    return normalized as 'yes' | 'expressions' | 'no';
+  }
+
+  return undefined;
+}
+
 function buildHistoricalPeriod(
   periodId: string,
   label: string,
@@ -173,6 +450,7 @@ function buildHistoricalPeriod(
     inventory?: number;
     payables?: number;
     maintenanceCapex?: number;
+    depreciationAmortization?: number;
     cashBalance?: number;
     financialDebt?: number;
   }
@@ -187,6 +465,7 @@ function buildHistoricalPeriod(
     inventory: options?.inventory,
     payables: options?.payables,
     maintenanceCapex: options?.maintenanceCapex,
+    depreciationAmortization: options?.depreciationAmortization,
     cashBalance: options?.cashBalance,
     financialDebt: options?.financialDebt,
     sourceType: 'owner_estimate' as const,
@@ -195,6 +474,15 @@ function buildHistoricalPeriod(
 }
 
 function buildOwnerHistoricals(formData: FormData) {
+  const revenuePrevious1 = hasValue(formData.revenuePrevious1) ? formData.revenuePrevious1 : formData.revenuePrev1;
+  const operatingProfitPrevious1 = hasValue(formData.operatingProfitPrevious1)
+    ? formData.operatingProfitPrevious1
+    : formData.operatingProfitPrev1;
+  const revenuePrevious2 = hasValue(formData.revenuePrevious2) ? formData.revenuePrevious2 : formData.revenuePrev2;
+  const operatingProfitPrevious2 = hasValue(formData.operatingProfitPrevious2)
+    ? formData.operatingProfitPrevious2
+    : formData.operatingProfitPrev2;
+
   const historicals = [
     buildHistoricalPeriod('latest_owner_input', 'Latest annual owner input', toNumber(formData.revenueLatest), toNumber(formData.operatingProfitLatest), {
       isRepresentative: true,
@@ -202,29 +490,30 @@ function buildOwnerHistoricals(formData: FormData) {
       inventory: toNumber(formData.inventoryValueLatest),
       payables: toNumber(formData.payablesLatest),
       maintenanceCapex: toNumber(formData.maintenanceCapexLatest),
+      depreciationAmortization: toNumber(formData.annualDepreciation),
       cashBalance: toNumber(formData.cashBalance),
       financialDebt: toNumber(formData.financialDebt),
     }),
   ];
 
-  if (hasValue(formData.revenuePrev1) || hasValue(formData.operatingProfitPrev1)) {
+  if (hasValue(revenuePrevious1) || hasValue(operatingProfitPrevious1)) {
     historicals.push(
       buildHistoricalPeriod(
         'prior_year_1',
         'Previous financial year',
-        toNumber(formData.revenuePrev1),
-        toNumber(formData.operatingProfitPrev1)
+        toNumber(revenuePrevious1),
+        toNumber(operatingProfitPrevious1)
       )
     );
   }
 
-  if (hasValue(formData.revenuePrev2) || hasValue(formData.operatingProfitPrev2)) {
+  if (hasValue(revenuePrevious2) || hasValue(operatingProfitPrevious2)) {
     historicals.push(
       buildHistoricalPeriod(
         'prior_year_2',
         'Two financial years ago',
-        toNumber(formData.revenuePrev2),
-        toNumber(formData.operatingProfitPrev2)
+        toNumber(revenuePrevious2),
+        toNumber(operatingProfitPrevious2)
       )
     );
   }
@@ -467,24 +756,29 @@ function buildNormalizationSchedule(formData: FormData) {
 }
 
 export function buildOwnerValuationRequest(formData: FormData): ValuationRequest {
-  const { policyGroupId } = resolveFrontendPolicyGroup(String(formData.level2 || ''));
+  const { policyGroupId, policyGroup } = resolveFrontendPolicyGroup(String(formData.level2 || ''));
   const submittedAt = new Date().toISOString();
   const purpose = mapPurpose(formData.transactionGoal);
   const urgency = mapUrgency(formData.transactionTimeline);
   const historicals = buildOwnerHistoricals(formData);
-
   const normalizationSchedule = buildNormalizationSchedule(formData);
-  const policy = resolveFrontendPolicyGroup(String(formData.level2 || '')).policyGroup;
   const latestReceivables = toNumber(formData.receivablesLatest);
   const latestInventory = toNumber(formData.inventoryValueLatest);
   const latestPayables = toNumber(formData.payablesLatest);
   const actualWorkingCapital = latestReceivables + latestInventory - latestPayables;
+  const customerConcentration = normalizeCustomerConcentration(formData.customerConcentration);
+  const previousOfferStatus = normalizePreviousOfferStatus(formData.previousOffer);
+  const previousOfferAmount =
+    previousOfferStatus === 'yes' && hasValue(formData.previousOfferAmount) ? toNumber(formData.previousOfferAmount) : undefined;
+  const founderRevenueDependence = hasValue(formData.founderRevenueDependence)
+    ? normalizeFounderDependence(formData.founderRevenueDependence)
+    : normalizeFounderDependence(formData.ownerCustomerRelationship);
   const earningsBaseType =
-    policy.ownerPhase.capitalizedMetric === 'sde'
+    policyGroup.ownerPhase.capitalizedMetric === 'sde'
       ? 'sde'
-      : policy.ownerPhase.marketMetric === 'adjustedEbitda'
+      : policyGroup.ownerPhase.marketMetric === 'adjustedEbitda'
         ? 'ebitda'
-        : policy.ownerPhase.marketMetric === 'revenue'
+        : policyGroup.ownerPhase.marketMetric === 'revenue'
           ? 'revenue'
           : 'ebit';
 
@@ -492,7 +786,7 @@ export function buildOwnerValuationRequest(formData: FormData): ValuationRequest
     meta: {
       requestId: buildRequestId(),
       mode: 'owner',
-      engineVersion: 'owner-phase-skeleton-v0.4',
+      engineVersion: 'owner-phase-skeleton-v0.5',
       submittedAt,
       currency: 'NGN',
       locale: 'en-NG',
@@ -507,6 +801,8 @@ export function buildOwnerValuationRequest(formData: FormData): ValuationRequest
       standardOfValue: purpose === 'fundraise' ? 'investment_value' : 'fair_market_value',
       premiseOfValue: urgency === 'forced' ? 'forced_liquidation' : 'going_concern',
       valuationDate: submittedAt.slice(0, 10),
+      previousOfferStatus,
+      previousOfferAmount,
     },
     company: {
       businessName: String(formData.businessName || 'Your Business'),
@@ -516,32 +812,43 @@ export function buildOwnerValuationRequest(formData: FormData): ValuationRequest
       legalStructure: (String(formData.legalStructure || 'other') as ValuationRequest['company']['legalStructure']),
       ownerControlBand: (String(formData.ownerControl || 'gt_75') as ValuationRequest['company']['ownerControlBand']),
       operatingYearsBand: (String(formData.operatingYears || '1_3') as ValuationRequest['company']['operatingYearsBand']),
-      primaryState: String(formData.primaryState || 'lagos_mainland'),
-      businessSummary: String(formData.businessSummary || 'Business summary not provided.'),
+      primaryState: normalizePrimaryState(formData.primaryState),
+      businessSummary: String(formData.businessSummary || formData.businessDescription || 'Business summary not provided.'),
     },
     classification: {
       level1: String(formData.level1 || ''),
       level2: String(formData.level2 || ''),
-      industryFit: (String(formData.industryFit || 'not_sure') as ValuationRequest['classification']['industryFit']),
+      industryFit: normalizeIndustryFit(formData.industryFit),
       policyGroupId,
     },
     operatingProfile: {
-      catchmentArea: String(formData.catchmentArea || 'local_city'),
+      catchmentArea: normalizeCatchmentArea(formData.catchmentArea),
       marketDemand: String(formData.marketDemand || 'not_sure'),
-      growthOutlook: String(formData.growthOutlook || 'not_sure'),
+      growthOutlook: normalizeGrowthOutlook(formData.growthPotential || formData.growthOutlook),
       differentiation: String(formData.differentiation || 'not_sure'),
-      pricingPower: String(formData.pricingPower || 'not_sure'),
-      customerConcentration: String(formData.customerConcentration || 'not_sure'),
-      bestCustomerRisk: String(formData.bestCustomerRisk || 'severe'),
-      founderRevenueDependence: String(formData.founderRevenueDependence || 'most'),
+      pricingPower: normalizePricingPower(formData.pricingPower),
+      customerConcentration,
+      bestCustomerRisk: normalizeBestCustomerRisk(formData.bestCustomerImpact || formData.bestCustomerRisk, customerConcentration),
+      founderRevenueDependence,
       recurringRevenueShare: String(formData.recurringRevenueShare || ''),
       revenueVisibility: String(formData.revenueVisibility || ''),
-      supplierTransferability: String(formData.supplierTransferability || ''),
-      hiringDifficulty: String(formData.hiringDifficulty || ''),
+      supplierTransferability: normalizeSupplierTransferability(formData.partnerDependency || formData.supplierTransferability),
+      hiringDifficulty: normalizeHiringDifficulty(formData.laborMarketDifficulty || formData.hiringDifficulty),
       fxExposure: String(formData.fxExposure || ''),
       assetSeparation: String(formData.assetSeparation || ''),
       inventoryProfile: String(formData.inventoryProfile || ''),
       workingCapitalHealth: String(formData.workingCapitalHealth || ''),
+      grossMarginStability: String(formData.grossMarginStability || ''),
+      supplierConcentration: String(formData.supplierConcentration || ''),
+      shrinkageSpoilage: String(formData.shrinkageSpoilage || ''),
+      peakSeasonDependency: String(formData.peakSeasonDependency || ''),
+      staffUtilization: String(formData.staffUtilization || ''),
+      keyPersonDependencies: String(formData.keyPersonDependencies || ''),
+      pricingPowerVsMarket: String(formData.pricingPowerVsMarket || ''),
+      capacityUtilization: String(formData.capacityUtilization || ''),
+      equipmentAgeCondition: String(formData.equipmentAgeCondition || ''),
+      rawMaterialPriceExposure: String(formData.rawMaterialPriceExposure || ''),
+      qualityCertifications: String(formData.qualityCertifications || ''),
     },
     financials: {
       historicals,

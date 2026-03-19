@@ -27,7 +27,9 @@ export interface Section {
 }
 
 export type FormValue = string | boolean;
-export type FormData = Partial<Record<OwnerFieldId, FormValue>>;
+export interface FormData extends Partial<Record<OwnerFieldId, FormValue>> {
+  [key: string]: string | boolean | unknown[] | undefined;
+}
 export type ResultData = ValuationResult;
 
 export interface ApiResponse {

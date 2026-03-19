@@ -57,6 +57,8 @@ export const engagementContextSchema = z.object({
   standardOfValue: z.enum(standardOfValueValues),
   premiseOfValue: z.enum(premiseOfValueValues),
   valuationDate: z.string().min(1),
+  previousOfferStatus: z.enum(['yes', 'expressions', 'no']).optional(),
+  previousOfferAmount: z.number().nonnegative().optional(),
 });
 
 export const companyProfileSchema = z.object({
@@ -96,6 +98,17 @@ export const operatingProfileSchema = z.object({
   assetSeparation: z.string().optional(),
   inventoryProfile: z.string().optional(),
   workingCapitalHealth: z.string().optional(),
+  grossMarginStability: z.string().optional(),
+  supplierConcentration: z.string().optional(),
+  shrinkageSpoilage: z.string().optional(),
+  peakSeasonDependency: z.string().optional(),
+  staffUtilization: z.string().optional(),
+  keyPersonDependencies: z.string().optional(),
+  pricingPowerVsMarket: z.string().optional(),
+  capacityUtilization: z.string().optional(),
+  equipmentAgeCondition: z.string().optional(),
+  rawMaterialPriceExposure: z.string().optional(),
+  qualityCertifications: z.string().optional(),
 });
 
 export const historicalFinancialPeriodSchema = z.object({
@@ -314,6 +327,24 @@ const rangedValueSchema = z.object({
   forcedSaleHigh: z.number().optional(),
 });
 
+const qualitativeAdjustmentSchema = z.object({
+  geographyBucket: z.string().optional(),
+  normalizedPrimaryState: z.string().optional(),
+  geographyAdjustmentFactor: z.number().optional(),
+  branchFamily: z.string().optional(),
+  branchQualityFactor: z.number().optional(),
+  branchSignalScore: z.number().optional(),
+  branchSignals: z
+    .array(
+      z.object({
+        key: z.string().min(1),
+        value: z.string().min(1),
+        score: z.number().min(0).max(100),
+      })
+    )
+    .optional(),
+});
+
 export const valueConclusionSchema = z.object({
   enterpriseValue: rangedValueSchema,
   equityValue: rangedValueSchema,
@@ -336,6 +367,7 @@ export const valueConclusionSchema = z.object({
           })
         )
         .optional(),
+      qualitativeAdjustments: qualitativeAdjustmentSchema.optional(),
     })
     .optional(),
 });
@@ -432,6 +464,7 @@ export const valuationResultSchema = z.object({
   audit: z.object({
     warnings: z.array(z.string()),
     validationPassed: z.boolean(),
+    qualitativeAdjustments: qualitativeAdjustmentSchema.optional(),
   }),
 });
 

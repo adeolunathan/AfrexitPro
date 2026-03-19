@@ -1,3 +1,5 @@
+import { buildBranchQualityAdjustment } from './qualitative-adjustments.mjs';
+
 function getMetricValue(normalizedMetrics, metricName) {
   switch (metricName) {
     case 'sde':
@@ -12,7 +14,7 @@ function getMetricValue(normalizedMetrics, metricName) {
   }
 }
 
-export function runMarketApproach(normalizedMetrics, policyGroup) {
+export function runMarketApproach(normalizedMetrics, policyGroup, branchQualityFactor = 1) {
   const ownerPhase = policyGroup.ownerPhase;
   if (!ownerPhase.marketMultipleRange) return null;
 
@@ -21,14 +23,14 @@ export function runMarketApproach(normalizedMetrics, policyGroup) {
 
   return {
     method: 'market_multiple',
-    low: metricValue * ownerPhase.marketMultipleRange.low,
-    mid: metricValue * ownerPhase.marketMultipleRange.mid,
-    high: metricValue * ownerPhase.marketMultipleRange.high,
+    low: metricValue * ownerPhase.marketMultipleRange.low * branchQualityFactor,
+    mid: metricValue * ownerPhase.marketMultipleRange.mid * branchQualityFactor,
+    high: metricValue * ownerPhase.marketMultipleRange.high * branchQualityFactor,
     metric: ownerPhase.marketMetric || 'revenue',
   };
 }
 
-export function runCapitalizedEarningsApproach(normalizedMetrics, policyGroup) {
+export function runCapitalizedEarningsApproach(normalizedMetrics, policyGroup, branchQualityFactor = 1) {
   const ownerPhase = policyGroup.ownerPhase;
   if (!ownerPhase.capitalizationRateRange) return null;
 
@@ -41,9 +43,9 @@ export function runCapitalizedEarningsApproach(normalizedMetrics, policyGroup) {
 
   return {
     method: 'capitalized_earnings',
-    low: metricValue / ownerPhase.capitalizationRateRange.high,
-    mid: metricValue / ownerPhase.capitalizationRateRange.mid,
-    high: metricValue / ownerPhase.capitalizationRateRange.low,
+    low: (metricValue / ownerPhase.capitalizationRateRange.high) * branchQualityFactor,
+    mid: (metricValue / ownerPhase.capitalizationRateRange.mid) * branchQualityFactor,
+    high: (metricValue / ownerPhase.capitalizationRateRange.low) * branchQualityFactor,
     metric: ownerPhase.capitalizedMetric || 'adjustedEbit',
   };
 }
@@ -68,11 +70,13 @@ export function runAssetApproach(normalizedMetrics, request, policyGroup) {
   };
 }
 
-export function runSelectedApproaches(methodOrder, normalizedMetrics, request, policyGroup) {
+export function runSelectedApproaches(methodOrder, normalizedMetrics, request, policyGroup, branchQuality = buildBranchQualityAdjustment(request)) {
+  const branchQualityFactor = branchQuality.branchQualityFactor || 1;
+
   return methodOrder
     .map((method) => {
-      if (method === 'market_multiple') return runMarketApproach(normalizedMetrics, policyGroup);
-      if (method === 'capitalized_earnings') return runCapitalizedEarningsApproach(normalizedMetrics, policyGroup);
+      if (method === 'market_multiple') return runMarketApproach(normalizedMetrics, policyGroup, branchQualityFactor);
+      if (method === 'capitalized_earnings') return runCapitalizedEarningsApproach(normalizedMetrics, policyGroup, branchQualityFactor);
       if (method === 'asset_approach') return runAssetApproach(normalizedMetrics, request, policyGroup);
       return null;
     })
@@ -88,10 +92,10 @@ function buildRawComparableMetrics(normalizedMetrics) {
   };
 }
 
-export function buildMethodNormalizationImpacts(methodOrder, normalizedMetrics, request, policyGroup) {
+export function buildMethodNormalizationImpacts(methodOrder, normalizedMetrics, request, policyGroup, branchQuality = buildBranchQualityAdjustment(request)) {
   const rawMetrics = buildRawComparableMetrics(normalizedMetrics);
-  const rawApproaches = runSelectedApproaches(methodOrder, rawMetrics, request, policyGroup);
-  const normalizedApproaches = runSelectedApproaches(methodOrder, normalizedMetrics, request, policyGroup);
+  const rawApproaches = runSelectedApproaches(methodOrder, rawMetrics, request, policyGroup, branchQuality);
+  const normalizedApproaches = runSelectedApproaches(methodOrder, normalizedMetrics, request, policyGroup, branchQuality);
 
   return methodOrder.map((method) => {
     const rawApproach = rawApproaches.find((approach) => approach.method === method);

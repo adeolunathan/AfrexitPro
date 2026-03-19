@@ -1,4 +1,5 @@
 import { average } from './utils.mjs';
+import { buildBranchQualityAdjustment, scoreOperatingYearsBand } from './qualitative-adjustments.mjs';
 
 const scoreMaps = {
   industryFit: { perfect_fit: 100, mostly_fit: 85, partial_fit: 60, poor_fit: 35, not_sure: 50 },
@@ -46,6 +47,12 @@ export function scoreFromMap(mapName, key, fallback = 50) {
 }
 
 export function buildScorecard(request) {
+  const branchQuality = buildBranchQualityAdjustment(request);
+  const branchSignalScore = branchQuality.branchSignalScore;
+  const productRetailBranchScore = branchQuality.branchFamily === 'product_retail' ? branchSignalScore : undefined;
+  const professionalServicesBranchScore = branchQuality.branchFamily === 'professional_services' ? branchSignalScore : undefined;
+  const manufacturingBranchScore = branchQuality.branchFamily === 'manufacturing' ? branchSignalScore : undefined;
+
   return {
     marketPosition: average([
       scoreFromMap('industryFit', request.classification.industryFit),
@@ -54,6 +61,7 @@ export function buildScorecard(request) {
       scoreFromMap('growthOutlook', request.operatingProfile.growthOutlook),
       scoreFromMap('differentiation', request.operatingProfile.differentiation),
       scoreFromMap('pricingPower', request.operatingProfile.pricingPower),
+      manufacturingBranchScore,
     ]),
     financialQuality: average([
       scoreFromMap('proofReadiness', request.financials.sourceQuality.proofReadiness),
@@ -74,6 +82,7 @@ export function buildScorecard(request) {
       scoreFromMap('founderRevenueDependence', request.operatingProfile.founderRevenueDependence),
       scoreFromMap('recurringRevenueShare', request.operatingProfile.recurringRevenueShare),
       scoreFromMap('revenueVisibility', request.operatingProfile.revenueVisibility),
+      professionalServicesBranchScore,
     ]),
     operatingResilience: average([
       scoreFromMap('supplierTransferability', request.operatingProfile.supplierTransferability),
@@ -82,6 +91,8 @@ export function buildScorecard(request) {
       scoreFromMap('workingCapitalHealth', request.operatingProfile.workingCapitalHealth),
       scoreFromMap('assetSeparation', request.operatingProfile.assetSeparation),
       scoreFromMap('fxExposure', request.operatingProfile.fxExposure),
+      productRetailBranchScore,
+      manufacturingBranchScore,
     ]),
     transactionReadiness: average([
       scoreFromMap('transactionGoal', request.engagement.purpose),
@@ -113,13 +124,16 @@ export function buildReadinessAssessment(request, scorecard) {
     ]),
   };
 
-  const overallScore = average(Object.values(readiness));
+  const readinessAverage = average(Object.values(readiness));
+  const operatingYearsScore = scoreOperatingYearsBand(request.company.operatingYearsBand);
+  const overallScore = readinessAverage * 0.9 + operatingYearsScore * 0.1;
   const topGaps = [];
 
   if (readiness.recordsQuality < 55) topGaps.push('Records and proof quality need to be improved before relying on a tight valuation range.');
   if (readiness.managementDepth < 55) topGaps.push('The business still depends too heavily on the founder or a thin management bench.');
   if (readiness.customerTransferability < 55) topGaps.push('Customer concentration or founder-linked revenue weakens transferability.');
   if (readiness.compliance < 55) topGaps.push('Compliance, documentation, or asset separation needs work.');
+  if (operatingYearsScore < 50) topGaps.push('The business still has a short operating history, which increases buyer caution and execution risk.');
 
   return {
     overallScore: Math.round(overallScore),

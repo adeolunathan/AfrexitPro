@@ -1,9 +1,19 @@
 import { clamp } from './utils.mjs';
 
-export function buildEnterpriseAndEquityValues(request, reconciled, readinessAssessment, confidenceAssessment, normalizedMetrics, policyGroup) {
+export function buildEnterpriseAndEquityValues(
+  request,
+  reconciled,
+  readinessAssessment,
+  confidenceAssessment,
+  normalizedMetrics,
+  policyGroup,
+  geographyAdjustment,
+  branchQuality
+) {
   const floor = policyGroup?.ownerPhase?.marketabilityFloor ?? 0.82;
   const ceiling = policyGroup?.ownerPhase?.marketabilityCeiling ?? 0.98;
   const marketabilityFactor = clamp(floor + readinessAssessment.overallScore / 520, floor, ceiling);
+  const geographyFactor = geographyAdjustment?.geographyAdjustmentFactor || 1;
   const urgencyFactor =
     request.engagement.urgency === 'forced' ? 0.72 : request.engagement.urgency === 'accelerated' ? 0.88 : 1;
   const workingCapitalBridge =
@@ -26,9 +36,9 @@ export function buildEnterpriseAndEquityValues(request, reconciled, readinessAss
     fundamentalLow: Math.max(reconciled.low, 0),
     fundamentalMid: Math.max(reconciled.mid, 0),
     fundamentalHigh: Math.max(reconciled.high, 0),
-    achievableTodayLow: Math.max(reconciled.low * marketabilityFactor, 0),
-    achievableTodayMid: Math.max(reconciled.mid * marketabilityFactor, 0),
-    achievableTodayHigh: Math.max(reconciled.high * marketabilityFactor, 0),
+    achievableTodayLow: Math.max(reconciled.low * marketabilityFactor * geographyFactor, 0),
+    achievableTodayMid: Math.max(reconciled.mid * marketabilityFactor * geographyFactor, 0),
+    achievableTodayHigh: Math.max(reconciled.high * marketabilityFactor * geographyFactor, 0),
   };
 
   if (request.engagement.urgency !== 'orderly') {
@@ -64,5 +74,14 @@ export function buildEnterpriseAndEquityValues(request, reconciled, readinessAss
       forcedSaleHigh: equityBase.forcedSaleHigh === undefined ? undefined : Math.max(equityBase.forcedSaleHigh, 0),
     },
     workingCapitalBridge,
+    qualitativeAdjustments: {
+      geographyBucket: geographyAdjustment?.geographyBucket,
+      normalizedPrimaryState: geographyAdjustment?.normalizedPrimaryState,
+      geographyAdjustmentFactor: geographyFactor,
+      branchFamily: branchQuality?.branchFamily,
+      branchQualityFactor: branchQuality?.branchQualityFactor,
+      branchSignalScore: branchQuality?.branchSignalScore,
+      branchSignals: branchQuality?.branchSignals,
+    },
   };
 }

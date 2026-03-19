@@ -11,22 +11,26 @@ This backend is intentionally separate from the live Afrexit estimator.
 
 ## Run locally
 
-1. Start the frontend dev server:
+1. From the repo root, start the full local stack:
 
 ```bash
 npm run dev
 ```
 
-2. Start the local backend in a second terminal:
-
-```bash
-node server/valuation-v2/server.mjs
-```
-
-3. Open the V2 lab entry:
+2. Open the V2 lab entry:
 
 ```text
 http://localhost:5173/valuation-v2.html
+```
+
+Optional split commands:
+
+```bash
+npm run dev:frontend
+```
+
+```bash
+npm run dev:backend
 ```
 
 ## Notes

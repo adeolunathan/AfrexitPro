@@ -1,5 +1,6 @@
 import { average, clamp, safeDivide } from './utils.mjs';
 import { scoreFromMap } from './scorecards.mjs';
+import { buildBranchQualityAdjustment, scoreOperatingYearsBand } from './qualitative-adjustments.mjs';
 
 function buildNormalizationQualityScore(normalizationSchedule) {
   if (!normalizationSchedule.length) {
@@ -35,9 +36,12 @@ function buildMethodDispersionPct(approaches) {
 
 export function buildConfidenceAssessment(request, scorecard, policyResolution, normalizationSchedule, historicalSummary, normalizedMetrics, approaches, policyGroup) {
   const yearsAvailableScore = clamp(38 + (historicalSummary.yearsAvailable - 1) * 18, 38, 86);
+  const operatingYearsScore = scoreOperatingYearsBand(request.company.operatingYearsBand);
+  const historicalDepthScore = average([yearsAvailableScore, operatingYearsScore], yearsAvailableScore);
   const workingCapitalCoverage =
     typeof normalizedMetrics.actualWorkingCapital === 'number' && typeof normalizedMetrics.normalizedWorkingCapital === 'number' ? 72 : 42;
   const normalizationQuality = buildNormalizationQualityScore(normalizationSchedule);
+  const branchQuality = buildBranchQualityAdjustment(request);
   const calibrationEvidenceScore = policyGroup?.calibration?.evidenceScore ?? 35;
   const calibrationFreshnessStatus = policyGroup?.calibration?.freshnessStatus ?? 'stale';
   const freshnessCoverage = calibrationFreshnessStatus === 'fresh' ? 85 : calibrationFreshnessStatus === 'aging' ? 65 : 40;
@@ -58,6 +62,7 @@ export function buildConfidenceAssessment(request, scorecard, policyResolution, 
     scoreFromMap('growthOutlook', request.operatingProfile.growthOutlook),
     scoreFromMap('marketDemand', request.operatingProfile.marketDemand),
     scoreFromMap('workingCapitalHealth', request.operatingProfile.workingCapitalHealth),
+    branchQuality.branchSignalScore,
   ]);
   const methodDispersionPct = buildMethodDispersionPct(approaches);
   const dispersionPenaltyWeight = policyGroup?.ownerPhase?.dispersionPenaltyWeight ?? 0.18;
@@ -66,7 +71,7 @@ export function buildConfidenceAssessment(request, scorecard, policyResolution, 
   const internalEvidenceBonus = Math.min(6, internalObservationCount * 1.5);
 
   const overallScore = clamp(
-    yearsAvailableScore * 0.2 +
+    historicalDepthScore * 0.2 +
       scorecard.financialQuality * 0.22 +
       normalizationQuality * 0.16 +
       workingCapitalCoverage * 0.12 +
@@ -84,6 +89,7 @@ export function buildConfidenceAssessment(request, scorecard, policyResolution, 
   const notes = [];
 
   if (historicalSummary.yearsAvailable < 3) notes.push('Owner mode currently has limited historical depth, so the range remains wider than an advisor-grade output.');
+  if (operatingYearsScore < 50) notes.push('The short operating history of the business itself also increases owner-mode uncertainty.');
   if (normalizationSchedule.length > 0) notes.push('Normalization adjustments are quantified from owner-provided amounts, but they remain unverified until advisor review.');
   if (policyResolution.fallback) notes.push('Level 2 policy fell back to a generic owner-operated service policy due to missing registry match.');
   if (policyGroup?.calibration?.source === 'benchmark_calibrated') {
@@ -106,10 +112,17 @@ export function buildConfidenceAssessment(request, scorecard, policyResolution, 
   if (Math.abs(normalizedMetrics.workingCapitalDelta || 0) > normalizedMetrics.revenue * 0.08) {
     notes.push('Working-capital adjustment is material relative to revenue, so the equity bridge is more sensitive than usual.');
   }
+  if (branchQuality.branchFamily && typeof branchQuality.branchSignalScore === 'number') {
+    notes.push(
+      branchQuality.branchSignalScore >= 65
+        ? `Branch-specific operating signals for ${branchQuality.branchFamily.replaceAll('_', ' ')} modestly support confidence.`
+        : `Branch-specific operating signals for ${branchQuality.branchFamily.replaceAll('_', ' ')} currently weaken confidence modestly.`
+    );
+  }
 
   return {
     overallScore: Math.round(overallScore),
-    dataCompleteness: Math.round(average([yearsAvailableScore, workingCapitalCoverage, normalizationQuality], 50)),
+    dataCompleteness: Math.round(average([historicalDepthScore, workingCapitalCoverage, normalizationQuality], 50)),
     recordsQuality: Math.round(scorecard.financialQuality),
     benchmarkCoverage: Math.round(benchmarkCoverage),
     earningsStability: Math.round(earningsStability),

@@ -5,6 +5,7 @@ import { spawnSync } from 'node:child_process';
 import { evaluateSubmission } from './owner-engine.mjs';
 import { buildInternalCaseCandidates } from './internal-case-candidates.mjs';
 import { parseInternalObservationPayload, sortInternalObservations, updateInternalObservationPayload } from './internal-observations.mjs';
+import { calculatePartialValuation } from './partial-valuation.mjs';
 import {
   appendInternalObservation,
   appendSubmission,
@@ -94,6 +95,7 @@ const server = http.createServer(async (request, response) => {
       endpoints: {
         health: 'GET /health',
         valuation: 'POST /api/valuation-v2',
+        partialValuation: 'POST /api/valuation-v2/partial',
         internalObservations: 'GET|POST /api/valuation-v2/internal-observations',
         ingestInternalObservations: 'POST /api/valuation-v2/internal-observations/ingest',
         internalCaseCandidates: 'GET /api/valuation-v2/internal-case-candidates',
@@ -107,6 +109,24 @@ const server = http.createServer(async (request, response) => {
       status: 'error',
       message: 'Use POST /api/valuation-v2 with a JSON body.',
     });
+    return;
+  }
+
+  if (request.method === 'POST' && pathname === '/api/valuation-v2/partial') {
+    try {
+      const payload = await readJson(request);
+      const result = calculatePartialValuation(payload);
+
+      writeJson(response, 200, {
+        status: 'success',
+        data: result,
+      });
+    } catch (error) {
+      writeJson(response, 400, {
+        status: 'error',
+        message: error instanceof Error ? error.message : 'Unexpected partial valuation error.',
+      });
+    }
     return;
   }
 

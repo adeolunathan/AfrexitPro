@@ -47,11 +47,16 @@ function formatAdjustmentAffects(value: string) {
   return value.toUpperCase().replaceAll('_', ' ');
 }
 
+function formatFactor(value: number | undefined) {
+  return typeof value === 'number' ? `${value.toFixed(3)}x` : 'N/A';
+}
+
 export function ResultsPage({ result, onRestart, onEdit }: ResultsPageProps) {
   const summary = result.summary;
   const actualWorkingCapital = result.normalizedMetrics.actualWorkingCapital;
   const normalizedWorkingCapital = result.normalizedMetrics.normalizedWorkingCapital;
   const methodNormalizationImpacts = result.valueConclusion.reconciliation?.methodNormalizationImpacts || [];
+  const qualitativeAdjustments = result.audit.qualitativeAdjustments;
   const workingCapitalGap =
     typeof actualWorkingCapital === 'number' && typeof normalizedWorkingCapital === 'number'
       ? actualWorkingCapital - normalizedWorkingCapital
@@ -146,14 +151,19 @@ export function ResultsPage({ result, onRestart, onEdit }: ResultsPageProps) {
               This valuation uses industry-specific benchmarks, market multiples, and your financial inputs to calculate 
               a probable range. Results depend on the accuracy of your inputs and market conditions.
             </div>
-            <div className="mt-5 rounded-2xl bg-white/5 p-4 text-sm leading-7 text-slate-300">
-              <div className="text-xs font-medium uppercase tracking-[0.18em] text-slate-400">Method policy</div>
+            <div className="mt-5 rounded-2xl bg-gray-50 p-4 text-sm leading-7 text-gray-700">
+              <div className="text-xs font-medium uppercase tracking-[0.18em] text-gray-500">Method policy</div>
               <div className="mt-2">Policy group: {result.classification.policyGroupId}</div>
               <div>Primary method: {formatMethodLabel(result.selectedMethods.primaryMethod)}</div>
               {result.selectedMethods.secondaryMethods.length > 0 ? (
                 <div>Secondary methods: {result.selectedMethods.secondaryMethods.map(formatMethodLabel).join(', ')}</div>
               ) : null}
-              <div className="mt-3 text-xs font-medium uppercase tracking-[0.18em] text-slate-400">Calibration</div>
+              <div className="mt-3 text-xs font-medium uppercase tracking-[0.18em] text-gray-500">Qualitative Adjustments</div>
+              <div className="mt-2">Primary state bucket: {qualitativeAdjustments?.geographyBucket || 'N/A'}</div>
+              <div>Geography factor: {formatFactor(qualitativeAdjustments?.geographyAdjustmentFactor)}</div>
+              <div>Branch family: {qualitativeAdjustments?.branchFamily ? formatMethodLabel(qualitativeAdjustments.branchFamily) : 'N/A'}</div>
+              <div>Branch quality factor: {formatFactor(qualitativeAdjustments?.branchQualityFactor)}</div>
+              <div className="mt-3 text-xs font-medium uppercase tracking-[0.18em] text-gray-500">Calibration</div>
               <div className="mt-2">Source: {formatMethodLabel(result.calibrationContext.source)}</div>
               <div>Benchmark observations: {result.calibrationContext.observationCount}</div>
               <div>Evidence score: {formatPercent(result.calibrationContext.evidenceScore)}</div>
@@ -161,15 +171,15 @@ export function ResultsPage({ result, onRestart, onEdit }: ResultsPageProps) {
                 <div>Benchmark sets: {result.calibrationContext.benchmarkSetIds.join(', ')}</div>
               ) : null}
             </div>
-            <ul className="mt-5 space-y-3 text-sm leading-7 text-slate-300">
+            <ul className="mt-5 space-y-3 text-sm leading-7 text-gray-700">
               {summary.warnings.length > 0 ? (
                 summary.warnings.map((warning) => (
-                  <li key={warning} className="rounded-2xl bg-white/5 px-4 py-3">
+                  <li key={warning} className="rounded-2xl bg-gray-50 px-4 py-3">
                     {warning}
                   </li>
                 ))
               ) : (
-                <li className="rounded-2xl bg-white/5 px-4 py-3">No immediate warning flags were raised by this draft engine.</li>
+                <li className="rounded-2xl bg-gray-50 px-4 py-3">No immediate warning flags were raised by this draft engine.</li>
               )}
             </ul>
           </div>
