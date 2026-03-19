@@ -8,6 +8,7 @@ export type OwnerFieldId =
   // Anchor phase
   | 'level1'
   | 'level2'
+  | 'respondentRole'
   | 'industryFit'
   | 'businessDescription'
   | 'businessSummary'
@@ -30,6 +31,9 @@ export type OwnerFieldId =
   // Branch: Product/Retail
   | 'inventoryValueLatest'
   | 'inventoryProfile'
+  | 'productRights'
+  | 'quantities'
+  | 'productCustomisation'
   | 'grossMarginStability'
   | 'supplierConcentration'
   | 'shrinkageSpoilage'
@@ -43,6 +47,7 @@ export type OwnerFieldId =
   | 'pricingPowerVsMarket'
   // Branch: Manufacturing
   | 'capacityUtilization'
+  | 'manufacturingValueCreation'
   | 'equipmentAgeCondition'
   | 'maintenanceCapexLatest'
   | 'customerConcentration'
@@ -113,6 +118,7 @@ interface OwnerFieldBinding {
 export const ownerFieldBindings: Record<OwnerFieldId, OwnerFieldBinding> = {
   level1: { canonicalPath: 'classification.level1', valueType: 'string' },
   level2: { canonicalPath: 'classification.level2', valueType: 'string' },
+  respondentRole: { canonicalPath: 'meta.respondentRole', valueType: 'string' },
   industryFit: { canonicalPath: 'classification.industryFit', valueType: 'string' },
   businessDescription: { canonicalPath: 'company.businessSummary', valueType: 'string' },
   businessSummary: { canonicalPath: 'company.businessSummary', valueType: 'string' },
@@ -163,6 +169,9 @@ export const ownerFieldBindings: Record<OwnerFieldId, OwnerFieldBinding> = {
   revenueVisibility: { canonicalPath: 'operatingProfile.revenueVisibility', valueType: 'string' },
   supplierTransferability: { canonicalPath: 'operatingProfile.supplierTransferability', valueType: 'string' },
   inventoryProfile: { canonicalPath: 'operatingProfile.inventoryProfile', valueType: 'string' },
+  productRights: { canonicalPath: 'operatingProfile.productRights', valueType: 'string' },
+  quantities: { canonicalPath: 'operatingProfile.quantities', valueType: 'string' },
+  productCustomisation: { canonicalPath: 'operatingProfile.productCustomisation', valueType: 'string' },
   workingCapitalHealth: { canonicalPath: 'operatingProfile.workingCapitalHealth', valueType: 'string' },
   assetSeparation: { canonicalPath: 'operatingProfile.assetSeparation', valueType: 'string' },
   fxExposure: { canonicalPath: 'operatingProfile.fxExposure', valueType: 'string' },
@@ -203,6 +212,7 @@ export const ownerFieldBindings: Record<OwnerFieldId, OwnerFieldBinding> = {
   pricingPowerVsMarket: { canonicalPath: 'operatingProfile.pricingPowerVsMarket', valueType: 'string' },
   // Branch: Manufacturing
   capacityUtilization: { canonicalPath: 'operatingProfile.capacityUtilization', valueType: 'string' },
+  manufacturingValueCreation: { canonicalPath: 'operatingProfile.manufacturingValueCreation', valueType: 'string' },
   equipmentAgeCondition: { canonicalPath: 'operatingProfile.equipmentAgeCondition', valueType: 'string' },
   rawMaterialPriceExposure: { canonicalPath: 'operatingProfile.rawMaterialPriceExposure', valueType: 'string' },
   qualityCertifications: { canonicalPath: 'operatingProfile.qualityCertifications', valueType: 'string' },
@@ -239,6 +249,10 @@ function normalizePrimaryState(value: string | boolean | undefined) {
   };
 
   return aliases[normalized] || normalized;
+}
+
+function normalizeRespondentRole(value: string | boolean | undefined) {
+  return String(value ?? '').trim() === 'representative' ? 'representative' : 'owner';
 }
 
 function normalizeIndustryFit(value: string | boolean | undefined): ValuationRequest['classification']['industryFit'] {
@@ -521,6 +535,41 @@ function buildOwnerHistoricals(formData: FormData) {
   return historicals;
 }
 
+function buildOwnerForecast(formData: FormData): ValuationRequest['financials']['forecast'] | undefined {
+  const rawPeriods = formData._financialPeriods;
+  if (!Array.isArray(rawPeriods)) {
+    return undefined;
+  }
+
+  const forecastPeriod = rawPeriods.find(
+    (period): period is { id?: unknown; enabled?: unknown; revenue?: unknown; operatingProfit?: unknown } =>
+      Boolean(period && typeof period === 'object' && 'id' in period && (period as { id?: unknown }).id === 'forecast')
+  );
+
+  if (!forecastPeriod || forecastPeriod.enabled !== true) {
+    return undefined;
+  }
+
+  const revenue = toNumber(forecastPeriod.revenue as string | boolean | undefined);
+  const operatingProfitRaw = forecastPeriod.operatingProfit as string | boolean | undefined;
+  const hasOperatingProfit = hasValue(operatingProfitRaw);
+
+  if (revenue <= 0 && !hasOperatingProfit) {
+    return undefined;
+  }
+
+  return {
+    forecastYears: [
+      {
+        year: new Date().getFullYear(),
+        revenue,
+        ebit: hasOperatingProfit ? toNumber(operatingProfitRaw) : undefined,
+      },
+    ],
+    forecastConfidence: 'low',
+  };
+}
+
 function mapPurpose(transactionGoal: string | boolean | undefined): ValuationRequest['engagement']['purpose'] {
   switch (transactionGoal) {
     case 'external_sale':
@@ -552,6 +601,49 @@ function mapTargetTransaction(transactionGoal: string | boolean | undefined): Va
     default:
       return 'not_sure';
   }
+}
+
+function deriveWorkingCapitalHealth(
+  options: {
+    hasInputs: boolean;
+    actualWorkingCapital: number;
+    revenue: number;
+    targetPct?: number;
+    inventoryProfile?: string | boolean | undefined;
+    level1?: string | boolean | undefined;
+    existingValue?: string | boolean | undefined;
+  }
+) {
+  if (hasValue(options.existingValue)) {
+    return String(options.existingValue);
+  }
+
+  if (!options.hasInputs || options.revenue <= 0) {
+    return 'not_sure';
+  }
+
+  const inventoryProfile = String(options.inventoryProfile || '');
+  const level1 = String(options.level1 || '');
+
+  if (options.actualWorkingCapital <= 0) {
+    if (inventoryProfile === 'lt_7' || inventoryProfile === 'service_business' || level1 === 'trade') {
+      return 'healthy';
+    }
+    return 'tight';
+  }
+
+  const normalizedWorkingCapital = options.revenue * (options.targetPct ?? 0.06);
+  if (normalizedWorkingCapital <= 0) {
+    const intensity = options.actualWorkingCapital / options.revenue;
+    if (intensity <= 0.08) return 'healthy';
+    if (intensity <= 0.18) return 'tight';
+    return 'under_pressure';
+  }
+
+  const coverage = options.actualWorkingCapital / normalizedWorkingCapital;
+  if (coverage >= 0.9) return 'healthy';
+  if (coverage >= 0.5) return 'tight';
+  return 'under_pressure';
 }
 
 function createNormalizationLineItem(
@@ -761,10 +853,13 @@ export function buildOwnerValuationRequest(formData: FormData): ValuationRequest
   const purpose = mapPurpose(formData.transactionGoal);
   const urgency = mapUrgency(formData.transactionTimeline);
   const historicals = buildOwnerHistoricals(formData);
+  const forecast = buildOwnerForecast(formData);
   const normalizationSchedule = buildNormalizationSchedule(formData);
   const latestReceivables = toNumber(formData.receivablesLatest);
   const latestInventory = toNumber(formData.inventoryValueLatest);
   const latestPayables = toNumber(formData.payablesLatest);
+  const hasWorkingCapitalInputs =
+    hasValue(formData.receivablesLatest) || hasValue(formData.inventoryValueLatest) || hasValue(formData.payablesLatest);
   const actualWorkingCapital = latestReceivables + latestInventory - latestPayables;
   const customerConcentration = normalizeCustomerConcentration(formData.customerConcentration);
   const previousOfferStatus = normalizePreviousOfferStatus(formData.previousOffer);
@@ -781,6 +876,15 @@ export function buildOwnerValuationRequest(formData: FormData): ValuationRequest
         : policyGroup.ownerPhase.marketMetric === 'revenue'
           ? 'revenue'
           : 'ebit';
+  const workingCapitalHealth = deriveWorkingCapitalHealth({
+    hasInputs: hasWorkingCapitalInputs,
+    actualWorkingCapital,
+    revenue: toNumber(formData.revenueLatest),
+    targetPct: policyGroup.ownerPhase.workingCapitalTargetPct,
+    inventoryProfile: formData.inventoryProfile,
+    level1: formData.level1,
+    existingValue: formData.workingCapitalHealth,
+  });
 
   const request: ValuationRequest = {
     meta: {
@@ -793,6 +897,7 @@ export function buildOwnerValuationRequest(formData: FormData): ValuationRequest
       source: 'web-owner',
       acknowledged: isTruthy(formData.termsAccepted),
       newsletterOptIn: isTruthy(formData.newsletterOptIn),
+      respondentRole: normalizeRespondentRole(formData.respondentRole),
     },
     engagement: {
       purpose,
@@ -837,7 +942,10 @@ export function buildOwnerValuationRequest(formData: FormData): ValuationRequest
       fxExposure: String(formData.fxExposure || ''),
       assetSeparation: String(formData.assetSeparation || ''),
       inventoryProfile: String(formData.inventoryProfile || ''),
-      workingCapitalHealth: String(formData.workingCapitalHealth || ''),
+      workingCapitalHealth,
+      productRights: String(formData.productRights || ''),
+      quantities: String(formData.quantities || ''),
+      productCustomisation: String(formData.productCustomisation || ''),
       grossMarginStability: String(formData.grossMarginStability || ''),
       supplierConcentration: String(formData.supplierConcentration || ''),
       shrinkageSpoilage: String(formData.shrinkageSpoilage || ''),
@@ -846,12 +954,14 @@ export function buildOwnerValuationRequest(formData: FormData): ValuationRequest
       keyPersonDependencies: String(formData.keyPersonDependencies || ''),
       pricingPowerVsMarket: String(formData.pricingPowerVsMarket || ''),
       capacityUtilization: String(formData.capacityUtilization || ''),
+      manufacturingValueCreation: String(formData.manufacturingValueCreation || ''),
       equipmentAgeCondition: String(formData.equipmentAgeCondition || ''),
       rawMaterialPriceExposure: String(formData.rawMaterialPriceExposure || ''),
       qualityCertifications: String(formData.qualityCertifications || ''),
     },
     financials: {
       historicals,
+      forecast,
       selectedRepresentativePeriodId: 'latest_owner_input',
       sourceQuality: {
         yearsAvailable: historicals.length,

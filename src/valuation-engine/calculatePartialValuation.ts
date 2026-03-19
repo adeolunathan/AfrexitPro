@@ -2,6 +2,12 @@ import type { FormData } from '@/types/valuation';
 import type { PartialValuationResult } from '@/api/valuation-partial';
 import { resolveFrontendPolicyGroup } from './policy-registry';
 
+function toNumber(value: unknown) {
+  const cleaned = String(value ?? '').replace(/[^0-9.-]/g, '');
+  const parsed = Number(cleaned);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
 function normalizeIndustryFit(value: unknown) {
   switch (String(value ?? '').trim()) {
     case 'perfect_fit':
@@ -70,6 +76,9 @@ function average(values: Array<number | undefined>, fallback = 50) {
 
 function buildBranchQualityScore(answers: Partial<FormData>) {
   const scoreMap = {
+    productRights: { company_owned: 88, mixed_control: 65, customer_owned: 40, public_domain: 22, not_sure: 50 },
+    quantities: { repeat_batches: 86, mixed_profile: 62, mostly_custom: 40, one_off_bespoke: 22, not_sure: 50 },
+    productCustomisation: { standardized: 90, configured: 72, tailored: 46, fully_bespoke: 24, not_sure: 50 },
     grossMarginStability: { expanding: 88, stable: 75, volatile: 45, contracting: 25 },
     supplierConcentration: { diversified: 85, moderate: 65, concentrated: 40, single_source: 20 },
     shrinkageSpoilage: { minimal: 85, moderate: 65, significant: 40, major: 20 },
@@ -78,6 +87,7 @@ function buildBranchQualityScore(answers: Partial<FormData>) {
     keyPersonDependencies: { none: 82, one: 65, few: 40, many: 20 },
     pricingPowerVsMarket: { premium: 85, market: 65, slight_discount: 45, significant_discount: 25 },
     capacityUtilization: { gt_90: 80, '70_90': 72, '50_70': 55, lt_50: 35 },
+    manufacturingValueCreation: { in_house_majority: 86, balanced: 62, outsourced_majority: 40, assembly_only: 24, not_sure: 50 },
     equipmentAgeCondition: { modern: 85, good: 70, aging: 45, outdated: 20 },
     rawMaterialPriceExposure: { minimal: 82, moderate: 65, significant: 40, critical: 20 },
     qualityCertifications: { major: 85, local: 68, in_progress: 55, none: 35 },
@@ -85,6 +95,9 @@ function buildBranchQualityScore(answers: Partial<FormData>) {
 
   const lookup = (mapName: keyof typeof scoreMap, value: unknown) => scoreMap[mapName][String(value ?? '') as keyof (typeof scoreMap)[typeof mapName]];
   const scores = [
+    lookup('productRights', answers.productRights),
+    lookup('quantities', answers.quantities),
+    lookup('productCustomisation', answers.productCustomisation),
     lookup('grossMarginStability', answers.grossMarginStability),
     lookup('supplierConcentration', answers.supplierConcentration),
     lookup('shrinkageSpoilage', answers.shrinkageSpoilage),
@@ -100,6 +113,7 @@ function buildBranchQualityScore(answers: Partial<FormData>) {
     lookup('keyPersonDependencies', answers.keyPersonDependencies),
     lookup('pricingPowerVsMarket', answers.pricingPowerVsMarket),
     lookup('capacityUtilization', answers.capacityUtilization),
+    lookup('manufacturingValueCreation', answers.manufacturingValueCreation),
     lookup('equipmentAgeCondition', answers.equipmentAgeCondition),
     lookup('rawMaterialPriceExposure', answers.rawMaterialPriceExposure),
     lookup('qualityCertifications', answers.qualityCertifications),
@@ -111,12 +125,59 @@ function buildBranchQualityScore(answers: Partial<FormData>) {
   return Math.round(average(scores, 60));
 }
 
+function getForecastBlendWeight(answers: Partial<FormData>) {
+  const actualYears =
+    1 +
+    (answers.revenuePrevious1 || answers.revenuePrev1 ? 1 : 0) +
+    (answers.revenuePrevious2 || answers.revenuePrev2 ? 1 : 0);
+  const depthModifier = actualYears >= 3 ? 0.75 : actualYears === 2 ? 0.9 : 1;
+  return Math.max(0.12, Math.min(0.18 * depthModifier, 0.22));
+}
+
+function getForecastSignal(answers: Partial<FormData>) {
+  const rawPeriods = Array.isArray(answers._financialPeriods) ? answers._financialPeriods : [];
+  const forecastPeriod = rawPeriods.find(
+    (period): period is { id?: unknown; enabled?: unknown; revenue?: unknown; operatingProfit?: unknown } =>
+      Boolean(period && typeof period === 'object' && 'id' in period && (period as { id?: unknown }).id === 'forecast')
+  );
+
+  if (!forecastPeriod || forecastPeriod.enabled !== true) {
+    return null;
+  }
+
+  const revenue = toNumber(forecastPeriod.revenue);
+  const profit = toNumber(forecastPeriod.operatingProfit);
+  const hasProfit = String(forecastPeriod.operatingProfit ?? '').trim() !== '';
+
+  if (revenue <= 0 && !hasProfit) {
+    return null;
+  }
+
+  return {
+    revenue,
+    profit,
+    hasProfit,
+    weight: getForecastBlendWeight(answers),
+  };
+}
+
+function blendTowardForecast(actualValue: number, forecastValue: number, weight: number) {
+  if (forecastValue <= 0 && actualValue <= 0) return 0;
+  if (actualValue <= 0) return forecastValue;
+  if (forecastValue <= 0) return actualValue;
+  return actualValue * (1 - weight) + forecastValue * weight;
+}
+
 function determinePhase(answers: Partial<FormData>) {
   const hasBranchData =
+    answers.productRights ||
+    answers.quantities ||
+    answers.productCustomisation ||
     answers.grossMarginStability ||
     answers.founderRevenueDependence ||
     answers.staffUtilization ||
-    answers.capacityUtilization;
+    answers.capacityUtilization ||
+    answers.manufacturingValueCreation;
   const hasClosingData = answers.ownerAbsence2Weeks || answers.receivablesLatest !== undefined;
 
   if (hasClosingData) return 'closing';
@@ -147,7 +208,8 @@ function getNextPhase(currentPhase: string) {
 export function calculatePartialValuation(answers: Partial<FormData>): PartialValuationResult {
   const flags: PartialValuationResult['flags'] = [];
   const level2 = String(answers.level2 || '');
-  const revenue = Number(answers.revenueLatest) || 0;
+  const forecastSignal = getForecastSignal(answers);
+  const revenue = forecastSignal ? blendTowardForecast(toNumber(answers.revenueLatest), forecastSignal.revenue, forecastSignal.weight) : toNumber(answers.revenueLatest);
 
   if (!level2 || revenue <= 0) {
     return {
@@ -216,6 +278,7 @@ export function calculatePartialValuation(answers: Partial<FormData>): PartialVa
 
   if (answers.revenuePrevious1 || answers.revenuePrev1) confidenceBreakdown.dataCompleteness += 5;
   if (answers.revenuePrevious2 || answers.revenuePrev2) confidenceBreakdown.dataCompleteness += 3;
+  if (forecastSignal) confidenceBreakdown.dataCompleteness += 2;
   if (typeof branchQualityScore === 'number') confidenceBreakdown.dataCompleteness += 4;
 
   let confidenceScore =
@@ -232,11 +295,15 @@ export function calculatePartialValuation(answers: Partial<FormData>): PartialVa
   if (['lt_1', '1_3'].includes(operatingYears)) confidenceScore -= 5;
   if (['10_20', 'gt_20'].includes(operatingYears)) confidenceScore += 5;
 
-  const profit = Number(answers.operatingProfitLatest) || 0;
+  const profit =
+    forecastSignal && forecastSignal.hasProfit
+      ? blendTowardForecast(toNumber(answers.operatingProfitLatest), forecastSignal.profit, forecastSignal.weight)
+      : toNumber(answers.operatingProfitLatest) || 0;
   const margin = profit / revenue;
   if (margin < 0.05) confidenceScore -= 10;
   if (margin < 0) confidenceScore -= 20;
   if (typeof branchQualityScore === 'number') confidenceScore += (branchQualityScore - 60) * 0.08;
+  if (forecastSignal) confidenceScore += 2;
 
   confidenceScore = Math.max(10, Math.min(95, Math.round(confidenceScore)));
 
@@ -282,6 +349,14 @@ export function calculatePartialValuation(answers: Partial<FormData>): PartialVa
     flags.push({
       type: 'info',
       message: 'Branch-specific operating signals are currently widening the estimate range slightly.',
+    });
+  }
+
+  if (forecastSignal) {
+    flags.push({
+      type: 'info',
+      message: 'Current-year forecast is included with cautious weight in this preliminary range.',
+      field: 'revenueLatest',
     });
   }
 

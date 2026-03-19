@@ -2,8 +2,26 @@ import { average, clamp, safeDivide } from './utils.mjs';
 
 const premiumStateSet = new Set(['lagos_island', 'lagos_mainland', 'fct']);
 const establishedStateSet = new Set(['rivers', 'ogun', 'oyo', 'kano', 'anambra', 'delta', 'edo', 'kaduna', 'akwa_ibom']);
+const productRetailLevel2Set = new Set([
+  'retail_physical',
+  'retail_ecommerce',
+  'wholesale',
+  'distribution',
+  'food_restaurant',
+  'food_fast_food',
+]);
+const manufacturingLevel2Set = new Set([
+  'manufacturing',
+  'assembly',
+  'production',
+  'light_manufacturing',
+  'fabrication',
+]);
 
 const branchScoreMaps = {
+  productRights: { company_owned: 88, mixed_control: 65, customer_owned: 40, public_domain: 22, not_sure: 50 },
+  quantities: { repeat_batches: 86, mixed_profile: 62, mostly_custom: 40, one_off_bespoke: 22, not_sure: 50 },
+  productCustomisation: { standardized: 90, configured: 72, tailored: 46, fully_bespoke: 24, not_sure: 50 },
   grossMarginStability: { expanding: 88, stable: 75, volatile: 45, contracting: 25 },
   supplierConcentration: { diversified: 85, moderate: 65, concentrated: 40, single_source: 20 },
   shrinkageSpoilage: { minimal: 85, moderate: 65, significant: 40, major: 20 },
@@ -12,6 +30,7 @@ const branchScoreMaps = {
   keyPersonDependencies: { none: 82, one: 65, few: 40, many: 20 },
   pricingPowerVsMarket: { premium: 85, market: 65, slight_discount: 45, significant_discount: 25 },
   capacityUtilization: { gt_90: 80, '70_90': 72, '50_70': 55, lt_50: 35 },
+  manufacturingValueCreation: { in_house_majority: 86, balanced: 62, outsourced_majority: 40, assembly_only: 24, not_sure: 50 },
   equipmentAgeCondition: { modern: 85, good: 70, aging: 45, outdated: 20 },
   rawMaterialPriceExposure: { minimal: 82, moderate: 65, significant: 40, critical: 20 },
   qualityCertifications: { major: 85, local: 68, in_progress: 55, none: 35 },
@@ -101,17 +120,98 @@ export function scoreOperatingYearsBand(value) {
 
 export function buildBranchQualityAdjustment(request) {
   const operatingProfile = request.operatingProfile || {};
+  const level2 = String(request.classification?.level2 ?? '').trim();
   let family;
   let signals = [];
 
-  if (
+  const looksManufacturingLevel2 = manufacturingLevel2Set.has(level2);
+  const looksProductLevel2 = productRetailLevel2Set.has(level2);
+  const hasManufacturingSignal =
+    hasText(operatingProfile.capacityUtilization) ||
+    hasText(operatingProfile.manufacturingValueCreation) ||
+    hasText(operatingProfile.equipmentAgeCondition) ||
+    hasText(operatingProfile.rawMaterialPriceExposure) ||
+    hasText(operatingProfile.qualityCertifications);
+  const hasProductSignal =
+    hasText(operatingProfile.productRights) ||
+    hasText(operatingProfile.quantities) ||
+    hasText(operatingProfile.productCustomisation) ||
     hasText(operatingProfile.grossMarginStability) ||
     hasText(operatingProfile.supplierConcentration) ||
     hasText(operatingProfile.shrinkageSpoilage) ||
-    hasText(operatingProfile.peakSeasonDependency)
-  ) {
+    hasText(operatingProfile.peakSeasonDependency);
+
+  if (hasManufacturingSignal || (looksManufacturingLevel2 && hasProductSignal)) {
+    family = 'manufacturing';
+    signals = [
+      buildSignal(
+        'productRights',
+        operatingProfile.productRights,
+        scoreFromMap('productRights', operatingProfile.productRights)
+      ),
+      buildSignal(
+        'quantities',
+        operatingProfile.quantities,
+        scoreFromMap('quantities', operatingProfile.quantities)
+      ),
+      buildSignal(
+        'productCustomisation',
+        operatingProfile.productCustomisation,
+        scoreFromMap('productCustomisation', operatingProfile.productCustomisation)
+      ),
+      buildSignal(
+        'manufacturingValueCreation',
+        operatingProfile.manufacturingValueCreation,
+        scoreFromMap('manufacturingValueCreation', operatingProfile.manufacturingValueCreation)
+      ),
+      buildSignal(
+        'capacityUtilization',
+        operatingProfile.capacityUtilization,
+        scoreFromMap('capacityUtilization', operatingProfile.capacityUtilization)
+      ),
+      buildSignal(
+        'equipmentAgeCondition',
+        operatingProfile.equipmentAgeCondition,
+        scoreFromMap('equipmentAgeCondition', operatingProfile.equipmentAgeCondition)
+      ),
+      buildSignal(
+        'rawMaterialPriceExposure',
+        operatingProfile.rawMaterialPriceExposure,
+        scoreFromMap('rawMaterialPriceExposure', operatingProfile.rawMaterialPriceExposure)
+      ),
+      buildSignal(
+        'qualityCertifications',
+        operatingProfile.qualityCertifications,
+        scoreFromMap('qualityCertifications', operatingProfile.qualityCertifications)
+      ),
+    ].filter(Boolean);
+
+    const maintenanceCapexScore = scoreMaintenanceCapexContext(request);
+    if (typeof maintenanceCapexScore === 'number') {
+      signals.push({
+        key: 'maintenanceCapexContext',
+        value: 'derived_from_latest_period',
+        score: maintenanceCapexScore,
+      });
+    }
+  } else if (hasProductSignal || (looksProductLevel2 && hasProductSignal)) {
     family = 'product_retail';
     signals = [
+      buildSignal(
+        'productRights',
+        operatingProfile.productRights,
+        scoreFromMap('productRights', operatingProfile.productRights)
+      ),
+      buildSignal(
+        'quantities',
+        operatingProfile.quantities,
+        scoreFromMap('quantities', operatingProfile.quantities)
+      ),
+      buildSignal(
+        'productCustomisation',
+        operatingProfile.productCustomisation,
+        scoreFromMap('productCustomisation', operatingProfile.productCustomisation)
+      ),
       buildSignal(
         'grossMarginStability',
         operatingProfile.grossMarginStability,
@@ -177,44 +277,6 @@ export function buildBranchQualityAdjustment(request) {
         scoreFromMap('pricingPowerVsMarket', operatingProfile.pricingPowerVsMarket)
       ),
     ].filter(Boolean);
-  } else if (
-    hasText(operatingProfile.capacityUtilization) ||
-    hasText(operatingProfile.equipmentAgeCondition) ||
-    hasText(operatingProfile.rawMaterialPriceExposure) ||
-    hasText(operatingProfile.qualityCertifications)
-  ) {
-    family = 'manufacturing';
-    signals = [
-      buildSignal(
-        'capacityUtilization',
-        operatingProfile.capacityUtilization,
-        scoreFromMap('capacityUtilization', operatingProfile.capacityUtilization)
-      ),
-      buildSignal(
-        'equipmentAgeCondition',
-        operatingProfile.equipmentAgeCondition,
-        scoreFromMap('equipmentAgeCondition', operatingProfile.equipmentAgeCondition)
-      ),
-      buildSignal(
-        'rawMaterialPriceExposure',
-        operatingProfile.rawMaterialPriceExposure,
-        scoreFromMap('rawMaterialPriceExposure', operatingProfile.rawMaterialPriceExposure)
-      ),
-      buildSignal(
-        'qualityCertifications',
-        operatingProfile.qualityCertifications,
-        scoreFromMap('qualityCertifications', operatingProfile.qualityCertifications)
-      ),
-    ].filter(Boolean);
-
-    const maintenanceCapexScore = scoreMaintenanceCapexContext(request);
-    if (typeof maintenanceCapexScore === 'number') {
-      signals.push({
-        key: 'maintenanceCapexContext',
-        value: 'derived_from_latest_period',
-        score: maintenanceCapexScore,
-      });
-    }
   }
 
   const validSignals = signals.filter(Boolean);

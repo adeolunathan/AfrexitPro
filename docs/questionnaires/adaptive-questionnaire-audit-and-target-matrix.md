@@ -116,6 +116,9 @@ This table records the approved decision for every adaptive question that existe
 | Branch | Question | Status | Role | Approved reasoning |
 | --- | --- | --- | --- | --- |
 | Product / Retail | `inventoryValueLatest` | Keep | V | Inventory and working-capital input. |
+| Product / Retail | `productRights` | Keep | V/R/T | Added as a defensibility and value-capture signal for product businesses. |
+| Product / Retail | `quantities` | Keep | V/R/T | Added to score repeatability and scalability of the product model. |
+| Product / Retail | `productCustomisation` | Keep | V/R/T | Added to score repeatability, operating complexity, and scalability. |
 | Product / Retail | `inventoryProfile` | Keep | R/T | Existing resilience signal. |
 | Product / Retail | `grossMarginStability` | Fix | V | Kept and now drives branch quality and confidence. |
 | Product / Retail | `supplierConcentration` | Fix | R/T | Kept and now drives branch quality and resilience. |
@@ -127,6 +130,10 @@ This table records the approved decision for every adaptive question that existe
 | Professional Services | `staffUtilization` | Fix | V | Kept and now drives branch quality. |
 | Professional Services | `keyPersonDependencies` | Fix | R/T | Kept and now drives branch quality. |
 | Professional Services | `pricingPowerVsMarket` | Fix | V | Kept and now drives branch quality. |
+| Manufacturing | `productRights` | Keep | V/R/T | Added as a defensibility signal where manufacturing know-how or owned designs matter. |
+| Manufacturing | `quantities` | Keep | V/R/T | Added to score repeatability and production scalability. |
+| Manufacturing | `productCustomisation` | Keep | V/R/T | Added to score production repeatability and operating complexity. |
+| Manufacturing | `manufacturingValueCreation` | Keep | V/R/T | Added to distinguish in-house value capture from outsourced dependence. |
 | Manufacturing | `capacityUtilization` | Fix | V | Kept and now drives branch quality. |
 | Manufacturing | `equipmentAgeCondition` | Fix | V | Kept and now drives branch quality. |
 | Manufacturing | `maintenanceCapexLatest` | Keep | V | Existing numeric input and branch-quality context. |
@@ -155,7 +162,8 @@ This table records the approved decision for every adaptive question that existe
 ### 4.2 Closing flow
 
 - Records and proof: `traceablePaymentsShare`, `bankingQuality`, `financeTracking`
-- Transferability and readiness: `ownerAbsence2Weeks`, `ownerAbsence3Months`, `ownerCustomerRelationship`, `managementDepth`, `processDocumentation`, `replacementDifficulty`, `laborMarketDifficulty`, `growthPotential`, `customerConcentration`, `bestCustomerImpact`, `partnerDependency`, `legalStructure`, `transactionTimeline`
+- Market position and resilience: `growthPotential`, `differentiation`, `customerConcentration`, `bestCustomerImpact`, `partnerDependency`, `assetSeparation`, `fxExposure`
+- Transferability and readiness: `ownerAbsence2Weeks`, `ownerAbsence3Months`, `ownerCustomerRelationship`, `managementDepth`, `processDocumentation`, `replacementDifficulty`, `laborMarketDifficulty`, `legalStructure`, `transactionTimeline`
 - Working capital and bridge: `receivablesLatest`, `payablesLatest`, `cashBalance`, `financialDebt`, `shareholderLoans`
 - Normalization: `ownerTotalCompensation`, `marketManagerCompensation`, `relatedPartyRentPaid`, `marketRentEquivalent`, `relatedPartyCompPaid`, `marketRelatedPartyCompEquivalent`, `privateExpensesAmount`, `oneOffExpenseAmount`, `oneOffIncomeAmount`, `nonCoreIncomeAmount`, `annualDepreciation`
 - Market-context / audit: `previousOffer`, `previousOfferAmount`
@@ -163,9 +171,9 @@ This table records the approved decision for every adaptive question that existe
 
 ### 4.3 Branches
 
-- Product / Retail: `inventoryValueLatest`, `inventoryProfile`, `grossMarginStability`, `supplierConcentration`, `shrinkageSpoilage`, `peakSeasonDependency`
+- Product / Retail: `inventoryValueLatest`, `productRights`, `quantities`, `productCustomisation`, `inventoryProfile`, `grossMarginStability`, `supplierConcentration`, `shrinkageSpoilage`, `peakSeasonDependency`
 - Professional Services: `founderRevenueDependence`, `recurringRevenueShare`, `revenueVisibility`, `staffUtilization`, `keyPersonDependencies`, `pricingPowerVsMarket`
-- Manufacturing: `capacityUtilization`, `equipmentAgeCondition`, `maintenanceCapexLatest`, `rawMaterialPriceExposure`, `qualityCertifications`
+- Manufacturing: `productRights`, `quantities`, `productCustomisation`, `manufacturingValueCreation`, `capacityUtilization`, `equipmentAgeCondition`, `maintenanceCapexLatest`, `rawMaterialPriceExposure`, `qualityCertifications`
 
 ## 5. Canonical Mapping Table
 
@@ -178,13 +186,21 @@ The following mappings are the ones most likely to be audited because they were 
 | `catchmentArea` | `operatingProfile.catchmentArea` | Canonicalize adaptive values to the original bank values. | Market-position score. |
 | `pricingPower` | `operatingProfile.pricingPower` | Canonicalize adaptive values to the original bank values. | Market-position score. |
 | `growthPotential` | `operatingProfile.growthOutlook` | Map directly into canonical growth outlook. | Market-position score and confidence earnings-stability input. |
+| `differentiation` | `operatingProfile.differentiation` | Store directly from the adaptive market-position question. | Market-position score. |
 | `laborMarketDifficulty` | `operatingProfile.hiringDifficulty` | Map directly into canonical hiring difficulty. | Operating-resilience score. |
 | `ownerCustomerRelationship` | `operatingProfile.founderRevenueDependence` | Use as the universal founder-dependence resolver when no branch-specific answer exists. | Revenue quality, transferability, readiness. |
 | `founderRevenueDependence` | `operatingProfile.founderRevenueDependence` | Branch-specific resolver takes precedence over the universal fallback. | Revenue quality, transferability, readiness. |
 | `customerConcentration` | `operatingProfile.customerConcentration` | Canonicalize to `none_material / manageable / high / extreme / not_sure`. | Revenue quality and transferability. |
 | `bestCustomerImpact` | `operatingProfile.bestCustomerRisk` | Canonicalize to `minor / noticeable / major / severe`. | Revenue quality and transferability. |
 | `partnerDependency` | `operatingProfile.supplierTransferability` | Canonicalize to `very_easy / manageable / uncertain / very_difficult`. | Operating resilience. |
+| `assetSeparation` | `operatingProfile.assetSeparation` | Store directly from the adaptive resilience question. | Operating-resilience and readiness/compliance score. |
+| `fxExposure` | `operatingProfile.fxExposure` | Store directly from the adaptive resilience question. | Operating-resilience score. |
+| `productRights` | `operatingProfile.productRights` | Store directly as a product/manufacturing defensibility signal. | Branch quality, market position, capped valuation factor. |
+| `quantities` | `operatingProfile.quantities` | Store directly as a repeatability / scalability signal. | Branch quality, resilience, capped valuation factor. |
+| `productCustomisation` | `operatingProfile.productCustomisation` | Store directly as a repeatability / complexity signal. | Branch quality, resilience, capped valuation factor. |
+| `manufacturingValueCreation` | `operatingProfile.manufacturingValueCreation` | Store directly as an in-house value-capture signal. | Branch quality, resilience, capped valuation factor. |
 | `annualDepreciation` | `financials.historicals[*].depreciationAmortization` | Store on the latest historical period. | EBITDA normalization and capitalized-earnings logic. |
+| `receivablesLatest` / `inventoryValueLatest` / `payablesLatest` | `financials.historicals[*]` and derived `operatingProfile.workingCapitalHealth` | Numeric working-capital inputs now derive working-capital health when the adaptive flow does not ask a separate subjective override. | Working-capital bridge, confidence, and operating-resilience score. |
 | `previousOffer` | `engagement.previousOfferStatus` | Persist for audit context only. | Stored in canonical payload and result trail, not scored. |
 | `previousOfferAmount` | `engagement.previousOfferAmount` | Persist only when `previousOfferStatus === yes`. | Stored in canonical payload and result trail, not scored. |
 | Product / Retail branch fields | `operatingProfile.*` branch fields | Carry through unchanged. | Branch score, confidence note, capped branch factor. |
@@ -234,9 +250,9 @@ Buckets:
 
 Branch family intent:
 
-- Product / Retail: gross-margin stability, supplier concentration, shrinkage/spoilage, and peak-season dependence drive resilience, confidence, and the capped branch factor.
+- Product / Retail: product rights, quantities, product customisation, gross-margin stability, supplier concentration, shrinkage/spoilage, and peak-season dependence drive repeatability, defensibility, resilience, confidence, and the capped branch factor.
 - Professional Services: founder dependence, recurring revenue, revenue visibility, staff utilization, key-person dependence, and pricing-power-vs-market drive revenue quality, transferability, confidence, and the capped branch factor.
-- Manufacturing: capacity utilization, equipment condition, maintenance-capex context, raw-material exposure, and certifications drive resilience, confidence, and the capped branch factor.
+- Manufacturing: product rights, quantities, product customisation, manufacturing value creation, capacity utilization, equipment condition, maintenance-capex context, raw-material exposure, and certifications drive repeatability, value capture, resilience, confidence, and the capped branch factor.
 
 ## 8. Deferred Items And Non-Goals
 
@@ -249,10 +265,10 @@ Deferred from this pass:
 
 Still intentionally defaulted in owner mode unless a future pass adds explicit questions:
 
-- deeper differentiation detail
-- working-capital-health subjective override
-- asset-separation detail beyond current canonical fallback path
-- FX-exposure detail beyond current canonical fallback path
+- deeper differentiation detail beyond the current anchored market-position question
+- a user-editable working-capital-health override beyond the derived numeric rule
+- asset-separation detail beyond the current direct resilience question
+- FX-exposure detail beyond the current direct resilience question
 
 ## 9. Audit Notes
 

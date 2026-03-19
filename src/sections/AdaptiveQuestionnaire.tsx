@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
-import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { ChevronLeft, ChevronRight, ArrowRight, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { anchorQuestions, getVisibleClosingQuestions } from '@/data/adaptive-question-bank';
@@ -8,9 +8,19 @@ import { fetchPartialValuation, calculatePreliminaryRange, formatRange } from '@
 import type { PartialValuationResult } from '@/api/valuation-partial';
 import { ConfidenceMeter } from '@/components/ConfidenceMeter';
 import { CurrencyInput } from '@/components/CurrencyInput';
-import { FinancialSpreadsheet, getDefaultFinancialPeriods, type FinancialPeriod } from '@/components/FinancialSpreadsheet';
+import {
+  FinancialSpreadsheet,
+  buildFinancialPeriodsFromAnswers,
+  getDefaultFinancialPeriods,
+  getFinancialPeriodById,
+  normalizeFinancialPeriods,
+  type FinancialPeriod,
+} from '@/components/FinancialSpreadsheet';
+import { OptionListInput } from '@/components/OptionListInput';
+import { QuestionHelpTooltip } from '@/components/QuestionHelpTooltip';
 import type { FormData } from '@/types/valuation';
 import type { Question } from '@/data/adaptive-question-bank';
+import { resolveQuestionCopy } from '@/lib/adaptive-question-copy';
 import { level2ByLevel1 } from '@/valuation-engine/policy-registry';
 
 interface AdaptiveQuestionnaireProps {
@@ -41,14 +51,15 @@ export function AdaptiveQuestionnaire({
   const [currentBranchIndex, setCurrentBranchIndex] = useState(0);
   const [isCalculating, setIsCalculating] = useState(false);
   const [previousRange, setPreviousRange] = useState<{ low: number; high: number } | null>(null);
+  const hasSyncedFinancialPeriods = useRef(false);
   
   // Financial periods state for the spreadsheet
   const [financialPeriods, setFinancialPeriods] = useState<FinancialPeriod[]>(() => {
     const saved = formData[FINANCIAL_PERIODS_KEY];
     if (saved && Array.isArray(saved)) {
-      return saved as FinancialPeriod[];
+      return normalizeFinancialPeriods(saved);
     }
-    return getDefaultFinancialPeriods();
+    return buildFinancialPeriodsFromAnswers(formData);
   });
 
   const visibleClosingQuestions = useMemo(() => getVisibleClosingQuestions(formData), [formData]);
@@ -66,6 +77,7 @@ export function AdaptiveQuestionnaire({
 
   const currentQuestion = currentQuestions[questionIndex];
   const isLastQuestion = phase === 'closing' && questionIndex === currentQuestions.length - 1;
+  const isFinancialTableQuestion = currentQuestion?.type === 'financial_table';
 
   // Calculate preliminary result when anchor is complete (backend with fallback)
   useEffect(() => {
@@ -166,7 +178,7 @@ export function AdaptiveQuestionnaire({
     
     // Special validation for financial table
     if (question.type === 'financial_table') {
-      const latestPeriod = financialPeriods[2];
+      const latestPeriod = getFinancialPeriodById(financialPeriods, 'latest');
       if (!latestPeriod.revenue || !latestPeriod.operatingProfit) {
         return 'Please enter at least the revenue and profit for the latest year';
       }
@@ -334,27 +346,36 @@ export function AdaptiveQuestionnaire({
     setFinancialPeriods(periods);
     setError('');
     
-    // Update formData with the financial values
     const updates: Partial<FormData> = {
       [FINANCIAL_PERIODS_KEY]: periods,
     };
-    
-    // Map periods to individual fields for backend compatibility
-    periods.forEach((period, index) => {
-      if (index === 2) {
-        updates.revenueLatest = period.revenue;
-        updates.operatingProfitLatest = period.operatingProfit;
-      } else if (index === 1) {
-        updates.revenuePrevious1 = period.revenue;
-        updates.operatingProfitPrevious1 = period.operatingProfit;
-      } else if (index === 0) {
-        updates.revenuePrevious2 = period.revenue;
-        updates.operatingProfitPrevious2 = period.operatingProfit;
-      }
-    });
+
+    const latestPeriod = getFinancialPeriodById(periods, 'latest');
+    const prior1Period = getFinancialPeriodById(periods, 'prior1');
+    const prior2Period = getFinancialPeriodById(periods, 'prior2');
+
+    updates.revenueLatest = latestPeriod.revenue;
+    updates.operatingProfitLatest = latestPeriod.operatingProfit;
+    updates.revenuePrevious1 = prior1Period.enabled ? prior1Period.revenue : '';
+    updates.operatingProfitPrevious1 = prior1Period.enabled ? prior1Period.operatingProfit : '';
+    updates.revenuePrevious2 = prior2Period.enabled ? prior2Period.revenue : '';
+    updates.operatingProfitPrevious2 = prior2Period.enabled ? prior2Period.operatingProfit : '';
     
     onUpdate(updates);
   }, [onUpdate]);
+
+  const handleFinancialReset = useCallback(() => {
+    handleFinancialPeriodsChange(getDefaultFinancialPeriods());
+  }, [handleFinancialPeriodsChange]);
+
+  useEffect(() => {
+    if (hasSyncedFinancialPeriods.current) {
+      return;
+    }
+
+    hasSyncedFinancialPeriods.current = true;
+    handleFinancialPeriodsChange(financialPeriods);
+  }, [financialPeriods, handleFinancialPeriodsChange]);
 
   const getInputType = (question: Question | BranchQuestion) => {
     if (question.type === 'number') return 'text';
@@ -376,7 +397,7 @@ export function AdaptiveQuestionnaire({
     
     return (
       <div className="min-h-screen bg-gray-50 px-4 py-8">
-        <div className="mx-auto max-w-2xl">
+        <div className="mx-auto max-w-4xl">
           {/* Header */}
           <div className="mb-8 text-center">
             <p className="mb-2 text-sm font-medium uppercase tracking-wider text-purple-600">
@@ -493,12 +514,14 @@ export function AdaptiveQuestionnaire({
   };
 
   // Render question screen
+  const progress = totalQuestions > 0 ? Math.round((globalQuestionNumber / totalQuestions) * 100) : 0;
+  const currentQuestionCopy = currentQuestion ? resolveQuestionCopy(currentQuestion, formData.respondentRole) : null;
   
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="sticky top-0 z-40 border-b border-gray-200 bg-white/95 backdrop-blur">
-        <div className="mx-auto max-w-3xl px-4 py-4">
+        <div className="mx-auto max-w-5xl px-4 py-4">
           <div className="flex items-center justify-between">
             <button
               onClick={onBackToLanding}
@@ -512,10 +535,19 @@ export function AdaptiveQuestionnaire({
             </span>
           </div>
         </div>
+        <div className="relative h-8 w-full overflow-hidden bg-slate-300">
+          <div
+            className="h-full bg-purple-600 transition-all duration-300"
+            style={{ width: `${progress}%` }}
+          />
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center text-sm font-semibold text-slate-700">
+            {progress}% Complete
+          </div>
+        </div>
       </header>
 
       {/* Main Content */}
-      <main className="mx-auto max-w-3xl px-4 py-8">
+      <main className="mx-auto max-w-5xl px-4 py-8">
         {/* Phase Indicator */}
         <div className="mb-6">
           <p className="text-xs font-medium uppercase tracking-wider text-purple-600">
@@ -552,36 +584,27 @@ export function AdaptiveQuestionnaire({
         <div className="rounded-2xl bg-white p-6 shadow-lg sm:p-8">
           {/* Question */}
           <div className="mb-6">
-            <h1 className="text-xl font-semibold text-gray-900 sm:text-2xl">
-              {currentQuestion?.prompt}
-            </h1>
-            {currentQuestion?.helperText && (
-              <p className="mt-2 text-sm text-gray-500">{currentQuestion.helperText}</p>
+            <div className="flex items-start gap-2">
+              <h1 className="text-xl font-semibold text-gray-900 sm:text-2xl">
+                {currentQuestionCopy?.prompt}
+              </h1>
+              {currentQuestionCopy?.tooltipText && <QuestionHelpTooltip content={currentQuestionCopy.tooltipText} />}
+            </div>
+            {currentQuestionCopy?.helperText && (
+              <p className="mt-2 text-sm text-gray-500">{currentQuestionCopy.helperText}</p>
             )}
           </div>
 
           {/* Input */}
           <div className="mb-6">
             {currentQuestion?.type === 'select' ? (
-              <select
+              <OptionListInput
                 value={String(formData[currentQuestion.id] || '')}
-                onChange={(e) => updateField(currentQuestion, e.target.value)}
+                onChange={(nextValue) => updateField(currentQuestion, nextValue)}
                 disabled={currentQuestion.id === 'level2' && level2Options.length === 0}
-                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-4 text-base text-gray-900 outline-none focus:border-purple-500 focus:ring-4 focus:ring-purple-100 disabled:cursor-not-allowed disabled:bg-gray-100"
-              >
-                <option value="" disabled>
-                  {currentQuestion.id === 'level2' && level2Options.length === 0
-                    ? 'Select industry first'
-                    : 'Select an option'}
-                </option>
-                {(currentQuestion.id === 'level2' ? level2Options : currentQuestion.options || []).map(
-                  (option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  )
-                )}
-              </select>
+                emptyLabel={currentQuestion.id === 'level2' && level2Options.length === 0 ? 'Select industry first' : 'No options available.'}
+                options={currentQuestion.id === 'level2' ? level2Options : currentQuestionCopy?.options || currentQuestion.options || []}
+              />
             ) : currentQuestion?.type === 'textarea' ? (
               <textarea
                 value={String(formData[currentQuestion.id] || '')}
@@ -598,7 +621,7 @@ export function AdaptiveQuestionnaire({
                   onChange={(e) => updateField(currentQuestion, e.target.checked)}
                   className="mt-1 h-5 w-5 rounded border-gray-300 accent-purple-600"
                 />
-                <span className="text-sm leading-6 text-gray-700">{currentQuestion.prompt}</span>
+                <span className="text-sm leading-6 text-gray-700">{currentQuestionCopy?.prompt}</span>
               </label>
             ) : currentQuestion?.type === 'currency' ? (
               <CurrencyInput
@@ -643,14 +666,27 @@ export function AdaptiveQuestionnaire({
               <ChevronLeft className="mr-2 h-4 w-4" />
               Back
             </Button>
-            <Button
-              onClick={handleNext}
-              disabled={isSubmitting}
-              className="bg-purple-600 hover:bg-purple-700"
-            >
-              {isLastQuestion ? 'Get Valuation' : 'Continue'}
-              <ChevronRight className="ml-2 h-4 w-4" />
-            </Button>
+            <div className="flex items-center gap-3">
+              {isFinancialTableQuestion ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleFinancialReset}
+                  className="border-rose-200 text-rose-600 hover:bg-rose-50 hover:text-rose-700"
+                >
+                  <RotateCcw className="mr-2 h-4 w-4" />
+                  Reset
+                </Button>
+              ) : null}
+              <Button
+                onClick={handleNext}
+                disabled={isSubmitting}
+                className="bg-purple-600 hover:bg-purple-700"
+              >
+                {isLastQuestion ? 'Get Valuation' : 'Continue'}
+                <ChevronRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </div>
 

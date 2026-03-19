@@ -234,7 +234,7 @@ Short names used below:
 | Question | Canonical path | Used by | Current owner-phase impact |
 | --- | --- | --- | --- |
 | `ownerAbsence2Weeks` - short founder absence | `readiness.ownerAbsence2Weeks` | `Score`, `Ready`, `Result` | Feeds `ownerIndependence` and readiness management depth. Indirectly affects achievable-today value through marketability. |
-| `ownerAbsence3Months` - longer founder absence | `readiness.ownerAbsence3Months` | `Score`, `Ready`, `Result` | Same pattern as `ownerAbsence2Weeks`, with stronger signal about transferability. |
+| `ownerAbsence3Months` - longer founder absence | `readiness.ownerAbsence3Months` | `Score`, `Ready`, `Result` | Same pattern as `ownerAbsence2Weeks`, with stronger signal about transferability. `v0.5` now recognizes a top-end `no_disruption` outcome instead of assuming every SME must degrade without the founder. |
 | `managementDepth` - who runs day to day | `readiness.managementDepth` | `Score`, `Ready`, `Methods`, `Bridge`, `Result` | Feeds `ownerIndependence` and readiness. Also affects whether owner-led businesses are allowed to include a market multiple when transferability is stronger. |
 | `processDocumentation` - how documented operations are | `readiness.processDocumentation` | `Score`, `Ready`, `Bridge`, `Result` | Feeds `ownerIndependence`, ownership clarity, documentation, and overall readiness. |
 | `replacementDifficulty` - replacing founder with a manager | `readiness.replacementDifficulty` | `Score`, `Ready`, `Bridge`, `Result` | Feeds `ownerIndependence` and readiness overall. |
@@ -251,9 +251,9 @@ Short names used below:
 | `revenueVisibility` - visibility of future revenue | `operatingProfile.revenueVisibility` | `Score`, `Ready`, `Bridge`, `Result` | Same pattern as `recurringRevenueShare`. |
 | `supplierTransferability` - ability to keep suppliers | `operatingProfile.supplierTransferability` | `Score`, `Result` | Feeds `operatingResilience` summary only today. |
 | `inventoryProfile` - stock duration | `operatingProfile.inventoryProfile` | `Score`, `Result` | Feeds `operatingResilience` summary only today. |
-| `workingCapitalHealth` - working-capital pressure | `operatingProfile.workingCapitalHealth` | `Score`, `Conf`, `Result` | Feeds `operatingResilience` summary and also confidence `earningsStability`. |
-| `assetSeparation` - business vs personal asset clarity | `operatingProfile.assetSeparation` | `Score`, `Ready`, `Bridge`, `Result` | Feeds `operatingResilience`, readiness compliance, and achievable-today marketability. |
-| `fxExposure` - import/FX/customs exposure | `operatingProfile.fxExposure` | `Score`, `Result` | Feeds `operatingResilience` summary only in `v0.4`. |
+| `workingCapitalHealth` - working-capital pressure | `operatingProfile.workingCapitalHealth` | `Score`, `Conf`, `Result` | Feeds `operatingResilience` summary and also confidence `earningsStability`. In the adaptive flow, `v0.5` now derives this from numeric working-capital inputs when no separate subjective override is asked. |
+| `assetSeparation` - business vs personal asset clarity | `operatingProfile.assetSeparation` | `Score`, `Ready`, `Bridge`, `Result` | Feeds `operatingResilience`, readiness compliance, and achievable-today marketability. In the adaptive flow, `v0.5` now asks this directly again. |
+| `fxExposure` - import/FX/customs exposure | `operatingProfile.fxExposure` | `Score`, `Result` | Feeds `operatingResilience` summary in `v0.5`. In the adaptive flow, `v0.5` now asks this directly again. |
 
 ### 5.7 Adjustments and Capital Structure
 

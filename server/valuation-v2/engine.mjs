@@ -39,7 +39,7 @@ const scoreMaps = {
   bankingQuality: { clean: 90, mostly_clean: 65, incomplete: 40, informal: 20 },
   financeTracking: { software: 90, spreadsheet: 70, notes: 45, informal: 20 },
   ownerAbsence2Weeks: { smooth: 90, minor_issues: 70, struggle: 40, almost_stop: 15 },
-  ownerAbsence3Months: { limited_disruption: 85, risky_but_possible: 60, very_difficult: 35, not_realistic: 15 },
+  ownerAbsence3Months: { no_disruption: 96, limited_disruption: 85, risky_but_possible: 60, very_difficult: 35, not_realistic: 15 },
   managementDepth: { team_controls: 90, trusted_manager: 75, founder_plus_support: 45, founder_only: 15 },
   processDocumentation: { documented_multi: 90, partly_documented: 65, little_documented: 40, founder_head: 15 },
   replacementDifficulty: { easy: 85, possible: 65, difficult: 35, founder_tied: 15 },

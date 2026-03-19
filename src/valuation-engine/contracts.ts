@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 export const userModeValues = ['owner', 'advisor', 'analyst'] as const;
+export const respondentRoleValues = ['owner', 'representative'] as const;
 export const valuationPurposeValues = ['sale', 'fundraise', 'internal_planning', 'succession', 'lending', 'other'] as const;
 export const urgencyValues = ['orderly', 'accelerated', 'forced'] as const;
 export const targetTransactionValues = ['full_sale', 'partial_sale', 'minority_raise', 'not_sure'] as const;
@@ -48,6 +49,7 @@ export const requestMetaSchema = z.object({
   source: z.enum(['web-owner', 'web-advisor', 'internal-analyst', 'api']),
   acknowledged: z.boolean().optional(),
   newsletterOptIn: z.boolean().optional(),
+  respondentRole: z.enum(respondentRoleValues).optional(),
 });
 
 export const engagementContextSchema = z.object({
@@ -98,6 +100,9 @@ export const operatingProfileSchema = z.object({
   assetSeparation: z.string().optional(),
   inventoryProfile: z.string().optional(),
   workingCapitalHealth: z.string().optional(),
+  productRights: z.string().optional(),
+  quantities: z.string().optional(),
+  productCustomisation: z.string().optional(),
   grossMarginStability: z.string().optional(),
   supplierConcentration: z.string().optional(),
   shrinkageSpoilage: z.string().optional(),
@@ -106,6 +111,7 @@ export const operatingProfileSchema = z.object({
   keyPersonDependencies: z.string().optional(),
   pricingPowerVsMarket: z.string().optional(),
   capacityUtilization: z.string().optional(),
+  manufacturingValueCreation: z.string().optional(),
   equipmentAgeCondition: z.string().optional(),
   rawMaterialPriceExposure: z.string().optional(),
   qualityCertifications: z.string().optional(),

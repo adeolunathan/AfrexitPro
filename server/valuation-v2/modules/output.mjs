@@ -51,6 +51,9 @@ export function buildAssumptions(request, selectedMethods, historicalSummary, no
   if (historicalSummary.yearsAvailable > 1) {
     assumptions.push('Representative earnings are blended across the available owner history rather than relying on only one year.');
   }
+  if (request.financials?.forecast?.forecastYears?.length) {
+    assumptions.push('Current-year forecast inputs are included with cautious weight in the representative earnings signal rather than being treated like completed-year actuals.');
+  }
   if (historicalSummary.yearsAvailable < 3) {
     assumptions.push('Historical financial depth is still limited relative to an advisor-grade engagement.');
   }

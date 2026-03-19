@@ -14,6 +14,7 @@ export interface Question {
   prompt: string;
   canonicalPath: string;
   helperText?: string;
+  tooltipText?: string;
   placeholder?: string;
   required?: boolean;
   options?: Option[];

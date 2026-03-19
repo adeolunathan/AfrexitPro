@@ -6,6 +6,10 @@ function toNumber(value) {
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
+function hasValue(value) {
+  return String(value ?? '').trim() !== '';
+}
+
 function isTruthy(value) {
   if (value === true) return true;
   const normalized = String(value ?? '').trim().toLowerCase();
@@ -27,6 +31,10 @@ function normalizePrimaryState(value) {
   };
 
   return aliases[normalized] || normalized;
+}
+
+function normalizeRespondentRole(value) {
+  return String(value ?? '').trim() === 'representative' ? 'representative' : 'owner';
 }
 
 function normalizeIndustryFit(value) {
@@ -257,7 +265,122 @@ function mapTargetTransaction(transactionGoal) {
   }
 }
 
-function buildNormalizationSchedule(raw) {
+function buildHistoricalPeriod(periodId, label, revenue, operatingProfit, options = {}) {
+  return {
+    periodId,
+    label,
+    months: 12,
+    revenue,
+    operatingProfit,
+    receivables: options.receivables,
+    inventory: options.inventory,
+    payables: options.payables,
+    maintenanceCapex: options.maintenanceCapex,
+    depreciationAmortization: options.depreciationAmortization,
+    cashBalance: options.cashBalance,
+    financialDebt: options.financialDebt,
+    sourceType: 'owner_estimate',
+    isRepresentative: options.isRepresentative,
+  };
+}
+
+function buildOwnerHistoricals(raw) {
+  const revenuePrevious1 = hasValue(raw.revenuePrevious1) ? raw.revenuePrevious1 : raw.revenuePrev1;
+  const operatingProfitPrevious1 = hasValue(raw.operatingProfitPrevious1)
+    ? raw.operatingProfitPrevious1
+    : raw.operatingProfitPrev1;
+  const revenuePrevious2 = hasValue(raw.revenuePrevious2) ? raw.revenuePrevious2 : raw.revenuePrev2;
+  const operatingProfitPrevious2 = hasValue(raw.operatingProfitPrevious2)
+    ? raw.operatingProfitPrevious2
+    : raw.operatingProfitPrev2;
+
+  const historicals = [
+    buildHistoricalPeriod('latest_owner_input', 'Latest annual owner input', toNumber(raw.revenueLatest), toNumber(raw.operatingProfitLatest), {
+      isRepresentative: true,
+      receivables: toNumber(raw.receivablesLatest),
+      inventory: toNumber(raw.inventoryValueLatest),
+      payables: toNumber(raw.payablesLatest),
+      maintenanceCapex: toNumber(raw.maintenanceCapexLatest),
+      depreciationAmortization: toNumber(raw.annualDepreciation),
+      cashBalance: toNumber(raw.cashBalance),
+      financialDebt: toNumber(raw.financialDebt),
+    }),
+  ];
+
+  if (hasValue(revenuePrevious1) || hasValue(operatingProfitPrevious1)) {
+    historicals.push(
+      buildHistoricalPeriod(
+        'prior_year_1',
+        'Previous financial year',
+        toNumber(revenuePrevious1),
+        toNumber(operatingProfitPrevious1)
+      )
+    );
+  }
+
+  if (hasValue(revenuePrevious2) || hasValue(operatingProfitPrevious2)) {
+    historicals.push(
+      buildHistoricalPeriod(
+        'prior_year_2',
+        'Two financial years ago',
+        toNumber(revenuePrevious2),
+        toNumber(operatingProfitPrevious2)
+      )
+    );
+  }
+
+  return historicals;
+}
+
+function buildOwnerForecast(raw) {
+  const rawPeriods = Array.isArray(raw?._financialPeriods) ? raw._financialPeriods : [];
+  const forecastPeriod = rawPeriods.find(
+    (period) => period && typeof period === 'object' && period.id === 'forecast'
+  );
+
+  if (!forecastPeriod || forecastPeriod.enabled !== true) {
+    return undefined;
+  }
+
+  const revenue = toNumber(forecastPeriod.revenue);
+  const operatingProfit = toNumber(forecastPeriod.operatingProfit);
+  const hasOperatingProfit = hasValue(forecastPeriod.operatingProfit);
+
+  if (revenue <= 0 && !hasOperatingProfit) {
+    return undefined;
+  }
+
+  return {
+    forecastYears: [
+      {
+        year: new Date().getFullYear(),
+        revenue,
+        ebit: hasOperatingProfit ? operatingProfit : undefined,
+      },
+    ],
+    forecastConfidence: 'low',
+  };
+}
+
+function createNormalizationLineItem(id, category, label, adjustmentAmount, direction, affects, notes, options = {}) {
+  return {
+    id,
+    category,
+    label,
+    periodId: 'latest_owner_input',
+    reportedAmount: options.reportedAmount,
+    normalizedAmount: options.normalizedAmount,
+    adjustmentAmount,
+    direction,
+    recurrence: options.recurrence || 'recurring',
+    confidence: 'low',
+    evidenceLevel: 'owner_statement',
+    affects,
+    notes,
+  };
+}
+
+function buildLegacyNormalizationFallback(raw) {
   const periodId = 'latest_owner_input';
   const schedule = [];
 
@@ -285,18 +408,229 @@ function buildNormalizationSchedule(raw) {
       confidence: 'low',
       evidenceLevel: 'owner_statement',
       affects: category === 'non_operating_income' ? 'ebit' : 'ebitda',
-      notes: 'Owner flagged this item, but owner-mode intake does not yet capture a quantified amount.',
+      notes: 'Owner flagged this item, but owner-mode intake did not capture a quantified amount.',
     });
   }
 
   return schedule;
 }
 
+function buildNormalizationSchedule(raw) {
+  const schedule = [];
+  const ownerTotalComp = toNumber(raw.ownerTotalCompensation);
+  const marketManagerComp = toNumber(raw.marketManagerCompensation);
+  const rentActual = toNumber(raw.relatedPartyRentPaid);
+  const rentMarket = toNumber(raw.marketRentEquivalent);
+  const relatedPartyCompActual = toNumber(raw.relatedPartyCompPaid);
+  const relatedPartyCompMarket = toNumber(raw.marketRelatedPartyCompEquivalent);
+  const privateExpensesAmount = toNumber(raw.privateExpensesAmount);
+  const oneOffExpenseAmount = toNumber(raw.oneOffExpenseAmount);
+  const oneOffIncomeAmount = toNumber(raw.oneOffIncomeAmount);
+  const nonCoreIncomeAmount = toNumber(raw.nonCoreIncomeAmount);
+
+  if (ownerTotalComp > 0) {
+    schedule.push(
+      createNormalizationLineItem(
+        'owner-comp-total',
+        'owner_comp',
+        'Owner total compensation added back for SDE view',
+        ownerTotalComp,
+        'add_back',
+        'sde',
+        'Owner-provided estimate of total annual compensation taken from the business.',
+        {
+          recurrence: 'recurring',
+          reportedAmount: ownerTotalComp,
+          normalizedAmount: 0,
+        }
+      )
+    );
+  }
+
+  if (ownerTotalComp !== marketManagerComp) {
+    const delta = Math.abs(ownerTotalComp - marketManagerComp);
+    const direction = ownerTotalComp > marketManagerComp ? 'add_back' : 'remove';
+    schedule.push(
+      createNormalizationLineItem(
+        'owner-comp-market-delta',
+        'owner_comp',
+        'Owner compensation normalized to market replacement cost',
+        delta,
+        direction,
+        'ebitda',
+        'Difference between owner take-home and estimated market replacement cost.',
+        {
+          recurrence: 'recurring',
+          reportedAmount: ownerTotalComp,
+          normalizedAmount: marketManagerComp,
+        }
+      )
+    );
+  }
+
+  if (rentActual !== rentMarket) {
+    const delta = Math.abs(rentActual - rentMarket);
+    const direction = rentActual > rentMarket ? 'add_back' : 'remove';
+    schedule.push(
+      createNormalizationLineItem(
+        'related-party-rent-delta',
+        'related_party_rent',
+        'Related-party or non-market rent normalization',
+        delta,
+        direction,
+        'ebitda',
+        'Difference between actual rent paid and estimated market-equivalent rent.',
+        {
+          recurrence: 'recurring',
+          reportedAmount: rentActual,
+          normalizedAmount: rentMarket,
+        }
+      )
+    );
+  }
+
+  if (relatedPartyCompActual !== relatedPartyCompMarket) {
+    const delta = Math.abs(relatedPartyCompActual - relatedPartyCompMarket);
+    const direction = relatedPartyCompActual > relatedPartyCompMarket ? 'add_back' : 'remove';
+    schedule.push(
+      createNormalizationLineItem(
+        'related-party-pay-delta',
+        'family_payroll',
+        'Related-party compensation normalization',
+        delta,
+        direction,
+        'ebitda',
+        'Difference between related-party pay and estimated market-equivalent cost.',
+        {
+          recurrence: 'recurring',
+          reportedAmount: relatedPartyCompActual,
+          normalizedAmount: relatedPartyCompMarket,
+        }
+      )
+    );
+  }
+
+  if (privateExpensesAmount > 0) {
+    schedule.push(
+      createNormalizationLineItem(
+        'private-expenses',
+        'personal_expense',
+        'Personal or private expenses through the business',
+        privateExpensesAmount,
+        'add_back',
+        'ebitda',
+        'Owner estimate of non-business expenses included in reported profit.',
+        {
+          recurrence: 'recurring',
+          reportedAmount: privateExpensesAmount,
+        }
+      )
+    );
+  }
+
+  if (oneOffExpenseAmount > 0) {
+    schedule.push(
+      createNormalizationLineItem(
+        'one-off-expenses',
+        'one_off_expense',
+        'One-off expenses removed from maintainable earnings',
+        oneOffExpenseAmount,
+        'add_back',
+        'ebitda',
+        'Owner estimate of unusual or non-recurring expenses.',
+        {
+          recurrence: 'non_recurring',
+          reportedAmount: oneOffExpenseAmount,
+        }
+      )
+    );
+  }
+
+  if (oneOffIncomeAmount > 0) {
+    schedule.push(
+      createNormalizationLineItem(
+        'one-off-income',
+        'one_off_income',
+        'One-off income removed from maintainable earnings',
+        oneOffIncomeAmount,
+        'remove',
+        'ebitda',
+        'Owner estimate of unusual or non-recurring income.',
+        {
+          recurrence: 'non_recurring',
+          reportedAmount: oneOffIncomeAmount,
+        }
+      )
+    );
+  }
+
+  if (nonCoreIncomeAmount > 0) {
+    schedule.push(
+      createNormalizationLineItem(
+        'non-core-income',
+        'non_operating_income',
+        'Income not related to the core operating business',
+        nonCoreIncomeAmount,
+        'remove',
+        'ebit',
+        'Owner estimate of non-core or non-operating income embedded in profit.',
+        {
+          recurrence: 'partly_recurring',
+          reportedAmount: nonCoreIncomeAmount,
+        }
+      )
+    );
+  }
+
+  return schedule.length ? schedule : buildLegacyNormalizationFallback(raw);
+}
+
+function deriveWorkingCapitalHealth({ hasInputs, actualWorkingCapital, revenue, targetPct, inventoryProfile, level1, existingValue }) {
+  if (hasValue(existingValue)) {
+    return String(existingValue);
+  }
+
+  if (!hasInputs || revenue <= 0) {
+    return 'not_sure';
+  }
+
+  const normalizedInventoryProfile = String(inventoryProfile || '');
+  const normalizedLevel1 = String(level1 || '');
+
+  if (actualWorkingCapital <= 0) {
+    if (normalizedInventoryProfile === 'lt_7' || normalizedInventoryProfile === 'service_business' || normalizedLevel1 === 'trade') {
+      return 'healthy';
+    }
+    return 'tight';
+  }
+
+  const normalizedWorkingCapital = revenue * (targetPct ?? 0.06);
+  if (normalizedWorkingCapital <= 0) {
+    const intensity = actualWorkingCapital / revenue;
+    if (intensity <= 0.08) return 'healthy';
+    if (intensity <= 0.18) return 'tight';
+    return 'under_pressure';
+  }
+
+  const coverage = actualWorkingCapital / normalizedWorkingCapital;
+  if (coverage >= 0.9) return 'healthy';
+  if (coverage >= 0.5) return 'tight';
+  return 'under_pressure';
+}
+
 export function adaptOwnerRequest(raw) {
-  const { policyGroupId } = resolvePolicyGroup(raw.level2);
+  const { policyGroupId, policyGroup } = resolvePolicyGroup(raw.level2);
   const now = new Date().toISOString();
   const purpose = mapPurpose(raw.transactionGoal);
   const urgency = mapUrgency(raw.transactionTimeline);
+  const historicals = buildOwnerHistoricals(raw);
+  const forecast = buildOwnerForecast(raw);
+  const latestReceivables = toNumber(raw.receivablesLatest);
+  const latestInventory = toNumber(raw.inventoryValueLatest);
+  const latestPayables = toNumber(raw.payablesLatest);
+  const hasWorkingCapitalInputs =
+    hasValue(raw.receivablesLatest) || hasValue(raw.inventoryValueLatest) || hasValue(raw.payablesLatest);
+  const actualWorkingCapital = latestReceivables + latestInventory - latestPayables;
   const customerConcentration = normalizeCustomerConcentration(raw.customerConcentration);
   const previousOfferStatus = normalizePreviousOfferStatus(raw.previousOffer);
   const previousOfferAmount =
@@ -304,6 +638,15 @@ export function adaptOwnerRequest(raw) {
   const founderRevenueDependence = raw.founderRevenueDependence
     ? normalizeFounderDependence(raw.founderRevenueDependence)
     : normalizeFounderDependence(raw.ownerCustomerRelationship);
+  const workingCapitalHealth = deriveWorkingCapitalHealth({
+    hasInputs: hasWorkingCapitalInputs,
+    actualWorkingCapital,
+    revenue: toNumber(raw.revenueLatest),
+    targetPct: policyGroup.ownerPhase.workingCapitalTargetPct,
+    inventoryProfile: raw.inventoryProfile,
+    level1: raw.level1,
+    existingValue: raw.workingCapitalHealth,
+  });
 
   return {
     meta: {
@@ -314,6 +657,7 @@ export function adaptOwnerRequest(raw) {
       currency: 'NGN',
       locale: 'en-NG',
       source: 'web-owner',
+      respondentRole: normalizeRespondentRole(raw.respondentRole),
     },
     engagement: {
       purpose,
@@ -358,7 +702,10 @@ export function adaptOwnerRequest(raw) {
       fxExposure: raw.fxExposure,
       assetSeparation: raw.assetSeparation,
       inventoryProfile: raw.inventoryProfile,
-      workingCapitalHealth: raw.workingCapitalHealth,
+      workingCapitalHealth,
+      productRights: raw.productRights,
+      quantities: raw.quantities,
+      productCustomisation: raw.productCustomisation,
       grossMarginStability: raw.grossMarginStability,
       supplierConcentration: raw.supplierConcentration,
       shrinkageSpoilage: raw.shrinkageSpoilage,
@@ -367,32 +714,17 @@ export function adaptOwnerRequest(raw) {
       keyPersonDependencies: raw.keyPersonDependencies,
       pricingPowerVsMarket: raw.pricingPowerVsMarket,
       capacityUtilization: raw.capacityUtilization,
+      manufacturingValueCreation: raw.manufacturingValueCreation,
       equipmentAgeCondition: raw.equipmentAgeCondition,
       rawMaterialPriceExposure: raw.rawMaterialPriceExposure,
       qualityCertifications: raw.qualityCertifications,
     },
     financials: {
-      historicals: [
-        {
-          periodId: 'latest_owner_input',
-          label: 'Latest annual owner input',
-          months: 12,
-          revenue: toNumber(raw.revenueLatest),
-          operatingProfit: toNumber(raw.operatingProfitLatest),
-          depreciationAmortization: toNumber(raw.annualDepreciation),
-          cashBalance: toNumber(raw.cashBalance),
-          financialDebt: toNumber(raw.financialDebt),
-          receivables: toNumber(raw.receivablesLatest),
-          inventory: toNumber(raw.inventoryValueLatest),
-          payables: toNumber(raw.payablesLatest),
-          maintenanceCapex: toNumber(raw.maintenanceCapexLatest),
-          sourceType: 'owner_estimate',
-          isRepresentative: true,
-        },
-      ],
+      historicals,
+      forecast,
       selectedRepresentativePeriodId: 'latest_owner_input',
       sourceQuality: {
-        yearsAvailable: 1,
+        yearsAvailable: historicals.length,
         bookkeepingQuality: raw.financeTracking || 'informal',
         bankingQuality: raw.bankingQuality || 'informal',
         traceablePaymentsShare: raw.traceablePaymentsShare || 'lt_20',
@@ -407,6 +739,8 @@ export function adaptOwnerRequest(raw) {
     bridge: {
       cashAndEquivalents: toNumber(raw.cashBalance),
       interestBearingDebt: toNumber(raw.financialDebt),
+      shareholderLoans: toNumber(raw.shareholderLoans),
+      actualWorkingCapital,
     },
     readiness: {
         recordsQuality: raw.proofReadiness,

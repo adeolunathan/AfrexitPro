@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { Check, ArrowRight } from 'lucide-react';
+import { Check, ArrowRight, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { anchorQuestions, getVisibleClosingQuestions } from '@/data/adaptive-question-bank';
@@ -7,11 +7,41 @@ import { detectBranches, getBranchQuestions, type BranchModule, type BranchQuest
 import { fetchPartialValuation, calculatePreliminaryRange, formatRange } from '@/api/valuation-partial';
 import type { PartialValuationResult } from '@/api/valuation-partial';
 import { ConfidenceMeter } from '@/components/ConfidenceMeter';
-import { CurrencyInput } from '@/components/CurrencyInput';
-import { FinancialSpreadsheet, getDefaultFinancialPeriods, type FinancialPeriod } from '@/components/FinancialSpreadsheet';
+import {
+  FinancialSpreadsheet,
+  buildFinancialPeriodsFromAnswers,
+  getDefaultFinancialPeriods,
+  getFinancialPeriodById,
+  normalizeFinancialPeriods,
+  type FinancialPeriod,
+} from '@/components/FinancialSpreadsheet';
+import { InlineCurrencyQuestionnaire } from '@/components/InlineCurrencyQuestionnaire';
+import { OptionListInput } from '@/components/OptionListInput';
+import { QuestionHelpTooltip } from '@/components/QuestionHelpTooltip';
 import type { FormData } from '@/types/valuation';
 import type { Question } from '@/data/adaptive-question-bank';
+import { resolveQuestionCopy } from '@/lib/adaptive-question-copy';
 import { level2ByLevel1 } from '@/valuation-engine/policy-registry';
+
+// Currency questions that should be shown in inline spreadsheet format
+const CURRENCY_QUESTION_IDS = [
+  'receivablesLatest',
+  'payablesLatest',
+  'cashBalance',
+  'ownerTotalCompensation',
+  'marketManagerCompensation',
+  'relatedPartyRentPaid',
+  'marketRentEquivalent',
+  'relatedPartyCompPaid',
+  'marketRelatedPartyCompEquivalent',
+  'privateExpensesAmount',
+  'oneOffExpenseAmount',
+  'oneOffIncomeAmount',
+  'nonCoreIncomeAmount',
+  'annualDepreciation',
+  'financialDebt',
+  'shareholderLoans',
+];
 
 interface ContinuousQuestionnaireProps {
   formData: FormData;
@@ -53,13 +83,14 @@ export function ContinuousQuestionnaire({
   
   const bottomRef = useRef<HTMLDivElement>(null);
   const questionRefs = useRef<Record<string, HTMLDivElement>>({});
+  const hasSyncedFinancialPeriods = useRef(false);
 
   const [financialPeriods, setFinancialPeriods] = useState<FinancialPeriod[]>(() => {
     const saved = formData[FINANCIAL_PERIODS_KEY];
     if (saved && Array.isArray(saved)) {
-      return saved as FinancialPeriod[];
+      return normalizeFinancialPeriods(saved);
     }
-    return getDefaultFinancialPeriods();
+    return buildFinancialPeriodsFromAnswers(formData);
   });
 
   // Check if a question should auto-advance on selection
@@ -77,7 +108,19 @@ export function ContinuousQuestionnaire({
     return CONTACT_GROUP_IDS.includes(id);
   }, []);
 
+  // Check if question is part of inline currency sequence
+  const isCurrencyQuestion = useCallback((id: string): boolean => {
+    return CURRENCY_QUESTION_IDS.includes(id);
+  }, []);
+
   const visibleClosingQuestions = useMemo(() => getVisibleClosingQuestions(formData), [formData]);
+
+  // Get all visible currency questions in order
+  const currencyQuestions = useMemo(() => {
+    return visibleClosingQuestions.filter(q => CURRENCY_QUESTION_IDS.includes(q.id));
+  }, [visibleClosingQuestions]);
+  const firstCurrencyQuestion = currencyQuestions[0];
+  const allCurrencyAnswered = currencyQuestions.length > 0 && currencyQuestions.every(q => !!formData[q.id]);
 
   // Build flat list of all questions with their phases
   const allQuestions = useMemo<QuestionState[]>(() => {
@@ -111,10 +154,19 @@ export function ContinuousQuestionnaire({
     
     // Closing questions (excluding contact questions)
     if (phase === 'closing' || phase === 'preliminary') {
+      let currencyGroupAdded = false;
       visibleClosingQuestions.forEach(q => {
-        if (!isContactQuestion(q.id)) {
-          questions.push({ question: q, phase: 'closing', answered: !!formData[q.id] });
+        if (isContactQuestion(q.id)) {
+          return;
         }
+        if (isCurrencyQuestion(q.id)) {
+          if (!currencyGroupAdded && firstCurrencyQuestion) {
+            questions.push({ question: firstCurrencyQuestion, phase: 'closing', answered: allCurrencyAnswered });
+            currencyGroupAdded = true;
+          }
+          return;
+        }
+        questions.push({ question: q, phase: 'closing', answered: !!formData[q.id] });
       });
       
       // Add contact group at the end
@@ -128,7 +180,7 @@ export function ContinuousQuestionnaire({
     }
     
     return questions;
-  }, [formData, activeBranches, phase, isContactQuestion, visibleClosingQuestions]);
+  }, [formData, activeBranches, phase, isContactQuestion, isCurrencyQuestion, visibleClosingQuestions, firstCurrencyQuestion, allCurrencyAnswered]);
 
   // Get currently visible questions
   const visibleQuestions = useMemo(() => {
@@ -181,7 +233,7 @@ export function ContinuousQuestionnaire({
 
   const validateQuestion = useCallback((question: Question | BranchQuestion, value: unknown): string => {
     if (question.type === 'financial_table') {
-      const latestPeriod = financialPeriods[2];
+      const latestPeriod = getFinancialPeriodById(financialPeriods, 'latest');
       if (!latestPeriod.revenue || !latestPeriod.operatingProfit) {
         return 'Please enter revenue and profit for the latest year';
       }
@@ -257,25 +309,32 @@ export function ContinuousQuestionnaire({
     const updates: Partial<FormData> = {
       [FINANCIAL_PERIODS_KEY]: periods,
     };
-    
-    periods.forEach((period, index) => {
-      if (index === 2) {
-        updates.revenueLatest = period.revenue;
-        updates.operatingProfitLatest = period.operatingProfit;
-      } else if (index === 1) {
-        updates.revenuePrevious1 = period.revenue;
-        updates.operatingProfitPrevious1 = period.operatingProfit;
-      } else if (index === 0) {
-        updates.revenuePrevious2 = period.revenue;
-        updates.operatingProfitPrevious2 = period.operatingProfit;
-      }
-    });
+
+    const latestPeriod = getFinancialPeriodById(periods, 'latest');
+    const prior1Period = getFinancialPeriodById(periods, 'prior1');
+    const prior2Period = getFinancialPeriodById(periods, 'prior2');
+
+    updates.revenueLatest = latestPeriod.revenue;
+    updates.operatingProfitLatest = latestPeriod.operatingProfit;
+    updates.revenuePrevious1 = prior1Period.enabled ? prior1Period.revenue : '';
+    updates.operatingProfitPrevious1 = prior1Period.enabled ? prior1Period.operatingProfit : '';
+    updates.revenuePrevious2 = prior2Period.enabled ? prior2Period.revenue : '';
+    updates.operatingProfitPrevious2 = prior2Period.enabled ? prior2Period.operatingProfit : '';
     
     onUpdate(updates);
   }, [onUpdate]);
 
+  useEffect(() => {
+    if (hasSyncedFinancialPeriods.current) {
+      return;
+    }
+
+    hasSyncedFinancialPeriods.current = true;
+    handleFinancialPeriodsChange(financialPeriods);
+  }, [financialPeriods, handleFinancialPeriodsChange]);
+
   const handleFinancialNext = useCallback(() => {
-    const latestPeriod = financialPeriods[2];
+    const latestPeriod = getFinancialPeriodById(financialPeriods, 'latest');
     if (!latestPeriod.revenue || !latestPeriod.operatingProfit) {
       setErrors(prev => ({ ...prev, revenueLatest: 'Please enter revenue and profit for the latest year' }));
       return;
@@ -286,6 +345,10 @@ export function ContinuousQuestionnaire({
       setVisibleCount(prev => prev + 1);
     }
   }, [financialPeriods, allQuestions, visibleCount]);
+
+  const handleFinancialReset = useCallback(() => {
+    handleFinancialPeriodsChange(getDefaultFinancialPeriods());
+  }, [handleFinancialPeriodsChange]);
 
   const handleContactGroupNext = useCallback(() => {
     const contactQs = visibleClosingQuestions.filter(q => isContactQuestion(q.id));
@@ -398,17 +461,75 @@ export function ContinuousQuestionnaire({
     const value = formData[q.id];
     const error = errors[q.id];
     const isEditing = editingQuestionId === q.id;
+    const questionCopy = resolveQuestionCopy(q, formData.respondentRole);
 
     // Special handling for contact group
     if (isContactQuestion(q.id)) {
       return renderContactGroup(isActive);
     }
 
+    // Special handling for inline currency group - only render for first currency question
+    if (isCurrencyQuestion(q.id)) {
+      // Only show the inline questionnaire for the first currency question
+      const firstCurrencyId = currencyQuestions[0]?.id;
+      if (q.id !== firstCurrencyId) {
+        // This question is handled within the inline questionnaire
+        return null;
+      }
+
+      if (!isActive && !isEditing) {
+        return (
+          <div 
+            className="flex cursor-pointer items-start gap-3 text-gray-600 hover:bg-gray-50 -m-6 rounded-2xl p-6 transition-colors"
+            onClick={() => toggleEdit(q.id)}
+          >
+            <div className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-green-100">
+              <Check className="h-3 w-3 text-green-600" />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm text-gray-500">Working Capital & Normalization</p>
+              <p className="font-medium text-gray-900">
+                {currencyQuestions.filter(item => !!formData[item.id]).length} of {currencyQuestions.length} amounts entered
+              </p>
+            </div>
+            <div className="text-xs text-purple-600 font-medium">Edit</div>
+          </div>
+        );
+      }
+      
+      return (
+        <div className="space-y-4">
+          <div>
+            <div className="flex items-start gap-2">
+              <h3 className="text-lg font-semibold text-gray-900">Working Capital & Normalization</h3>
+              <QuestionHelpTooltip content="These inputs directly affect maintainable earnings, working-capital needs, and the final equity value a seller could achieve." />
+            </div>
+            <p className="mt-1 text-sm text-gray-500">
+              Enter the amounts for each item below. Click Next after each entry.
+            </p>
+          </div>
+          <InlineCurrencyQuestionnaire
+            questions={currencyQuestions}
+            formData={formData as Record<string, string | boolean>}
+            onUpdate={(patch) => onUpdate(patch as FormData)}
+            onComplete={() => {
+              const currentIdx = allQuestions.findIndex(vq => vq.question.id === q.id);
+              if (currentIdx >= 0 && currentIdx === visibleCount - 1 && visibleCount < allQuestions.length) {
+                setVisibleCount(prev => prev + 1);
+              }
+              setEditingQuestionId(null);
+            }}
+          />
+        </div>
+      );
+    }
+
     // Render answered question (compact view with edit option)
     if (!isActive && !isEditing) {
       let displayValue: string;
       if (q.type === 'select') {
-        const option = q.options?.find(o => o.value === value);
+        const optionList = q.id === 'level2' ? level2Options : questionCopy.options || q.options;
+        const option = optionList?.find(o => o.value === value);
         displayValue = option?.label || String(value || '');
       } else if (q.type === 'checkbox') {
         displayValue = value === true ? 'Yes' : 'No';
@@ -416,7 +537,7 @@ export function ContinuousQuestionnaire({
         const num = parseFloat(String(value || '0').replace(/[^0-9]/g, ''));
         displayValue = num ? `₦${num.toLocaleString('en-NG')}` : '';
       } else if (q.type === 'financial_table') {
-        const latest = financialPeriods[2];
+        const latest = getFinancialPeriodById(financialPeriods, 'latest');
         displayValue = latest.revenue ? `Latest: ₦${parseInt(latest.revenue).toLocaleString('en-NG')}` : '';
       } else {
         displayValue = String(value || '');
@@ -431,7 +552,7 @@ export function ContinuousQuestionnaire({
             <Check className="h-3 w-3 text-green-600" />
           </div>
           <div className="flex-1">
-            <p className="text-sm text-gray-500">{q.prompt}</p>
+            <p className="text-sm text-gray-500">{questionCopy.prompt}</p>
             <p className="font-medium text-gray-900">{displayValue || '—'}</p>
           </div>
           <div className="text-xs text-purple-600 font-medium">Edit</div>
@@ -445,29 +566,22 @@ export function ContinuousQuestionnaire({
     return (
       <div className="space-y-4">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">{q.prompt}</h3>
-          {q.helperText && <p className="mt-1 text-sm text-gray-500">{q.helperText}</p>}
+          <div className="flex items-start gap-2">
+            <h3 className="text-lg font-semibold text-gray-900">{questionCopy.prompt}</h3>
+            {questionCopy.tooltipText && <QuestionHelpTooltip content={questionCopy.tooltipText} />}
+          </div>
+          {questionCopy.helperText && <p className="mt-1 text-sm text-gray-500">{questionCopy.helperText}</p>}
         </div>
 
-        <div className={q.type === 'financial_table' ? 'w-full' : 'max-w-xl'}>
+        <div className="w-full">
           {q.type === 'select' ? (
-            <select
+            <OptionListInput
               value={String(value || '')}
-              onChange={(e) => handleAnswer(q, e.target.value, true)}
+              onChange={(nextValue) => handleAnswer(q, nextValue, true)}
               disabled={q.id === 'level2' && level2Options.length === 0}
-              className="w-full rounded-xl border border-gray-200 bg-white px-4 py-4 text-base text-gray-900 outline-none focus:border-purple-500 focus:ring-4 focus:ring-purple-100 disabled:cursor-not-allowed disabled:bg-gray-100"
-            >
-              <option value="" disabled>
-                {q.id === 'level2' && level2Options.length === 0
-                  ? 'Select industry first'
-                  : 'Select an option'}
-              </option>
-              {(q.id === 'level2' ? level2Options : q.options || []).map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+              emptyLabel={q.id === 'level2' && level2Options.length === 0 ? 'Select industry first' : 'No options available.'}
+              options={q.id === 'level2' ? level2Options : questionCopy.options || q.options || []}
+            />
           ) : q.type === 'textarea' ? (
             <>
               <textarea
@@ -498,46 +612,34 @@ export function ContinuousQuestionnaire({
                 onChange={(e) => handleAnswer(q, e.target.checked, true)}
                 className="mt-1 h-5 w-5 rounded border-gray-300 accent-purple-600"
               />
-              <span className="text-sm leading-6 text-gray-700">{q.prompt}</span>
+              <span className="text-sm leading-6 text-gray-700">{questionCopy.prompt}</span>
             </label>
-          ) : q.type === 'currency' ? (
-            <>
-              <CurrencyInput
-                value={String(value || '')}
-                onChange={(val) => {
-                  onUpdate({ [q.id]: val });
-                  setErrors(prev => ({ ...prev, [q.id]: '' }));
-                }}
-                placeholder={q.placeholder}
-                required={q.required}
-                min={q.min}
-                max={q.max}
-              />
-              {showNextButton && (
-                <Button 
-                  onClick={() => handleNextClick(q)}
-                  className="mt-4 bg-purple-600 hover:bg-purple-700"
-                >
-                  Continue
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              )}
-            </>
-          ) : q.type === 'financial_table' ? (
-            <div className="w-full">
-              <FinancialSpreadsheet
-                periods={financialPeriods}
-                onChange={handleFinancialPeriodsChange}
-              />
-              <Button 
-                onClick={handleFinancialNext}
-                className="mt-4 bg-purple-600 hover:bg-purple-700"
-              >
-                Continue
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </div>
-          ) : (
+            ) : q.type === 'financial_table' ? (
+              <div className="w-full">
+                <FinancialSpreadsheet
+                  periods={financialPeriods}
+                  onChange={handleFinancialPeriodsChange}
+                />
+                <div className="mt-4 flex justify-end gap-3">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleFinancialReset}
+                    className="border-rose-200 text-rose-600 hover:bg-rose-50 hover:text-rose-700"
+                  >
+                    <RotateCcw className="mr-2 h-4 w-4" />
+                    Reset
+                  </Button>
+                  <Button 
+                    onClick={handleFinancialNext}
+                    className="bg-purple-600 hover:bg-purple-700"
+                  >
+                    Continue
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            ) : (
             <>
               <Input
                 type={q.type === 'tel' ? 'tel' : q.type === 'email' ? 'email' : 'text'}
@@ -575,7 +677,7 @@ export function ContinuousQuestionnaire({
     
     return (
       <div className="min-h-screen bg-gray-50 px-4 py-8">
-        <div className="mx-auto max-w-2xl">
+        <div className="mx-auto max-w-4xl">
           {/* Previous questions summary */}
           <div className="mb-8 space-y-4">
             {visibleQuestions.slice(0, -1).map((qState) => (
@@ -638,14 +740,15 @@ export function ContinuousQuestionnaire({
     );
   }
 
-  const progress = Math.round((visibleQuestions.filter(q => q.answered).length / allQuestions.length) * 100);
+  const answeredCount = allQuestions.filter(q => q.answered).length;
+  const progress = allQuestions.length > 0 ? Math.round((answeredCount / allQuestions.length) * 100) : 0;
   const isContactPhase = visibleQuestions.length > 0 && isContactQuestion(visibleQuestions[visibleQuestions.length - 1]?.question.id || '');
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="sticky top-0 z-40 border-b border-gray-200 bg-white/95 backdrop-blur">
-        <div className="mx-auto max-w-3xl px-4 py-4">
+        <div className="mx-auto max-w-5xl px-4 py-4">
           <div className="flex items-center justify-between">
             <button
               onClick={onBackToLanding}
@@ -654,21 +757,24 @@ export function ContinuousQuestionnaire({
               <img src="/logo-mark.png" alt="Afrexit" className="h-8 w-8" />
               <span className="font-semibold">Afrexit</span>
             </button>
-            <div className="flex items-center gap-3">
-              <div className="h-2 w-24 rounded-full bg-gray-200">
-                <div 
-                  className="h-2 rounded-full bg-purple-600 transition-all"
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
-              <span className="text-sm text-gray-500">{progress}%</span>
-            </div>
+            <span className="text-sm text-gray-500">
+              {answeredCount} of {allQuestions.length} complete
+            </span>
+          </div>
+        </div>
+        <div className="relative h-8 w-full overflow-hidden bg-slate-300">
+          <div
+            className="h-full bg-purple-600 transition-all duration-300"
+            style={{ width: `${progress}%` }}
+          />
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center text-sm font-semibold text-slate-700">
+            {progress}% Complete
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="mx-auto max-w-3xl px-4 py-8">
+      <main className="mx-auto max-w-5xl px-4 py-8">
         {/* Questions List */}
         <div className="space-y-4">
           {visibleQuestions.map((qState, index) => {

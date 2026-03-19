@@ -15,6 +15,7 @@ export interface BranchQuestion {
   type: QuestionType;
   prompt: string;
   helperText?: string;
+  tooltipText?: string;
   placeholder?: string;
   required?: boolean;
   options?: Option[];
@@ -39,11 +40,11 @@ export interface BranchModule {
 // BRANCH 1: Product/Retail/Distribution
 export const productRetailBranch: BranchModule = {
   id: 'product_retail',
-  title: 'Inventory & Operations Deep-Dive',
-  description: 'Because you selected a product-based business, we\'ll ask about inventory, suppliers, and operational efficiency.',
-  shortDescription: 'inventory, suppliers, and operations',
+  title: 'Product Model & Operations',
+  description: 'Because you selected a product-based business, we\'ll assess repeatability, defensibility, inventory discipline, and operating resilience.',
+  shortDescription: 'product model, inventory, and operations',
   estimatedMinutes: 4,
-  questionCount: 6,
+  questionCount: 9,
   trigger: (level2) => [
     'retail_physical',
     'retail_ecommerce', 
@@ -56,46 +57,91 @@ export const productRetailBranch: BranchModule = {
     {
       id: 'inventoryValueLatest',
       type: 'number',
-      prompt: 'What is the current inventory value tied up in stock or raw materials?',
+      prompt: 'What is the current value tied up in stock, finished goods, or raw materials?',
       helperText: 'Enter 0 if this is mainly a service business.',
       required: true,
       placeholder: 'e.g. 18000000',
     },
     {
-      id: 'inventoryProfile',
+      id: 'productRights',
       type: 'select',
-      prompt: 'Which best describes your inventory position?',
+      prompt: 'Who mainly controls the commercial rights to the products you sell?',
+      tooltipText:
+        'This helps us assess defensibility. Product rights owned and controlled by the business usually support stronger buyer confidence than products anyone can replicate or rights owned by customers.',
       required: true,
       options: [
-        { value: 'lt_7', label: 'Less than 7 days of stock' },
-        { value: '7_30', label: '7 to 30 days of stock' },
-        { value: '30_90', label: '30 to 90 days of stock' },
-        { value: 'gt_90', label: 'More than 90 days of stock' },
+        { value: 'company_owned', label: 'The business owns or controls the key product rights, formulas, designs, or brand assets' },
+        { value: 'mixed_control', label: 'The business controls some important rights, but not all of them' },
+        { value: 'customer_owned', label: 'Important product rights mainly sit with customers, licensors, or external partners' },
+        { value: 'public_domain', label: 'The offer is mostly unprotected, easy to copy, or effectively public-domain' },
+        { value: 'not_sure', label: 'Not sure' },
+      ],
+    },
+    {
+      id: 'quantities',
+      type: 'select',
+      prompt: 'Which best describes how orders are usually fulfilled?',
+      tooltipText:
+        'This helps us assess repeatability and scalability. Businesses that sell standard products in repeatable volumes are usually easier to scale and transfer than businesses built around one-off custom jobs.',
+      required: true,
+      options: [
+        { value: 'repeat_batches', label: 'Mostly repeatable standard products sold in regular or larger quantities' },
+        { value: 'mixed_profile', label: 'A meaningful mix of standard-volume sales and custom work' },
+        { value: 'mostly_custom', label: 'Mostly short-run, made-to-order, or customer-specific production' },
+        { value: 'one_off_bespoke', label: 'Mostly one-off bespoke jobs with limited repeatability' },
+        { value: 'not_sure', label: 'Not sure' },
+      ],
+    },
+    {
+      id: 'productCustomisation',
+      type: 'select',
+      prompt: 'How much delivery or production effort usually changes from one customer to another?',
+      tooltipText:
+        'This helps us assess operating repeatability. The more every order needs fresh tailoring, rework, or design effort, the harder the business is to scale cleanly.',
+      required: true,
+      options: [
+        { value: 'standardized', label: 'Very little changes; the offer is largely standardised' },
+        { value: 'configured', label: 'A standard core is sold, with limited configuration or finishing' },
+        { value: 'tailored', label: 'Orders often need meaningful tailoring before delivery' },
+        { value: 'fully_bespoke', label: 'Most jobs are effectively bespoke each time' },
+        { value: 'not_sure', label: 'Not sure' },
+      ],
+    },
+    {
+      id: 'inventoryProfile',
+      type: 'select',
+      prompt: 'Which statement best fits your normal stock position?',
+      required: true,
+      options: [
+        { value: 'lt_7', label: 'Usually under 7 days of stock on hand' },
+        { value: '7_30', label: 'Usually about 7 to 30 days of stock on hand' },
+        { value: '30_90', label: 'Usually about 30 to 90 days of stock on hand' },
+        { value: 'gt_90', label: 'Usually over 90 days of stock on hand' },
       ],
     },
     {
       id: 'grossMarginStability',
       type: 'select',
-      prompt: 'How stable are your gross margins year to year?',
+      prompt: 'Over the last 3 completed years, how stable has gross margin been?',
       required: true,
       options: [
-        { value: 'expanding', label: 'Expanding - margins improving' },
-        { value: 'stable', label: 'Stable - consistent margins' },
-        { value: 'volatile', label: 'Volatile - significant fluctuations' },
-        { value: 'contracting', label: 'Contracting - margins under pressure' },
+        { value: 'expanding', label: 'Margins have improved meaningfully over time' },
+        { value: 'stable', label: 'Margins are usually within about +/-3 percentage points year to year' },
+        { value: 'volatile', label: 'Margins often move materially from year to year' },
+        { value: 'contracting', label: 'Margins are clearly compressing or under sustained pressure' },
       ],
     },
     {
       id: 'supplierConcentration',
       type: 'select',
-      prompt: 'How concentrated are your suppliers?',
-      helperText: 'Do you rely on one or two key suppliers, or do you have options?',
+      prompt: 'About what share of purchases comes from your single largest supplier?',
+      helperText: 'This helps us estimate supplier-switching risk and operating resilience.',
       required: true,
       options: [
-        { value: 'diversified', label: 'Diversified - many supplier options' },
-        { value: 'moderate', label: 'Moderate - several main suppliers' },
-        { value: 'concentrated', label: 'Concentrated - 2-3 key suppliers' },
-        { value: 'single_source', label: 'Single source - one critical supplier' },
+        { value: 'diversified', label: 'Under about 20%' },
+        { value: 'moderate', label: 'About 20% to 35%' },
+        { value: 'concentrated', label: 'About 35% to 60%' },
+        { value: 'single_source', label: 'Over 60% or effectively single-source' },
       ],
     },
     {
@@ -154,13 +200,15 @@ export const professionalServicesBranch: BranchModule = {
     {
       id: 'founderRevenueDependence',
       type: 'select',
-      prompt: 'How much of revenue depends on customers buying mainly because of you personally?',
+      prompt: 'About what share of revenue depends on customers buying mainly because of you personally?',
+      tooltipText:
+        "This helps us measure how much revenue could be at risk if the owner is no longer the main relationship or delivery point.",
       required: true,
       options: [
-        { value: 'very_little', label: 'Very little - clients buy the brand/service' },
-        { value: 'some', label: 'Some - personal relationships help' },
-        { value: 'large_share', label: 'Large share - my involvement is key' },
-        { value: 'most', label: 'Most - clients are buying me personally' },
+        { value: 'very_little', label: 'Under about 10%' },
+        { value: 'some', label: 'About 10% to 30%' },
+        { value: 'large_share', label: 'About 30% to 60%' },
+        { value: 'most', label: 'Over about 60%' },
       ],
     },
     {
@@ -216,13 +264,13 @@ export const professionalServicesBranch: BranchModule = {
     {
       id: 'pricingPowerVsMarket',
       type: 'select',
-      prompt: 'How does your pricing compare to market rates?',
+      prompt: 'How does your realized pricing usually compare with the market rate for similar providers?',
       required: true,
       options: [
-        { value: 'premium', label: 'Premium - we charge above market rates' },
-        { value: 'market', label: 'Market rate - competitive with peers' },
-        { value: 'slight_discount', label: 'Slight discount - competitive pressure' },
-        { value: 'significant_discount', label: 'Significant discount - price competition' },
+        { value: 'premium', label: 'Usually more than about 10% above market' },
+        { value: 'market', label: 'Usually within about +/-10% of market' },
+        { value: 'slight_discount', label: 'Usually about 10% to 20% below market' },
+        { value: 'significant_discount', label: 'Usually more than about 20% below market' },
       ],
     },
   ],
@@ -231,11 +279,11 @@ export const professionalServicesBranch: BranchModule = {
 // BRANCH 3: Manufacturing/Production
 export const manufacturingBranch: BranchModule = {
   id: 'manufacturing',
-  title: 'Production Capacity & Equipment',
-  description: 'Because you selected Manufacturing, we\'ll ask about equipment, utilization, and production constraints.',
-  shortDescription: 'equipment, utilization, and capacity',
+  title: 'Production Model & Factory Economics',
+  description: 'Because you selected manufacturing, we\'ll assess repeatability, value capture, capacity, equipment quality, and production risk.',
+  shortDescription: 'production model, equipment, and capacity',
   estimatedMinutes: 4,
-  questionCount: 5,
+  questionCount: 9,
   trigger: (level2) => [
     'manufacturing',
     'assembly',
@@ -245,33 +293,93 @@ export const manufacturingBranch: BranchModule = {
   ].includes(level2),
   questions: [
     {
-      id: 'capacityUtilization',
+      id: 'productRights',
       type: 'select',
-      prompt: 'What is your current capacity utilization?',
+      prompt: 'Who mainly controls the commercial rights to the products you manufacture?',
+      tooltipText:
+        'This helps us assess defensibility. Manufacturing businesses with protected designs, formulas, or owned brands are usually harder to copy and easier to defend.',
       required: true,
       options: [
-        { value: 'gt_90', label: 'Over 90% - near maximum capacity' },
-        { value: '70_90', label: '70-90% - good utilization' },
-        { value: '50_70', label: '50-70% - moderate utilization' },
-        { value: 'lt_50', label: 'Under 50% - significant idle capacity' },
+        { value: 'company_owned', label: 'The business owns or controls the key product rights, formulas, designs, or brand assets' },
+        { value: 'mixed_control', label: 'The business controls some important rights, but not all of them' },
+        { value: 'customer_owned', label: 'Important product rights mainly sit with customers, licensors, or external partners' },
+        { value: 'public_domain', label: 'The offer is mostly unprotected, easy to copy, or effectively public-domain' },
+        { value: 'not_sure', label: 'Not sure' },
+      ],
+    },
+    {
+      id: 'quantities',
+      type: 'select',
+      prompt: 'Which best describes the production pattern in your factory today?',
+      tooltipText:
+        'This helps us assess repeatability and scale efficiency. Longer production runs and repeat batches are usually easier to plan, staff, and scale than one-off work.',
+      required: true,
+      options: [
+        { value: 'repeat_batches', label: 'Mostly repeat batches or standard products made in regular quantities' },
+        { value: 'mixed_profile', label: 'A meaningful mix of repeat production and custom jobs' },
+        { value: 'mostly_custom', label: 'Mostly short-run, made-to-order, or customer-specific production' },
+        { value: 'one_off_bespoke', label: 'Mostly one-off bespoke jobs with limited repeatability' },
+        { value: 'not_sure', label: 'Not sure' },
+      ],
+    },
+    {
+      id: 'productCustomisation',
+      type: 'select',
+      prompt: 'How much engineering, tooling, or production effort usually changes from one order to another?',
+      tooltipText:
+        'This measures how standardised production really is. More order-specific rework generally reduces scalability and makes performance more dependent on specific people or processes.',
+      required: true,
+      options: [
+        { value: 'standardized', label: 'Very little changes; production is largely standardised' },
+        { value: 'configured', label: 'The core product is standard, with limited configuration or finishing' },
+        { value: 'tailored', label: 'Orders often need meaningful adaptation before delivery' },
+        { value: 'fully_bespoke', label: 'Most jobs are effectively bespoke each time' },
+        { value: 'not_sure', label: 'Not sure' },
+      ],
+    },
+    {
+      id: 'manufacturingValueCreation',
+      type: 'select',
+      prompt: 'Where is most of the manufacturing value actually created?',
+      tooltipText:
+        'This helps us assess whether value creation sits inside the business or mainly with subcontractors and suppliers. More in-house control can support defensibility, margins, and transferability.',
+      required: true,
+      options: [
+        { value: 'in_house_majority', label: 'The business itself performs most of the value-adding production work' },
+        { value: 'balanced', label: 'Value creation is meaningfully split between the business and outside partners' },
+        { value: 'outsourced_majority', label: 'A majority of value creation sits with subcontractors or suppliers' },
+        { value: 'assembly_only', label: 'The business mainly assembles, coordinates, or resells rather than manufacturing deeply' },
+        { value: 'not_sure', label: 'Not sure' },
+      ],
+    },
+    {
+      id: 'capacityUtilization',
+      type: 'select',
+      prompt: 'What is current practical capacity utilisation?',
+      required: true,
+      options: [
+        { value: 'gt_90', label: 'Above 90%; the plant is close to practical limits' },
+        { value: '70_90', label: 'About 70% to 90%; capacity is being used well' },
+        { value: '50_70', label: 'About 50% to 70%; there is still room to absorb growth' },
+        { value: 'lt_50', label: 'Below 50%; there is significant unused capacity' },
       ],
     },
     {
       id: 'equipmentAgeCondition',
       type: 'select',
-      prompt: 'How would you describe your main equipment age and condition?',
+      prompt: 'How would you describe the age and condition of the main production equipment?',
       required: true,
       options: [
-        { value: 'modern', label: 'Modern - well maintained, recent purchase' },
-        { value: 'good', label: 'Good - functional, regular maintenance' },
-        { value: 'aging', label: 'Aging - functional but nearing replacement' },
-        { value: 'outdated', label: 'Outdated - requires significant investment' },
+        { value: 'modern', label: 'Modern and well maintained, with no near-term replacement concern' },
+        { value: 'good', label: 'In good working order with normal maintenance requirements' },
+        { value: 'aging', label: 'Still functional, but meaningful replacement or refurbishment is approaching' },
+        { value: 'outdated', label: 'Aging or constrained enough to require significant reinvestment' },
       ],
     },
     {
       id: 'maintenanceCapexLatest',
       type: 'number',
-      prompt: 'How much do you spend annually on equipment maintenance and upkeep?',
+      prompt: 'How much do you typically spend each year just to maintain existing equipment and keep production running?',
       helperText: 'Use naira. Enter 0 if negligible.',
       required: true,
       placeholder: 'e.g. 3500000',
@@ -279,25 +387,25 @@ export const manufacturingBranch: BranchModule = {
     {
       id: 'rawMaterialPriceExposure',
       type: 'select',
-      prompt: 'How exposed are you to raw material price fluctuations?',
+      prompt: 'How exposed are margins to raw-material price swings?',
       required: true,
       options: [
-        { value: 'minimal', label: 'Minimal - long-term contracts or hedging' },
-        { value: 'moderate', label: 'Moderate - some pass-through ability' },
-        { value: 'significant', label: 'Significant - prices affect margins materially' },
-        { value: 'critical', label: 'Critical - major vulnerability to price swings' },
+        { value: 'minimal', label: 'Low exposure; prices are stable or mostly passed through' },
+        { value: 'moderate', label: 'Moderate exposure; some margin pressure is manageable' },
+        { value: 'significant', label: 'Significant exposure; raw-material moves affect margins materially' },
+        { value: 'critical', label: 'Critical exposure; raw-material moves can severely disrupt profitability' },
       ],
     },
     {
       id: 'qualityCertifications',
       type: 'select',
-      prompt: 'Do you hold quality certifications (ISO, industry-specific, etc.)?',
+      prompt: 'What is the current status of quality or process certifications relevant to your market?',
       required: true,
       options: [
-        { value: 'major', label: 'Yes - internationally recognized certifications' },
-        { value: 'local', label: 'Yes - local or industry-specific certifications' },
-        { value: 'in_progress', label: 'In progress' },
-        { value: 'none', label: 'None' },
+        { value: 'major', label: 'Recognised international or major customer-required certifications are in place' },
+        { value: 'local', label: 'Relevant local or industry-specific certifications are in place' },
+        { value: 'in_progress', label: 'Certification work is in progress but not yet completed' },
+        { value: 'none', label: 'No meaningful certifications are currently in place' },
       ],
     },
   ],

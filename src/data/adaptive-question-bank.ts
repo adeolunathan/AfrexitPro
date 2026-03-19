@@ -24,6 +24,7 @@ export interface Question {
   type: QuestionType;
   prompt: string;
   helperText?: string;
+  tooltipText?: string;
   placeholder?: string;
   required?: boolean;
   options?: Option[];
@@ -102,6 +103,17 @@ export const anchorQuestions: Question[] = [
     required: true,
   },
   {
+    id: 'respondentRole',
+    type: 'select',
+    prompt: 'Are you the business owner completing this assessment?',
+    helperText: 'This only changes how we phrase owner-related questions. It does not change the valuation logic.',
+    required: true,
+    options: [
+      { value: 'owner', label: 'Yes, I am the owner' },
+      { value: 'representative', label: 'No, I am completing this for the owner' },
+    ],
+  },
+  {
     id: 'industryFit',
     type: 'select',
     prompt: 'How well does the industry you selected fit your actual business activity?',
@@ -128,7 +140,7 @@ export const anchorQuestions: Question[] = [
     type: 'financial_table',
     prompt: 'Financial Performance History',
     helperText:
-      'Enter revenue and operating profit for the last 3 years. We use this to estimate representative earnings and trend stability.',
+      'Enter revenue and operating profit for the last completed year, the prior 2 years if available, and the current-year forecast if you have one. You can paste directly from a spreadsheet.',
     required: true,
   },
   {
@@ -162,13 +174,15 @@ export const anchorQuestions: Question[] = [
   {
     id: 'pricingPower',
     type: 'select',
-    prompt: 'How much freedom do you have to charge above the normal market price?',
+    prompt: 'Compared with similar competitors, how much price premium can you usually sustain without losing most customers?',
+    tooltipText:
+      'This helps us assess whether the business has real pricing strength or is competing mostly on price, which affects resilience and valuation quality.',
     required: true,
     options: [
-      { value: 'none', label: 'Almost none, price is set by the market' },
-      { value: 'some', label: 'Some freedom if we position the offer well' },
-      { value: 'premium', label: 'Clear premium pricing is possible' },
-      { value: 'strong_premium', label: 'Strong premium pricing is possible' },
+      { value: 'none', label: 'No real premium; usually within about 0% to 5% of market price' },
+      { value: 'some', label: 'A small premium is possible; roughly 5% to 10%' },
+      { value: 'premium', label: 'A clear premium is possible; roughly 10% to 20%' },
+      { value: 'strong_premium', label: 'A strong premium is possible; usually above 20%' },
       { value: 'not_sure', label: 'Not sure' },
     ],
   },
@@ -189,6 +203,8 @@ export const anchorQuestions: Question[] = [
     id: 'proofReadiness',
     type: 'select',
     prompt: 'How quickly could you prove your revenue and profit to a serious buyer?',
+    tooltipText:
+      'This measures how quickly a buyer could verify the numbers. Strong proof improves confidence and usually supports a tighter valuation range.',
     required: true,
     options: [
       { value: 'immediate', label: 'Immediately, with bank records and clear books' },
@@ -212,13 +228,13 @@ export const anchorQuestions: Question[] = [
   {
     id: 'marketDemand',
     type: 'select',
-    prompt: 'How is demand in your market moving right now?',
+    prompt: 'Based on what you are seeing in actual demand, how is your market moving right now?',
     required: true,
     options: [
-      { value: 'strong_growth', label: 'Growing strongly' },
-      { value: 'steady_growth', label: 'Growing steadily' },
-      { value: 'flat', label: 'Mostly flat' },
-      { value: 'declining', label: 'Falling' },
+      { value: 'strong_growth', label: 'Demand is growing strongly and new business is easier to win' },
+      { value: 'steady_growth', label: 'Demand is growing steadily, but not overheating' },
+      { value: 'flat', label: 'Demand is broadly flat or only moving slightly' },
+      { value: 'declining', label: 'Demand is weakening or customers are cutting back' },
       { value: 'not_sure', label: 'Not sure' },
     ],
   },
@@ -265,25 +281,30 @@ export const closingQuestions: Question[] = [
     id: 'ownerAbsence2Weeks',
     type: 'select',
     prompt: 'If you stepped away for 2 weeks, what would happen?',
+    tooltipText:
+      "This helps us assess how dependent the business is on the owner's presence for day-to-day decisions and operations.",
     required: true,
     options: [
-      { value: 'smooth', label: 'It would keep running smoothly' },
-      { value: 'minor_issues', label: 'It would run with some issues, but nothing major' },
-      { value: 'struggle', label: 'It would struggle badly' },
-      { value: 'almost_stop', label: 'It would almost stop' },
+      { value: 'smooth', label: 'It would continue normally with no material issues' },
+      { value: 'minor_issues', label: 'It would continue with minor issues or under about 5% disruption' },
+      { value: 'struggle', label: 'It would struggle materially during that period' },
+      { value: 'almost_stop', label: 'It would nearly stop without me' },
     ],
   },
   {
     id: 'ownerAbsence3Months',
     type: 'select',
-    prompt: 'If you were unavailable for 3 months, what would happen to the business?',
-    helperText: 'This is one of the strongest transferability signals in owner mode.',
+    prompt: 'If you were unavailable for 3 months, what is the most realistic impact on operations and revenue?',
+    helperText: 'Base this on what would happen without your direct involvement, not on a best-case hope. This is one of the strongest transferability signals in owner mode.',
+    tooltipText:
+      "This helps us assess the risk to the company if the owner is unavailable for an extended period and how independent the business really is.",
     required: true,
     options: [
-      { value: 'limited_disruption', label: 'Continue with limited disruption' },
-      { value: 'risky_but_possible', label: 'Could continue, but with clear risks' },
-      { value: 'very_difficult', label: 'It would be very difficult' },
-      { value: 'not_realistic', label: 'Not realistic, the business depends on me' },
+      { value: 'no_disruption', label: 'Business would continue with no material disruption' },
+      { value: 'limited_disruption', label: 'Business would continue, with likely disruption under about 10%' },
+      { value: 'risky_but_possible', label: 'Business would continue, but with clear risk or roughly 10% to 30% disruption' },
+      { value: 'very_difficult', label: 'Business would be severely disrupted or likely lose more than about 30%' },
+      { value: 'not_realistic', label: 'Not realistic; the business depends too heavily on me' },
     ],
   },
   {
@@ -291,6 +312,8 @@ export const closingQuestions: Question[] = [
     type: 'select',
     prompt: 'How are customer relationships tied to you personally?',
     helperText: 'We use this as the universal founder-dependence signal when a more specific branch resolver is not available.',
+    tooltipText:
+      "This helps us assess whether customer loyalty depends on the owner's direct involvement or would continue if the owner stepped back.",
     required: true,
     options: [
       { value: 'brand_not_personal', label: 'Customers buy the brand or service, not me personally' },
@@ -302,13 +325,13 @@ export const closingQuestions: Question[] = [
   {
     id: 'managementDepth',
     type: 'select',
-    prompt: 'Who currently runs day-to-day operations and key decisions?',
+    prompt: 'Who currently carries most day-to-day operating control and key decisions?',
     required: true,
     options: [
-      { value: 'team_controls', label: 'A team with clear roles and controls' },
-      { value: 'trusted_manager', label: 'A trusted manager, with my oversight' },
-      { value: 'founder_plus_support', label: 'Me, with occasional help from family or staff' },
-      { value: 'founder_only', label: 'Mostly me alone' },
+      { value: 'team_controls', label: 'A management team with clear roles, controls, and delegated authority' },
+      { value: 'trusted_manager', label: 'A trusted manager runs most of it, with my oversight' },
+      { value: 'founder_plus_support', label: 'I still run most of it, with occasional help from staff or family' },
+      { value: 'founder_only', label: 'The business still depends on me for most key decisions and coordination' },
     ],
   },
   {
@@ -329,72 +352,120 @@ export const closingQuestions: Question[] = [
     prompt: 'If you needed to replace yourself with a manager, how hard would that be?',
     required: true,
     options: [
-      { value: 'easy', label: 'Easy, within a week or two' },
-      { value: 'possible', label: 'Possible, within 1 to 2 months' },
-      { value: 'difficult', label: 'Difficult, would take several months' },
-      { value: 'founder_tied', label: 'Very difficult, the role is too tied to me' },
+      { value: 'easy', label: 'A credible replacement could be found and stabilised within a few weeks' },
+      { value: 'possible', label: 'A replacement is possible, but would likely take 1 to 2 months' },
+      { value: 'difficult', label: 'A replacement would likely take several months and real handover effort' },
+      { value: 'founder_tied', label: 'Very difficult; too much of the role is still tied to me personally' },
     ],
   },
   {
     id: 'laborMarketDifficulty',
     type: 'select',
-    prompt: 'How difficult is it to recruit skilled workers for your business?',
+    prompt: 'If you needed to hire one solid skilled employee today, how long would it usually take to find and onboard the right person?',
     required: true,
     options: [
-      { value: 'easy', label: 'Talent is generally available' },
-      { value: 'feasible', label: 'Recruiting takes effort but is feasible' },
-      { value: 'difficult', label: 'Finding the right people is difficult' },
-      { value: 'severe', label: 'Talent shortage is one of our biggest challenges' },
+      { value: 'easy', label: 'Usually within 30 days' },
+      { value: 'feasible', label: 'Usually about 1 to 3 months' },
+      { value: 'difficult', label: 'Usually about 3 to 6 months' },
+      { value: 'severe', label: 'Usually over 6 months or very uncertain' },
     ],
   },
   {
     id: 'growthPotential',
     type: 'select',
-    prompt: 'Over the next 3 years, how do you expect this business to perform?',
+    prompt: 'Over the next 3 years, what average annual revenue growth is most realistic?',
     required: true,
     options: [
-      { value: 'strong_growth', label: 'Strong growth is realistic' },
-      { value: 'moderate_growth', label: 'Moderate growth is realistic' },
-      { value: 'stable', label: 'Stable or modest growth' },
-      { value: 'decline', label: 'The business may decline' },
+      { value: 'strong_growth', label: 'More than 20% a year' },
+      { value: 'moderate_growth', label: 'About 8% to 20% a year' },
+      { value: 'stable', label: 'Between about -5% and +8% a year' },
+      { value: 'decline', label: 'Likely to shrink by more than about 5% a year' },
+      { value: 'not_sure', label: 'Not sure' },
+    ],
+  },
+  {
+    id: 'differentiation',
+    type: 'select',
+    prompt: 'What most often wins business for you against comparable alternatives?',
+    helperText: 'Choose the main reason customers buy from you today, not the reason you want to be known for.',
+    tooltipText:
+      'This tells us whether demand is driven by something durable and hard to copy or by factors that are easier for competitors to match.',
+    required: true,
+    options: [
+      { value: 'price', label: 'Mostly lower price, convenience, or location' },
+      { value: 'reliability', label: 'Mostly more reliable delivery, service, or execution' },
+      { value: 'hard_to_copy', label: 'Mostly something hard to copy: brand, capability, process, distribution, or certification' },
+      { value: 'founder_trust', label: 'Mostly personal trust in me or my relationships' },
       { value: 'not_sure', label: 'Not sure' },
     ],
   },
   {
     id: 'customerConcentration',
     type: 'select',
-    prompt: 'How concentrated is your customer base?',
+    prompt: 'About what share of annual revenue comes from your single largest customer?',
+    tooltipText:
+      'This helps us assess how exposed the business is to losing one important customer. Higher concentration usually reduces transferability and buyer confidence.',
     required: true,
     options: [
-      { value: 'none_material', label: 'No single customer is material' },
-      { value: 'manageable', label: 'Top customers matter, but concentration is manageable' },
-      { value: 'high', label: 'Top customers drive a large share of revenue' },
-      { value: 'extreme', label: 'One or two customers carry too much of the business' },
+      { value: 'none_material', label: 'Less than 10%' },
+      { value: 'manageable', label: 'About 10% to 20%' },
+      { value: 'high', label: 'About 20% to 40%' },
+      { value: 'extreme', label: 'More than 40%' },
       { value: 'not_sure', label: 'Not sure' },
     ],
   },
   {
     id: 'bestCustomerImpact',
     type: 'select',
-    prompt: 'What would be the impact of losing your single best customer?',
+    prompt: 'If you lost your largest customer, how much annual revenue or profit would likely be at risk before replacement?',
+    tooltipText:
+      'This estimates how much of current performance depends on the biggest customer and how painful that loss would be before a replacement is found.',
     required: true,
     options: [
-      { value: 'minor', label: 'Minor, we would adjust fairly easily' },
-      { value: 'noticeable', label: 'Noticeable, but not threatening' },
-      { value: 'major', label: 'Major, it would seriously hurt performance' },
-      { value: 'severe', label: 'Severe, it would put the business under real pressure' },
+      { value: 'minor', label: 'Minor; likely under about 10% at risk' },
+      { value: 'noticeable', label: 'Noticeable; roughly 10% to 20% at risk' },
+      { value: 'major', label: 'Major; roughly 20% to 40% at risk' },
+      { value: 'severe', label: 'Severe; over 40% at risk or threatens viability' },
     ],
   },
   {
     id: 'partnerDependency',
     type: 'select',
-    prompt: 'How dependent is the business on key partners such as suppliers or subcontractors?',
+    prompt: 'If you lost your most important supplier or operating partner, how hard would it be to replace them without major disruption?',
     required: true,
     options: [
-      { value: 'very_easy', label: 'We can replace a critical partner easily' },
-      { value: 'manageable', label: 'Replacement would be manageable' },
-      { value: 'uncertain', label: 'Replacement is possible but uncertain' },
-      { value: 'very_difficult', label: 'A critical partner would be very difficult to replace' },
+      { value: 'very_easy', label: 'Replaceable in under 2 weeks' },
+      { value: 'manageable', label: 'Replaceable in about 2 to 8 weeks' },
+      { value: 'uncertain', label: 'Possible, but likely 2 to 6 months or uncertain' },
+      { value: 'very_difficult', label: 'Very difficult; likely over 6 months or not realistically replaceable' },
+    ],
+  },
+  {
+    id: 'assetSeparation',
+    type: 'select',
+    prompt: 'How clearly are business assets separated from personal assets today?',
+    tooltipText:
+      'Buyers prefer assets to be clearly identifiable and transferable. Mixed personal and business assets can slow a deal or reduce value certainty.',
+    required: true,
+    options: [
+      { value: 'clear', label: 'Clear - business assets are fully identifiable and separate' },
+      { value: 'mostly', label: 'Mostly clear - a few items need tidying up' },
+      { value: 'partial', label: 'Partly mixed - several items still overlap' },
+      { value: 'no', label: 'Not really - business and personal assets are materially mixed' },
+    ],
+  },
+  {
+    id: 'fxExposure',
+    type: 'select',
+    prompt: 'Roughly what share of your cost base is exposed to imports, foreign currency swings, or customs/logistics disruption?',
+    tooltipText:
+      'This helps us assess cost volatility and margin risk, especially for businesses that depend on imported inputs or foreign-currency-linked costs.',
+    required: true,
+    options: [
+      { value: 'low', label: 'Low - under about 10%' },
+      { value: 'moderate', label: 'Moderate - about 10% to 30%' },
+      { value: 'high', label: 'High - about 30% to 60%' },
+      { value: 'very_high', label: 'Very high - over about 60%' },
     ],
   },
   {
@@ -428,6 +499,8 @@ export const closingQuestions: Question[] = [
     type: 'currency',
     prompt: 'How much are customers owing the business at month-end?',
     helperText: 'Trade receivables only. Enter 0 if customers pay immediately.',
+    tooltipText:
+      'Receivables are part of working capital. We use them to understand how much cash is tied up in the business and how that affects equity value at deal time.',
     required: true,
     placeholder: 'e.g. 9,500,000',
     min: 0,
@@ -437,6 +510,8 @@ export const closingQuestions: Question[] = [
     type: 'currency',
     prompt: 'How much does the business owe suppliers?',
     helperText: 'Exclude bank loans or director loans.',
+    tooltipText:
+      'Payables are part of working capital. They help us estimate the funding the business needs to operate normally and the likely deal-time working-capital position.',
     required: true,
     placeholder: 'e.g. 11,000,000',
     min: 0,
@@ -446,6 +521,8 @@ export const closingQuestions: Question[] = [
     type: 'currency',
     prompt: 'What is the current cash balance?',
     helperText: 'Include bank balances available to operations.',
+    tooltipText:
+      'Cash affects the equity bridge directly. More available operating cash can increase the equity value available to a seller.',
     required: true,
     placeholder: 'e.g. 12,500,000',
     min: 0,
@@ -453,8 +530,10 @@ export const closingQuestions: Question[] = [
   {
     id: 'ownerTotalCompensation',
     type: 'currency',
-    prompt: 'How much do you take out annually in salary and benefits?',
-    helperText: 'Enter 0 only if you take nothing out.',
+    prompt: 'What is your total annual all-in compensation from the business?',
+    helperText: 'Include salary, bonuses, benefits, allowances, and regular owner pay. Enter 0 only if you take nothing out.',
+    tooltipText:
+      'We use this to normalize earnings. Buyer value is based on maintainable profit after allowing for a realistic replacement cost, not just the current owner draw.',
     required: true,
     placeholder: 'e.g. 18,000,000',
     min: 0,
@@ -462,8 +541,10 @@ export const closingQuestions: Question[] = [
   {
     id: 'marketManagerCompensation',
     type: 'currency',
-    prompt: 'What would it cost to hire a capable manager to replace you?',
-    helperText: 'Give your best realistic all-in estimate.',
+    prompt: 'If you had to hire a full-time non-owner manager to do your role properly, what total annual pay package would be realistic?',
+    helperText: 'Include salary, bonuses, benefits, pension, and statutory costs. Use your best realistic estimate for your size of business and location.',
+    tooltipText:
+      'This is the replacement cost we compare against current owner pay to estimate maintainable earnings. We do not auto-apply a generic CEO benchmark here because the right number depends heavily on business size, complexity, and location.',
     required: true,
     placeholder: 'e.g. 9,000,000',
     min: 0,
@@ -471,8 +552,10 @@ export const closingQuestions: Question[] = [
   {
     id: 'relatedPartyRentPaid',
     type: 'currency',
-    prompt: 'How much rent does the business currently pay each year if the premises is related-party or non-market?',
+    prompt: 'What total annual rent does the business currently pay for premises that are related-party, subsidized, or otherwise not at market terms?',
     helperText: 'Enter 0 if the business already pays a clear market rent.',
+    tooltipText:
+      'If the business uses below-market or related-party premises, we normalize that cost so profit better reflects what a buyer would likely face after a deal.',
     required: true,
     placeholder: 'e.g. 6,000,000',
     min: 0,
@@ -480,8 +563,10 @@ export const closingQuestions: Question[] = [
   {
     id: 'marketRentEquivalent',
     type: 'currency',
-    prompt: 'What do you think a market-equivalent annual rent would be for the same premises?',
+    prompt: 'What would the total annual market rent be for the same premises on arm\'s-length terms?',
     helperText: 'Enter 0 only if there is no rent normalization issue.',
+    tooltipText:
+      'This is the market cost benchmark we use to adjust reported profit if current rent is not on normal commercial terms.',
     required: true,
     placeholder: 'e.g. 8,500,000',
     min: 0,
@@ -489,8 +574,10 @@ export const closingQuestions: Question[] = [
   {
     id: 'relatedPartyCompPaid',
     type: 'currency',
-    prompt: 'How much is currently paid to related parties or family members working in the business each year?',
-    helperText: 'Enter 0 if not applicable.',
+    prompt: 'What is the total annual all-in amount paid to related parties or family members working in the business?',
+    helperText: 'Include salary, wages, bonuses, allowances, pension, benefits, and any other compensation. Enter 0 if none.',
+    tooltipText:
+      'We compare current related-party pay with a normal market replacement cost so maintainable earnings are not overstated or understated.',
     required: true,
     placeholder: 'e.g. 4,500,000',
     min: 0,
@@ -498,8 +585,10 @@ export const closingQuestions: Question[] = [
   {
     id: 'marketRelatedPartyCompEquivalent',
     type: 'currency',
-    prompt: 'What would be the fair market cost for those same related-party roles?',
-    helperText: 'Enter 0 if not applicable.',
+    prompt: 'What would be the total annual all-in market cost to hire non-related staff for those same roles?',
+    helperText: 'Use a realistic replacement cost including salary, benefits, and statutory costs. Enter 0 if none.',
+    tooltipText:
+      'This estimates what a buyer would likely need to pay independent staff to perform those same roles after a transaction.',
     required: true,
     placeholder: 'e.g. 3,200,000',
     min: 0,
@@ -509,6 +598,8 @@ export const closingQuestions: Question[] = [
     type: 'currency',
     prompt: 'How much personal or private spending runs through the business each year?',
     helperText: 'Enter 0 if none.',
+    tooltipText:
+      'We add back personal expenses that are not needed to operate the business so the valuation reflects true maintainable business earnings.',
     required: true,
     placeholder: 'e.g. 1,500,000',
     min: 0,
@@ -516,8 +607,10 @@ export const closingQuestions: Question[] = [
   {
     id: 'oneOffExpenseAmount',
     type: 'currency',
-    prompt: 'How much unusual or one-off expense should be removed from maintainable earnings?',
-    helperText: 'Examples: one-time repairs, legal settlements, unusual losses. Enter 0 if none.',
+    prompt: 'In the latest year, how much expense in reported profit came from unusual or non-recurring items that should not be treated as ongoing?',
+    helperText: 'Examples: one-time repairs, legal settlements, exceptional losses, or relocation costs. Enter 0 if none.',
+    tooltipText:
+      'We remove one-time expenses that are unlikely to repeat so the valuation is based on maintainable operating performance, not a distorted bad year.',
     required: true,
     placeholder: 'e.g. 2,000,000',
     min: 0,
@@ -525,8 +618,10 @@ export const closingQuestions: Question[] = [
   {
     id: 'oneOffIncomeAmount',
     type: 'currency',
-    prompt: 'How much unusual or one-off income should be removed from maintainable earnings?',
-    helperText: 'Enter 0 if none.',
+    prompt: 'In the latest year, how much income in reported profit came from unusual or non-recurring items that are unlikely to happen again?',
+    helperText: 'Examples: asset sale gains, insurance recoveries, exceptional rebates, or one-time settlements. Enter 0 if none.',
+    tooltipText:
+      'We remove unusual income that is unlikely to repeat so the valuation reflects maintainable earnings rather than one-time boosts.',
     required: true,
     placeholder: 'e.g. 1,200,000',
     min: 0,
@@ -534,8 +629,10 @@ export const closingQuestions: Question[] = [
   {
     id: 'nonCoreIncomeAmount',
     type: 'currency',
-    prompt: 'How much non-core income is included in reported profit?',
-    helperText: 'Examples: income not tied to the main operating business. Enter 0 if none.',
+    prompt: 'In the latest year, how much income in reported profit came from activities outside the main business?',
+    helperText: 'Examples: rent from non-core property, investment income, side ventures, or other income not required to run the core business. Enter 0 if none.',
+    tooltipText:
+      'We separate non-core income so the valuation focuses on the operating business a buyer is actually assessing.',
     required: true,
     placeholder: 'e.g. 2,800,000',
     min: 0,
@@ -545,6 +642,8 @@ export const closingQuestions: Question[] = [
     type: 'currency',
     prompt: 'What is the annual depreciation expense for the latest year?',
     helperText: 'Enter 0 if negligible or unknown.',
+    tooltipText:
+      'Depreciation helps us bridge between EBIT and EBITDA-style earnings and improves comparability across valuation methods.',
     required: false,
     placeholder: 'e.g. 2,500,000',
     min: 0,
@@ -554,6 +653,8 @@ export const closingQuestions: Question[] = [
     type: 'currency',
     prompt: 'What is the current financial debt balance?',
     helperText: 'Include loans and finance obligations.',
+    tooltipText:
+      'Financial debt reduces the equity value available to the seller even when enterprise value stays the same.',
     required: true,
     placeholder: 'e.g. 8,000,000',
     min: 0,
@@ -563,6 +664,8 @@ export const closingQuestions: Question[] = [
     type: 'currency',
     prompt: 'What is the balance of shareholder or director loans?',
     helperText: 'Enter 0 if none.',
+    tooltipText:
+      'Shareholder or director loans can change the final equity bridge and are important for understanding what a buyer would actually assume or repay.',
     required: true,
     placeholder: 'e.g. 5,000,000',
     min: 0,

@@ -1,6 +1,12 @@
 import { policyRegistry } from './policy-registry.mjs';
 import { buildBranchQualityAdjustment, buildGeographyAdjustment } from './modules/qualitative-adjustments.mjs';
 
+function toNumber(value) {
+  const cleaned = String(value ?? '').replace(/[^0-9.-]/g, '');
+  const parsed = Number(cleaned);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
 function normalizeIndustryFit(value) {
   switch (String(value ?? '').trim()) {
     case 'perfect_fit':
@@ -80,12 +86,58 @@ function normalizeCustomerConcentration(value) {
   }
 }
 
+function getForecastBlendWeight(answers) {
+  const actualYears =
+    1 +
+    (answers.revenuePrevious1 || answers.revenuePrev1 ? 1 : 0) +
+    (answers.revenuePrevious2 || answers.revenuePrev2 ? 1 : 0);
+  const depthModifier = actualYears >= 3 ? 0.75 : actualYears === 2 ? 0.9 : 1;
+  return Math.max(0.12, Math.min(0.18 * depthModifier, 0.22));
+}
+
+function getForecastSignal(answers) {
+  const rawPeriods = Array.isArray(answers._financialPeriods) ? answers._financialPeriods : [];
+  const forecastPeriod = rawPeriods.find(
+    (period) => period && typeof period === 'object' && period.id === 'forecast' && period.enabled === true
+  );
+
+  if (!forecastPeriod) {
+    return null;
+  }
+
+  const revenue = toNumber(forecastPeriod.revenue);
+  const profit = toNumber(forecastPeriod.operatingProfit);
+  const hasProfit = String(forecastPeriod.operatingProfit ?? '').trim() !== '';
+
+  if (revenue <= 0 && !hasProfit) {
+    return null;
+  }
+
+  return {
+    revenue,
+    profit,
+    hasProfit,
+    weight: getForecastBlendWeight(answers),
+  };
+}
+
+function blendTowardForecast(actualValue, forecastValue, weight) {
+  if (forecastValue <= 0 && actualValue <= 0) return 0;
+  if (actualValue <= 0) return forecastValue;
+  if (forecastValue <= 0) return actualValue;
+  return actualValue * (1 - weight) + forecastValue * weight;
+}
+
 function determinePhase(answers) {
   const hasBranchData =
+    answers.productRights ||
+    answers.quantities ||
+    answers.productCustomisation ||
     answers.grossMarginStability ||
     answers.founderRevenueDependence ||
     answers.staffUtilization ||
-    answers.capacityUtilization;
+    answers.capacityUtilization ||
+    answers.manufacturingValueCreation;
   const hasClosingData = answers.ownerAbsence2Weeks || answers.receivablesLatest !== undefined;
 
   if (hasClosingData) return 'closing';
@@ -115,6 +167,9 @@ function getNextPhase(currentPhase) {
 
 function buildPseudoRequest(answers) {
   return {
+    classification: {
+      level2: answers.level2,
+    },
     company: {
       primaryState: answers.primaryState,
       operatingYearsBand: answers.operatingYears,
@@ -127,6 +182,9 @@ function buildPseudoRequest(answers) {
       recurringRevenueShare: answers.recurringRevenueShare,
       revenueVisibility: answers.revenueVisibility,
       customerConcentration: normalizeCustomerConcentration(answers.customerConcentration),
+      productRights: answers.productRights,
+      quantities: answers.quantities,
+      productCustomisation: answers.productCustomisation,
       grossMarginStability: answers.grossMarginStability,
       supplierConcentration: answers.supplierConcentration,
       shrinkageSpoilage: answers.shrinkageSpoilage,
@@ -135,6 +193,7 @@ function buildPseudoRequest(answers) {
       keyPersonDependencies: answers.keyPersonDependencies,
       pricingPowerVsMarket: answers.pricingPowerVsMarket,
       capacityUtilization: answers.capacityUtilization,
+      manufacturingValueCreation: answers.manufacturingValueCreation,
       equipmentAgeCondition: answers.equipmentAgeCondition,
       rawMaterialPriceExposure: answers.rawMaterialPriceExposure,
       qualityCertifications: answers.qualityCertifications,
@@ -199,8 +258,12 @@ function calculateConfidenceScore(answers, breakdown, fallback, branchQuality) {
   if (['lt_1', '1_3'].includes(operatingYears)) adjustedScore -= 5;
   if (['10_20', 'gt_20'].includes(operatingYears)) adjustedScore += 5;
 
-  const revenue = Number(answers.revenueLatest) || 1;
-  const profit = Number(answers.operatingProfitLatest) || 0;
+  const forecastSignal = getForecastSignal(answers);
+  const revenue = forecastSignal ? blendTowardForecast(toNumber(answers.revenueLatest), forecastSignal.revenue, forecastSignal.weight) : toNumber(answers.revenueLatest) || 1;
+  const profit =
+    forecastSignal && forecastSignal.hasProfit
+      ? blendTowardForecast(toNumber(answers.operatingProfitLatest), forecastSignal.profit, forecastSignal.weight)
+      : toNumber(answers.operatingProfitLatest) || 0;
   const margin = profit / revenue;
   if (margin < 0.05) adjustedScore -= 10;
   if (margin < 0) adjustedScore -= 20;
@@ -209,11 +272,16 @@ function calculateConfidenceScore(answers, breakdown, fallback, branchQuality) {
     adjustedScore += (branchQuality.branchSignalScore - 60) * 0.08;
   }
 
+  if (forecastSignal) {
+    adjustedScore += 2;
+  }
+
   return Math.max(10, Math.min(95, Math.round(adjustedScore)));
 }
 
 function generateDataFlags(answers, branchQuality, geographyAdjustment) {
   const flags = [];
+  const forecastSignal = getForecastSignal(answers);
 
   if (normalizeIndustryFit(answers.industryFit) === 'poor_fit') {
     flags.push({
@@ -238,8 +306,11 @@ function generateDataFlags(answers, branchQuality, geographyAdjustment) {
     });
   }
 
-  const revenue = Number(answers.revenueLatest) || 1;
-  const profit = Number(answers.operatingProfitLatest) || 0;
+  const revenue = forecastSignal ? blendTowardForecast(toNumber(answers.revenueLatest), forecastSignal.revenue, forecastSignal.weight) : toNumber(answers.revenueLatest) || 1;
+  const profit =
+    forecastSignal && forecastSignal.hasProfit
+      ? blendTowardForecast(toNumber(answers.operatingProfitLatest), forecastSignal.profit, forecastSignal.weight)
+      : toNumber(answers.operatingProfitLatest) || 0;
   if (profit / revenue < 0.05) {
     flags.push({
       type: 'warning',
@@ -262,6 +333,14 @@ function generateDataFlags(answers, branchQuality, geographyAdjustment) {
     });
   }
 
+  if (forecastSignal) {
+    flags.push({
+      type: 'info',
+      message: 'Current-year forecast is included with cautious weight in this preliminary range.',
+      field: 'revenueLatest',
+    });
+  }
+
   return flags;
 }
 
@@ -276,7 +355,8 @@ function mapConfidenceLevel(score) {
 export function calculatePartialValuation(answers) {
   const flags = [];
   const level2 = answers.level2 || '';
-  const revenue = Number(answers.revenueLatest) || 0;
+  const forecastSignal = getForecastSignal(answers);
+  const revenue = forecastSignal ? blendTowardForecast(toNumber(answers.revenueLatest), forecastSignal.revenue, forecastSignal.weight) : toNumber(answers.revenueLatest);
 
   if (!level2 || !revenue) {
     return {
@@ -324,6 +404,9 @@ export function calculatePartialValuation(answers) {
   const mid = Math.round((low + high) / 2);
 
   const breakdown = calculateConfidenceBreakdown(answers, policyGroup, phase, branchQuality);
+  if (forecastSignal) {
+    breakdown.dataCompleteness = Math.min(100, breakdown.dataCompleteness + 2);
+  }
   const confidenceScore = calculateConfidenceScore(answers, breakdown, fallback, branchQuality);
   flags.push(...generateDataFlags(answers, branchQuality, geographyAdjustment));
 
