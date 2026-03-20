@@ -1,11 +1,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { getSupabaseAdminClient } from '../../server/valuation/supabase.mjs';
 
 const ROOT = path.resolve(new URL('..', import.meta.url).pathname, '..');
 const POLICY_REGISTRY_PATH = path.join(ROOT, 'src/valuation-engine/policy-registry.json');
 const BENCHMARK_DATA_PATH = path.join(ROOT, 'src/valuation-engine/benchmark-data.json');
-const INTERNAL_OBSERVATIONS_PATH = path.join(ROOT, 'server/valuation-v2/data/internal-observations.ndjson');
 
 function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));
@@ -13,19 +13,6 @@ function readJson(filePath) {
 
 function writeJson(filePath, data) {
   fs.writeFileSync(filePath, `${JSON.stringify(data, null, 2)}\n`);
-}
-
-function readNdjson(filePath) {
-  if (!fs.existsSync(filePath)) {
-    return [];
-  }
-
-  return fs
-    .readFileSync(filePath, 'utf8')
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .map((line) => JSON.parse(line));
 }
 
 function buildInternalSetId(policyGroupId) {
@@ -74,19 +61,59 @@ function buildObservations(entries) {
   }));
 }
 
-function main() {
+async function main() {
   const policyRegistry = readJson(POLICY_REGISTRY_PATH);
   const benchmarkData = readJson(BENCHMARK_DATA_PATH);
-  const internalEntries = readNdjson(INTERNAL_OBSERVATIONS_PATH).filter(
-    (entry) => entry.calibrationEligible && entry.approvalStatus === 'approved'
-  );
+  const supabase = getSupabaseAdminClient();
+  const { data: internalEntries = [], error } = await supabase
+    .from('internal_observations')
+    .select('*')
+    .eq('calibration_eligible', true)
+    .eq('approval_status', 'approved');
+
+  if (error) {
+    throw new Error(error.message);
+  }
 
   const groupedEntries = internalEntries.reduce((acc, entry) => {
-    if (!acc[entry.policyGroupId]) {
-      acc[entry.policyGroupId] = [];
+    const policyGroupId = entry.policy_group_id;
+    if (!acc[policyGroupId]) {
+      acc[policyGroupId] = [];
     }
 
-    acc[entry.policyGroupId].push(entry);
+    acc[policyGroupId].push({
+      id: entry.id,
+      caseId: entry.case_id,
+      companyAlias: entry.company_alias,
+      caseType: entry.case_type,
+      caseStage: entry.case_stage,
+      transactionContext: entry.transaction_context,
+      policyGroupId,
+      level1: entry.level1,
+      level2: entry.level2,
+      primaryState: entry.primary_state,
+      metric: entry.metric,
+      basis: entry.basis,
+      value: entry.value,
+      sourceKind: entry.source_kind,
+      sizeBand: entry.size_band,
+      quality: entry.quality,
+      observedAt: entry.observed_at,
+      sourceName: entry.source_name,
+      sourceUrl: entry.source_url,
+      sourceDate: entry.source_date,
+      notes: entry.notes,
+      calibrationEligible: entry.calibration_eligible,
+      enteredBy: entry.entered_by,
+      sourceSubmissionId: entry.source_submission_id,
+      sourceSubmissionTimestamp: entry.source_submission_timestamp,
+      approvalStatus: entry.approval_status,
+      approvalNotes: entry.approval_notes,
+      approvedBy: entry.approved_by,
+      approvedAt: entry.approved_at,
+      createdAt: entry.created_at,
+      updatedAt: entry.updated_at,
+    });
     return acc;
   }, {});
   const internalSetIds = new Set();
@@ -159,4 +186,7 @@ function main() {
   );
 }
 
-main();
+main().catch((error) => {
+  console.error(error instanceof Error ? error.message : String(error));
+  process.exitCode = 1;
+});

@@ -635,6 +635,7 @@ export function adaptOwnerRequest(raw) {
   const previousOfferStatus = normalizePreviousOfferStatus(raw.previousOffer);
   const previousOfferAmount =
     previousOfferStatus === 'yes' && raw.previousOfferAmount !== undefined ? toNumber(raw.previousOfferAmount) : undefined;
+  const lastName = String(raw.lastName || '').trim();
   const founderRevenueDependence = raw.founderRevenueDependence
     ? normalizeFounderDependence(raw.founderRevenueDependence)
     : normalizeFounderDependence(raw.ownerCustomerRelationship);
@@ -672,6 +673,7 @@ export function adaptOwnerRequest(raw) {
     company: {
       businessName: raw.businessName || 'Your Business',
       firstName: raw.firstName || 'Business Owner',
+      ...(lastName ? { lastName } : {}),
       email: raw.email || '',
       whatsapp: raw.whatsapp || '',
       legalStructure: raw.legalStructure || 'other',

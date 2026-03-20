@@ -36,16 +36,3 @@ export function validateCanonicalRequest(request) {
     throw new Error('Revenue or operating profit must be greater than zero.');
   }
 }
-
-export function validateLegacyRawInput(rawInput) {
-  requireString(rawInput.firstName, 'firstName');
-  requireString(rawInput.businessName, 'businessName');
-  requireString(rawInput.email, 'email');
-  requireString(rawInput.whatsapp, 'whatsapp');
-  requireString(rawInput.level1, 'level1');
-  requireString(rawInput.level2, 'level2');
-
-  if (rawInput.termsAccepted !== true) {
-    throw new Error('The local lab acknowledgement must be accepted before submission.');
-  }
-}

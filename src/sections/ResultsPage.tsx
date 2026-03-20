@@ -9,11 +9,10 @@ interface ResultsPageProps {
 }
 
 function formatCurrency(value: number) {
-  return new Intl.NumberFormat('en-NG', {
-    style: 'currency',
-    currency: 'NGN',
-    maximumFractionDigits: 0,
-  }).format(Math.round(value));
+  return `₦${Number(value || 0).toLocaleString('en-NG', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  })}m`;
 }
 
 function formatOptionalCurrency(value: number | undefined) {

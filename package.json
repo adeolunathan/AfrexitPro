@@ -6,13 +6,14 @@
   "scripts": {
     "dev": "node scripts/dev-stack.mjs",
     "dev:frontend": "vite",
-    "dev:backend": "node server/valuation-v2/server.mjs",
+    "dev:backend": "node --env-file=.env.local server/valuation/server.mjs",
     "start": "node scripts/dev-stack.mjs",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "valuation:v2:fixtures": "node scripts/valuation-engine/run-owner-fixtures.mjs",
-    "valuation:v2:fixtures:api": "node scripts/valuation-engine/run-owner-fixtures.mjs --mode api"
+    "valuation:fixtures": "node scripts/valuation-engine/run-owner-fixtures.mjs",
+    "valuation:fixtures:api": "node scripts/valuation-engine/run-owner-fixtures.mjs --mode api",
+    "valuation:sensitivity": "node scripts/valuation-engine/run-owner-sensitivity.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -42,6 +43,7 @@
     "@radix-ui/react-toggle": "^1.1.10",
     "@radix-ui/react-toggle-group": "^1.1.11",
     "@radix-ui/react-tooltip": "^1.2.8",
+    "@supabase/supabase-js": "^2.99.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",

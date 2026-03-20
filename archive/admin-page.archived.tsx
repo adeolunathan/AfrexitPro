@@ -7,10 +7,10 @@ import rawOwnerFixtures from './valuation-engine/owner-test-fixtures.json';
 import rawOwnerFixturesExtended from './valuation-engine/owner-test-fixtures-extended.json';
 import { policyRegistry } from './valuation-engine/policy-registry';
 
-const LOCAL_VALUATION_API = 'http://localhost:8788/api/valuation-v2';
-const LOCAL_OBSERVATIONS_API = 'http://localhost:8788/api/valuation-v2/internal-observations';
-const LOCAL_INGEST_API = 'http://localhost:8788/api/valuation-v2/internal-observations/ingest';
-const LOCAL_CASE_CANDIDATES_API = 'http://localhost:8788/api/valuation-v2/internal-case-candidates';
+const LOCAL_VALUATION_API = 'http://localhost:8788/api/valuation';
+const LOCAL_OBSERVATIONS_API = 'http://localhost:8788/api/admin/internal-observations';
+const LOCAL_INGEST_API = 'http://localhost:8788/api/admin/internal-observations';
+const LOCAL_CASE_CANDIDATES_API = 'http://localhost:8788/api/admin/submissions';
 const TODAY = new Date().toISOString().slice(0, 10);
 const ownerFixtures = [...rawOwnerFixtures.fixtures, ...rawOwnerFixturesExtended.fixtures];
 
@@ -615,7 +615,7 @@ export function V2AdminPage() {
       <div className="mx-auto flex max-w-7xl flex-col gap-8">
         <header className="flex flex-wrap items-center justify-between gap-4">
           <div className="space-y-2">
-            <div className="text-sm font-medium uppercase tracking-[0.22em] text-slate-400">Valuation V2 Admin</div>
+            <div className="text-sm font-medium uppercase tracking-[0.22em] text-slate-400">Valuation Admin</div>
             <h1 className="text-4xl font-semibold tracking-tight">Benchmark and Calibration Review</h1>
             <p className="max-w-3xl text-base leading-7 text-slate-300">
               Local-only internal view for benchmark provenance, stale-data warnings, and the Afrexit internal observation workflow.
@@ -623,7 +623,7 @@ export function V2AdminPage() {
           </div>
           <div className="flex gap-3">
             <Button asChild variant="outline" className="border-white/20 bg-white/5 text-white hover:bg-white/10">
-              <a href="/valuation-v2.html">Open V2 lab</a>
+              <a href="/admin-lab.html">Open admin lab</a>
             </Button>
             <Button asChild className="bg-white text-slate-950 hover:bg-slate-100">
               <a href="/">Return to main app</a>

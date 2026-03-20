@@ -3,22 +3,13 @@ import { ArrowRight } from 'lucide-react';
 import type { Question } from '@/data/adaptive-question-bank';
 import { QuestionHelpTooltip } from '@/components/QuestionHelpTooltip';
 import { resolveQuestionCopy } from '@/lib/adaptive-question-copy';
+import { formatMillions, sanitizeMillionInput, serializeMillions } from '@/lib/million-currency';
 
 interface InlineCurrencyQuestionnaireProps {
   questions: Question[];
   formData: Record<string, string | boolean>;
   onUpdate: (patch: Record<string, string | boolean>) => void;
   onComplete: () => void;
-}
-
-function formatCurrency(value: string): string {
-  const num = parseFloat(value.replace(/[^0-9]/g, ''));
-  if (isNaN(num)) return '';
-  return `₦${num.toLocaleString('en-NG')}`;
-}
-
-function parseInput(value: string): string {
-  return value.replace(/[^0-9]/g, '');
 }
 
 export function InlineCurrencyQuestionnaire({ 
@@ -40,7 +31,7 @@ export function InlineCurrencyQuestionnaire({
 
   const [editValue, setEditValue] = useState(() => {
     const q = questions[activeIndex];
-    return q ? String(formData[q.id] || '') : '';
+    return q ? formatMillions(String(formData[q.id] || '')) : '';
   });
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -49,7 +40,7 @@ export function InlineCurrencyQuestionnaire({
   useEffect(() => {
     const q = questions[activeIndex];
     if (q) {
-      setEditValue(String(formData[q.id] || ''));
+      setEditValue(formatMillions(String(formData[q.id] || '')));
     }
   }, [activeIndex, formData, questions]);
 
@@ -69,7 +60,7 @@ export function InlineCurrencyQuestionnaire({
     if (!currentQ) return;
 
     // Save current value
-    onUpdate({ [currentQ.id]: editValue });
+    onUpdate({ [currentQ.id]: serializeMillions(editValue) });
 
     // Move to next question
     if (activeIndex < questions.length - 1) {
@@ -99,13 +90,16 @@ export function InlineCurrencyQuestionnaire({
   return (
     <div className="w-full">
       <div className="rounded-xl border border-slate-200 overflow-hidden">
+        <div className="border-b border-slate-200 bg-white px-4 py-3 text-sm text-slate-500">
+          Enter all amounts in <span className="font-medium text-slate-700">₦ millions</span>. Example: <span className="font-medium text-slate-700">12.5</span> means <span className="font-medium text-slate-700">₦12.5m</span>.
+        </div>
         {/* Header */}
         <div className="grid grid-cols-[1fr_200px] border-b border-slate-200 bg-slate-50">
           <div className="h-9 flex items-center px-4 text-xs font-medium text-slate-500">
             Question
           </div>
           <div className="h-9 flex items-center justify-end px-4 text-xs font-medium text-slate-500 border-l border-slate-200">
-            Amount (₦)
+            Amount (₦m)
           </div>
         </div>
 
@@ -149,20 +143,20 @@ export function InlineCurrencyQuestionnaire({
                     <input
                       ref={inputRef}
                       type="text"
-                      inputMode="numeric"
+                      inputMode="decimal"
                       value={editValue}
-                      onChange={(e) => setEditValue(parseInput(e.target.value))}
+                      onChange={(e) => setEditValue(sanitizeMillionInput(e.target.value))}
                       onKeyDown={handleKeyDown}
-                      placeholder={q.placeholder ? q.placeholder.replace(/[₦,]/g, '') : '0'}
+                      placeholder={q.placeholder || '0'}
                       className="h-full w-full bg-transparent px-2 text-right text-sm font-medium text-slate-900 outline-none"
                     />
                   </div>
                 ) : isAnswered ? (
                   <span className="text-sm font-medium text-slate-700">
-                    {formatCurrency(value)}
+                    ₦{formatMillions(value)}m
                   </span>
                 ) : (
-                  <span className="text-sm text-slate-300">—</span>
+                  <span className="text-sm text-slate-300">0</span>
                 )}
               </div>
             </div>

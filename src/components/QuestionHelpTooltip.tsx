@@ -17,7 +17,11 @@ export function QuestionHelpTooltip({ content }: QuestionHelpTooltipProps) {
           <Info className="h-3.5 w-3.5" />
         </button>
       </TooltipTrigger>
-      <TooltipContent side="top" sideOffset={8} className="max-w-xs rounded-xl px-3 py-2 text-left leading-5">
+      <TooltipContent
+        side="top"
+        sideOffset={8}
+        className="rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5 text-left text-sm leading-5 text-white"
+      >
         {content}
       </TooltipContent>
     </Tooltip>

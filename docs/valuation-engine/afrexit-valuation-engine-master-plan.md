@@ -11,9 +11,9 @@ Scope: owner-first implementation with advisor and analyst architecture defined 
 - legacy heuristic engine frozen and no longer treated as the target architecture
 - canonical request and result contracts created
 - shared `level2 -> policyGroupId` registry created and used on both frontend and backend
-- V2 owner question bank wired to canonical schema paths
+- Owner question bank wired to canonical schema paths
 - owner-mode local backend rebuilt around policy selection, quantified normalization, EV-to-equity bridge, readiness, and confidence
-- V2 result payload now exposes structured historical trend detail and calibration provenance for internal review
+- Result payload now exposes structured historical trend detail and calibration provenance for internal review
 - calibration table and benchmark-data layers now cover all owner-phase policy groups
 - weaker owner-phase policy groups have now been upgraded from public-comp-heavy proxy sets into sourceable small-business transaction proxy sets plus explicit owner-mode overlays where direct evidence is still thin
 - local admin view now exists for benchmark sets, source notes, calibration notes, source-date aging, and stale-data warnings without opening JSON files
@@ -150,7 +150,7 @@ This is the right tradeoff because it avoids overbuilding while still preventing
 
 ## 3. Freeze Decision
 
-The current `server/valuation-v2/engine.mjs` is now considered a legacy experimental heuristic.
+The current `server/valuation/engine.mjs` is now considered a legacy experimental heuristic.
 
 It remains useful as:
 
@@ -170,7 +170,7 @@ What is frozen:
 
 What is not frozen:
 
-- the V2 local-lab scaffolding
+- the local-lab scaffolding
 - the separation from production
 - the local-only experimental workflow
 

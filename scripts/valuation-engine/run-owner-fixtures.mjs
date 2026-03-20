@@ -1,9 +1,9 @@
 import process from 'node:process';
 import fixturesData from '../../src/valuation-engine/owner-test-fixtures.json' with { type: 'json' };
 import extendedFixturesData from '../../src/valuation-engine/owner-test-fixtures-extended.json' with { type: 'json' };
-import { evaluateSubmission } from '../../server/valuation-v2/owner-engine.mjs';
+import { evaluateSubmission } from '../../server/valuation/owner-engine.mjs';
 
-const DEFAULT_API_URL = 'http://localhost:8788/api/valuation-v2';
+const DEFAULT_API_URL = 'http://localhost:8788/api/valuation';
 const ALL_FIXTURES = [...fixturesData.fixtures, ...extendedFixturesData.fixtures];
 
 function parseArgs(argv) {

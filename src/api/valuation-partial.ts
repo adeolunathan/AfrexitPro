@@ -2,7 +2,8 @@ import type { FormData } from '@/types/valuation';
 import type { BranchModule } from '@/data/branch-modules';
 import { calculatePartialValuation } from '@/valuation-engine/calculatePartialValuation';
 
-const API_URL = import.meta.env.VITE_VALUATION_API_URL || 'http://localhost:8788';
+const API_ROOT_URL = (import.meta.env.VITE_VALUATION_API_URL || 'http://localhost:8788/api/valuation').replace(/\/$/, '');
+const PARTIAL_URL = API_ROOT_URL.endsWith('/partial') ? API_ROOT_URL : `${API_ROOT_URL}/partial`;
 
 export interface PreliminaryRange {
   low: number;
@@ -37,7 +38,7 @@ export interface PartialValuationResult {
  * Used for real-time range updates during questionnaire
  */
 export async function fetchPartialValuation(answers: Partial<FormData>): Promise<PartialValuationResult> {
-  const response = await fetch(`${API_URL}/api/valuation-v2/partial`, {
+  const response = await fetch(PARTIAL_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -64,13 +65,10 @@ export function calculatePreliminaryRange(answers: Partial<FormData>): PartialVa
 }
 
 export function formatCurrency(value: number): string {
-  if (value >= 1000000000) {
-    return `₦${(value / 1000000000).toFixed(1)}B`;
-  }
-  if (value >= 1000000) {
-    return `₦${(value / 1000000).toFixed(1)}M`;
-  }
-  return `₦${value.toLocaleString()}`;
+  return `₦${value.toLocaleString('en-NG', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  })}m`;
 }
 
 export function formatRange(low: number, high: number): string {

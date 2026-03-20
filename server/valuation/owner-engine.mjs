@@ -1,4 +1,3 @@
-import { adaptOwnerRequest } from './owner-request-adapter.mjs';
 import { resolvePolicyGroup } from './policy-registry.mjs';
 import { buildEnterpriseAndEquityValues } from './modules/bridge.mjs';
 import { buildConfidenceAssessment } from './modules/confidence.mjs';
@@ -6,24 +5,14 @@ import { buildHistoricalSummary } from './modules/history.mjs';
 import { selectOwnerMethods, reconcileApproaches } from './modules/method-selection.mjs';
 import { buildNormalizedMetrics } from './modules/normalization.mjs';
 import { buildAssumptions, buildOwnerResult, buildRedFlags } from './modules/output.mjs';
-import { isCanonicalRequest, validateCanonicalRequest, validateLegacyRawInput } from './modules/request-validation.mjs';
+import { validateCanonicalRequest } from './modules/request-validation.mjs';
 import { buildReadinessAssessment, buildScorecard } from './modules/scorecards.mjs';
 import { buildMethodNormalizationImpacts, runSelectedApproaches } from './modules/approaches.mjs';
 import { buildBranchQualityAdjustment, buildGeographyAdjustment } from './modules/qualitative-adjustments.mjs';
 
 const ENGINE_VERSION = 'owner-phase-skeleton-v0.5';
 
-function coerceRequest(rawInput) {
-  if (isCanonicalRequest(rawInput)) {
-    return rawInput;
-  }
-
-  validateLegacyRawInput(rawInput);
-  return adaptOwnerRequest(rawInput);
-}
-
-export function evaluateSubmission(rawInput) {
-  const request = coerceRequest(rawInput);
+export function evaluateSubmission(request) {
   validateCanonicalRequest(request);
 
   const policyResolution = resolvePolicyGroup(request.classification.level2);

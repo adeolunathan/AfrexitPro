@@ -1,12 +1,14 @@
 import { spawn } from 'node:child_process';
+import fs from 'node:fs';
 import process from 'node:process';
 
 const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+const envFile = '.env.local';
 const services = [
   {
     name: 'backend',
     command: 'node',
-    args: ['server/valuation-v2/server.mjs'],
+    args: [`--env-file=${envFile}`, 'server/valuation/server.mjs'],
   },
   {
     name: 'frontend',
@@ -91,9 +93,17 @@ process.once('SIGTERM', () => {
   shutdown('Stopping dev stack...', 0);
 });
 
+const envContents = fs.existsSync(envFile) ? fs.readFileSync(envFile, 'utf8') : '';
+const hasSupabaseFrontendEnv = /VITE_SUPABASE_URL=/.test(envContents) && /VITE_SUPABASE_ANON_KEY=/.test(envContents);
+const hasSupabaseBackendEnv = /SUPABASE_SERVICE_ROLE_KEY=/.test(envContents) && (/SUPABASE_URL=/.test(envContents) || /VITE_SUPABASE_URL=/.test(envContents));
+
 process.stdout.write('Starting AfrexitPro dev stack...\n');
-process.stdout.write('Frontend: http://localhost:5173\n');
-process.stdout.write('Backend:  http://localhost:8788\n');
+process.stdout.write('Public App: http://localhost:5173\n');
+process.stdout.write('Admin Lab:  http://localhost:5173/admin-lab.html\n');
+process.stdout.write('Backend:    http://localhost:8788\n');
+if (!hasSupabaseFrontendEnv || !hasSupabaseBackendEnv) {
+  process.stdout.write('Warning: Supabase env vars are missing in .env.local. Public submission persistence and admin auth will not work until they are added.\n');
+}
 
 for (const service of services) {
   const child = spawn(service.command, service.args, {

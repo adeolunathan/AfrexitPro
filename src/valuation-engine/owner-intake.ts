@@ -97,6 +97,7 @@ export type OwnerFieldId =
   | 'previousOffer'
   | 'previousOfferAmount'
   | 'firstName'
+  | 'lastName'
   | 'businessName'
   | 'email'
   | 'whatsapp'
@@ -196,6 +197,7 @@ export const ownerFieldBindings: Record<OwnerFieldId, OwnerFieldBinding> = {
   previousOffer: { canonicalPath: 'engagement.previousOfferStatus', valueType: 'string' },
   previousOfferAmount: { canonicalPath: 'engagement.previousOfferAmount', valueType: 'number' },
   firstName: { canonicalPath: 'company.firstName', valueType: 'string' },
+  lastName: { canonicalPath: 'company.lastName', valueType: 'string' },
   businessName: { canonicalPath: 'company.businessName', valueType: 'string' },
   email: { canonicalPath: 'company.email', valueType: 'string' },
   whatsapp: { canonicalPath: 'company.whatsapp', valueType: 'string' },
@@ -865,6 +867,7 @@ export function buildOwnerValuationRequest(formData: FormData): ValuationRequest
   const previousOfferStatus = normalizePreviousOfferStatus(formData.previousOffer);
   const previousOfferAmount =
     previousOfferStatus === 'yes' && hasValue(formData.previousOfferAmount) ? toNumber(formData.previousOfferAmount) : undefined;
+  const lastName = String(formData.lastName || '').trim();
   const founderRevenueDependence = hasValue(formData.founderRevenueDependence)
     ? normalizeFounderDependence(formData.founderRevenueDependence)
     : normalizeFounderDependence(formData.ownerCustomerRelationship);
@@ -912,6 +915,7 @@ export function buildOwnerValuationRequest(formData: FormData): ValuationRequest
     company: {
       businessName: String(formData.businessName || 'Your Business'),
       firstName: String(formData.firstName || 'Business Owner'),
+      ...(lastName ? { lastName } : {}),
       email: String(formData.email || ''),
       whatsapp: String(formData.whatsapp || ''),
       legalStructure: (String(formData.legalStructure || 'other') as ValuationRequest['company']['legalStructure']),

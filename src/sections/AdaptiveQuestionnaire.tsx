@@ -407,7 +407,7 @@ export function AdaptiveQuestionnaire({
               Based on {level2Label}
             </h1>
             <p className="mt-2 text-gray-600">
-              with ₦{Number(formData.revenueLatest || 0).toLocaleString()} revenue
+              with ₦{Number(formData.revenueLatest || 0).toLocaleString('en-NG', { maximumFractionDigits: 2 })}m revenue
             </p>
           </div>
 

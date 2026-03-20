@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { Check, ArrowRight, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { CurrencyInput } from '@/components/CurrencyInput';
 import { anchorQuestions, getVisibleClosingQuestions } from '@/data/adaptive-question-bank';
 import { detectBranches, getBranchQuestions, type BranchModule, type BranchQuestion } from '@/data/branch-modules';
 import { fetchPartialValuation, calculatePreliminaryRange, formatRange } from '@/api/valuation-partial';
@@ -21,6 +22,7 @@ import { QuestionHelpTooltip } from '@/components/QuestionHelpTooltip';
 import type { FormData } from '@/types/valuation';
 import type { Question } from '@/data/adaptive-question-bank';
 import { resolveQuestionCopy } from '@/lib/adaptive-question-copy';
+import { formatMillions } from '@/lib/million-currency';
 import { level2ByLevel1 } from '@/valuation-engine/policy-registry';
 
 // Currency questions that should be shown in inline spreadsheet format
@@ -56,7 +58,7 @@ type Phase = 'anchor' | 'preliminary' | 'branch' | 'closing';
 const FINANCIAL_PERIODS_KEY = '_financialPeriods';
 
 // IDs of questions that should be grouped together (contact info)
-const CONTACT_GROUP_IDS = ['businessName', 'firstName', 'email', 'whatsapp', 'termsAccepted'];
+const CONTACT_GROUP_IDS = ['businessName', 'firstName', 'lastName', 'email', 'whatsapp', 'termsAccepted'];
 
 interface QuestionState {
   question: Question | BranchQuestion;
@@ -395,7 +397,9 @@ export function ContinuousQuestionnaire({
           <div className="flex-1">
             <p className="text-sm text-gray-500">Contact Information</p>
             <p className="font-medium text-gray-900">
-              {allAnswered ? `${formData.firstName} at ${formData.businessName}` : 'Incomplete'}
+              {allAnswered
+                ? `${[formData.firstName, formData.lastName].filter(Boolean).join(' ')} at ${formData.businessName}`
+                : 'Incomplete'}
             </p>
           </div>
         </div>
@@ -411,7 +415,16 @@ export function ContinuousQuestionnaire({
 
         <div className="grid gap-4 sm:grid-cols-2">
           {contactQs.map(q => (
-            <div key={q.id} className={q.id === 'businessName' || q.id === 'firstName' ? 'sm:col-span-1' : 'sm:col-span-2'}>
+            <div
+              key={q.id}
+              className={
+                q.id === 'businessName' || q.id === 'termsAccepted'
+                  ? 'sm:col-span-2'
+                  : q.id === 'firstName' || q.id === 'lastName' || q.id === 'email' || q.id === 'whatsapp'
+                    ? 'sm:col-span-1'
+                    : 'sm:col-span-2'
+              }
+            >
               {q.type === 'checkbox' ? (
                 <label className="flex cursor-pointer items-start gap-4 rounded-xl border border-gray-200 bg-gray-50 px-4 py-4">
                   <input
@@ -534,11 +547,10 @@ export function ContinuousQuestionnaire({
       } else if (q.type === 'checkbox') {
         displayValue = value === true ? 'Yes' : 'No';
       } else if (q.type === 'currency') {
-        const num = parseFloat(String(value || '0').replace(/[^0-9]/g, ''));
-        displayValue = num ? `₦${num.toLocaleString('en-NG')}` : '';
+        displayValue = `₦${formatMillions(String(value || '')) || '0'}m`;
       } else if (q.type === 'financial_table') {
         const latest = getFinancialPeriodById(financialPeriods, 'latest');
-        displayValue = latest.revenue ? `Latest: ₦${parseInt(latest.revenue).toLocaleString('en-NG')}` : '';
+        displayValue = `Latest: ₦${formatMillions(latest.revenue) || '0'}m`;
       } else {
         displayValue = String(value || '');
       }
@@ -640,6 +652,30 @@ export function ContinuousQuestionnaire({
                 </div>
               </div>
             ) : (
+            q.type === 'currency' ? (
+              <>
+                <CurrencyInput
+                  value={String(value || '')}
+                  onChange={(nextValue) => {
+                    onUpdate({ [q.id]: nextValue });
+                    setErrors(prev => ({ ...prev, [q.id]: '' }));
+                  }}
+                  placeholder={q.placeholder}
+                  required={q.required}
+                  min={q.min}
+                  max={q.max}
+                />
+                {showNextButton && (
+                  <Button 
+                    onClick={() => handleNextClick(q)}
+                    className="mt-4 bg-purple-600 hover:bg-purple-700"
+                  >
+                    Continue
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                )}
+              </>
+            ) : (
             <>
               <Input
                 type={q.type === 'tel' ? 'tel' : q.type === 'email' ? 'email' : 'text'}
@@ -662,6 +698,7 @@ export function ContinuousQuestionnaire({
                 </Button>
               )}
             </>
+            )
           )}
           
           {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
@@ -699,7 +736,7 @@ export function ContinuousQuestionnaire({
               Based on {level2Label}
             </h1>
             <p className="mt-1 text-gray-600">
-              with ₦{Number(formData.revenueLatest || 0).toLocaleString()} revenue
+              with ₦{Number(formData.revenueLatest || 0).toLocaleString('en-NG', { maximumFractionDigits: 2 })}m revenue
             </p>
 
             <div className="mt-6 rounded-xl bg-purple-50 p-6 text-center">

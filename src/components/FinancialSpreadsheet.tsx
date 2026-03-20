@@ -1,6 +1,12 @@
 import { useEffect, useMemo, useRef, useState, useCallback, type ClipboardEvent, type KeyboardEvent, type MouseEvent } from 'react';
 import { Switch } from '@/components/ui/switch';
 import { QuestionHelpTooltip } from '@/components/QuestionHelpTooltip';
+import {
+  formatMillions,
+  normalizeMillions,
+  sanitizeMillionInput,
+  serializeMillions,
+} from '@/lib/million-currency';
 
 export interface FinancialPeriod {
   id: FinancialPeriodId;
@@ -70,29 +76,6 @@ const PERIOD_FIELD_MAP: Record<Exclude<FinancialPeriodId, 'forecast'>, { revenue
 
 const METRIC_COLUMN_WIDTH = 220;
 const PERIOD_COLUMN_WIDTH = 156;
-
-function sanitizeNumericInput(value: string, allowNegative: boolean): string {
-  const trimmed = value.replace(/[₦,\s]/g, '');
-  const negative = allowNegative && trimmed.startsWith('-');
-  const digits = trimmed.replace(/[^0-9]/g, '');
-  
-  if (!digits) return negative ? '-' : '';
-  return `${negative ? '-' : ''}${digits}`;
-}
-
-function formatWithCommas(value: string, allowNegative: boolean): string {
-  const normalized = sanitizeNumericInput(value, allowNegative);
-  if (!normalized) return '';
-  if (normalized === '-') return '-';
-  
-  const negative = normalized.startsWith('-');
-  const digits = normalized.replace('-', '');
-  const num = parseInt(digits, 10);
-  if (Number.isNaN(num)) return negative ? '-' : '';
-  
-  return `${negative ? '-' : ''}${num.toLocaleString('en-NG')}`;
-}
-
 function calculateMargin(revenue: string, profit: string): string {
   const revenueValue = Number(revenue || 0);
   const profitValue = Number(profit || 0);
@@ -193,10 +176,27 @@ export function FinancialSpreadsheet({ periods, onChange }: FinancialSpreadsheet
     editValue: '',
   }));
 
+  // Track if this is the initial focus for editing
+  const initialFocusRef = useRef(false);
+  
   useEffect(() => {
     if (state.editingCell && inputRef.current) {
       inputRef.current.focus();
-      inputRef.current.select();
+      
+      // Only handle selection on initial focus, not on every keystroke
+      if (!initialFocusRef.current) {
+        initialFocusRef.current = true;
+        // Select all for easy replacement when editing existing content
+        if (state.editValue.length > 1 || state.editValue === '') {
+          inputRef.current.select();
+        } else {
+          // Single character typed to start - put cursor at end
+          inputRef.current.setSelectionRange(state.editValue.length, state.editValue.length);
+        }
+      }
+    } else if (!state.editingCell) {
+      // Reset when editing ends
+      initialFocusRef.current = false;
     }
   }, [state.editingCell]);
 
@@ -248,8 +248,7 @@ export function FinancialSpreadsheet({ periods, onChange }: FinancialSpreadsheet
     const period = normalizedPeriods[colIndex];
     if (!rowDef || !rowDef.editable || !isPeriodEnabled(period)) return;
     
-    const sanitized = sanitizeNumericInput(value, rowDef.allowNegative ?? false);
-    const storedValue = sanitized === '-' ? '' : sanitized;
+    const storedValue = serializeMillions(value, rowDef.allowNegative ?? false);
     
     const nextPeriods = normalizedPeriods.map((p, i) => 
       i === colIndex 
@@ -267,10 +266,10 @@ export function FinancialSpreadsheet({ periods, onChange }: FinancialSpreadsheet
     const rowKey = getRowKey(rowIndex);
     
     if (rowKey === 'revenue') {
-      return formatWithCommas(period.revenue, false) || '0';
+      return formatMillions(period.revenue, false) || '0';
     }
     if (rowKey === 'operatingProfit') {
-      return formatWithCommas(period.operatingProfit, true) || '0';
+      return formatMillions(period.operatingProfit, true) || '0';
     }
     if (rowKey === 'margin') {
       return calculateMargin(period.revenue, period.operatingProfit);
@@ -307,8 +306,8 @@ export function FinancialSpreadsheet({ periods, onChange }: FinancialSpreadsheet
     const rowDef = rowDefinitions[coord.rowIndex];
     const currentValue = getCellValue(coord.rowIndex, coord.colIndex);
     const value = initialValue !== undefined 
-      ? sanitizeNumericInput(initialValue, rowDef.allowNegative ?? false)
-      : sanitizeNumericInput(currentValue, rowDef.allowNegative ?? false);
+      ? sanitizeMillionInput(initialValue, rowDef.allowNegative ?? false)
+      : sanitizeMillionInput(formatMillions(currentValue, rowDef.allowNegative ?? false), rowDef.allowNegative ?? false);
     
     setState(prev => ({
       ...prev,
@@ -468,7 +467,7 @@ export function FinancialSpreadsheet({ periods, onChange }: FinancialSpreadsheet
             isEditableCell(state.activeCell.rowIndex) &&
             isPeriodEnabled(normalizedPeriods[state.activeCell.colIndex]) &&
             event.key.length === 1 && 
-            /[0-9-]/.test(event.key) &&
+            /[0-9.-]/.test(event.key) &&
             !event.ctrlKey && !event.metaKey && !event.altKey) {
           event.preventDefault();
           startEditing(state.activeCell, event.key);
@@ -516,12 +515,12 @@ export function FinancialSpreadsheet({ periods, onChange }: FinancialSpreadsheet
         const targetColIndex = enabledColumns[targetEnabledColIdx];
         
         const cellValue = rowData[colOffset];
-        const sanitized = sanitizeNumericInput(cellValue, rowDef.allowNegative ?? false);
-        if (sanitized && sanitized !== '-') {
+        const storedValue = serializeMillions(cellValue, rowDef.allowNegative ?? false);
+        if (storedValue) {
           nextPeriods[targetColIndex] = {
             ...nextPeriods[targetColIndex],
             enabled: true,
-            [rowDef.key]: sanitized,
+            [rowDef.key]: storedValue,
           };
           appliedCount++;
         }
@@ -615,6 +614,9 @@ export function FinancialSpreadsheet({ periods, onChange }: FinancialSpreadsheet
     <div className="w-full">
       <div className="max-w-full overflow-x-auto">
         <div className="flex w-full min-w-fit flex-col" style={{ minWidth: sheetMinWidth }}>
+          <div className="mb-3 text-sm text-slate-500">
+            Enter all figures in <span className="font-medium text-slate-700">₦ millions</span>. Example: <span className="font-medium text-slate-700">12.5</span> means <span className="font-medium text-slate-700">₦12.5m</span>.
+          </div>
           {/* Toggle Row - Fixed positions for all 4 periods */}
           <div
             className="mb-4 grid w-full items-end gap-y-1"
@@ -734,14 +736,14 @@ export function FinancialSpreadsheet({ periods, onChange }: FinancialSpreadsheet
 
                       {isEditing ? (
                         <div className="absolute inset-0 flex items-center bg-white">
-                          <span className="pl-2 text-xs text-slate-400">₦</span>
+                          <span className="pl-2 text-xs text-slate-400">₦m</span>
                           <input
                             ref={inputRef}
                             type="text"
-                            inputMode="numeric"
+                            inputMode="decimal"
                             value={state.editValue}
                             onChange={(e) => {
-                              const sanitized = sanitizeNumericInput(
+                              const sanitized = sanitizeMillionInput(
                                 e.target.value, 
                                 rowDef.allowNegative ?? false
                               );
@@ -760,7 +762,7 @@ export function FinancialSpreadsheet({ periods, onChange }: FinancialSpreadsheet
                                 ? 'text-emerald-600'
                                 : 'text-slate-700'
                         }`}>
-                          {rowDef.editable ? '₦' : ''}
+                          {rowDef.editable ? '₦m ' : ''}
                           {displayValue}
                           {!rowDef.editable ? '%' : ''}
                         </span>
@@ -811,8 +813,8 @@ export function normalizeFinancialPeriods(value: unknown): FinancialPeriod[] {
         (typeof saved?.enabled === 'boolean'
           ? saved.enabled
           : defaultPeriod.enabled || Boolean(saved?.revenue || saved?.operatingProfit)),
-      revenue: saved?.revenue ? sanitizeNumericInput(String(saved.revenue), false) : '',
-      operatingProfit: saved?.operatingProfit ? sanitizeNumericInput(String(saved.operatingProfit), true) : '',
+      revenue: saved?.revenue ? normalizeMillions(saved.revenue) : '',
+      operatingProfit: saved?.operatingProfit ? normalizeMillions(saved.operatingProfit) : '',
     };
   });
 }
@@ -837,14 +839,14 @@ export function buildFinancialPeriodsFromAnswers(
       return {
         ...period,
         enabled: Boolean(savedForecast?.enabled),
-        revenue: savedForecast?.revenue ? sanitizeNumericInput(String(savedForecast.revenue), false) : '',
-        operatingProfit: savedForecast?.operatingProfit ? sanitizeNumericInput(String(savedForecast.operatingProfit), true) : '',
+        revenue: savedForecast?.revenue ? normalizeMillions(savedForecast.revenue) : '',
+        operatingProfit: savedForecast?.operatingProfit ? normalizeMillions(savedForecast.operatingProfit) : '',
       };
     }
 
     const fieldMap = PERIOD_FIELD_MAP[period.id as Exclude<FinancialPeriodId, 'forecast'>];
-    const revenue = sanitizeNumericInput(String(answers[fieldMap.revenue] ?? ''), false);
-    const operatingProfit = sanitizeNumericInput(String(answers[fieldMap.operatingProfit] ?? ''), true);
+    const revenue = normalizeMillions(answers[fieldMap.revenue]);
+    const operatingProfit = normalizeMillions(answers[fieldMap.operatingProfit]);
 
     return {
       ...period,

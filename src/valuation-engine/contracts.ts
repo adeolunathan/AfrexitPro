@@ -66,6 +66,7 @@ export const engagementContextSchema = z.object({
 export const companyProfileSchema = z.object({
   businessName: z.string().min(1),
   firstName: z.string().min(1),
+  lastName: z.string().min(1).optional(),
   email: z.email(),
   whatsapp: z.string().min(1),
   legalStructure: z.enum(legalStructureValues),
