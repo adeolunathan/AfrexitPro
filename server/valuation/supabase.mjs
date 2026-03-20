@@ -2,18 +2,53 @@ import { createClient } from '@supabase/supabase-js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const ADMIN_DEV_BYPASS = /^true$/i.test(String(process.env.ADMIN_DEV_BYPASS || ''));
 
 let cachedAdminClient;
 
 function requireEnv(name, value) {
-  if (!value) {
+  if (!isMeaningfulSupabaseEnvValue(value)) {
     throw new Error(`Missing required environment variable: ${name}`);
   }
   return value;
 }
 
+function normalizeEnvValue(value) {
+  return String(value || '').trim();
+}
+
+function isPlaceholderSupabaseValue(value) {
+  const normalized = normalizeEnvValue(value).toLowerCase();
+  return (
+    !normalized ||
+    normalized === 'your-anon-key' ||
+    normalized === 'your-service-role-key' ||
+    normalized.includes('your-project.supabase.co')
+  );
+}
+
+function isMeaningfulSupabaseEnvValue(value) {
+  return Boolean(normalizeEnvValue(value)) && !isPlaceholderSupabaseValue(value);
+}
+
+function isLocalSupabaseUrl(value) {
+  return /^https?:\/\/(?:127\.0\.0\.1|localhost):54321\/?$/i.test(normalizeEnvValue(value));
+}
+
+export function getSupabaseMode() {
+  if (!isMeaningfulSupabaseEnvValue(SUPABASE_URL) || !isMeaningfulSupabaseEnvValue(SUPABASE_SERVICE_ROLE_KEY)) {
+    return 'disabled';
+  }
+
+  return isLocalSupabaseUrl(SUPABASE_URL) ? 'local' : 'hosted';
+}
+
 export function isSupabaseConfigured() {
-  return Boolean(SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY);
+  return getSupabaseMode() !== 'disabled';
+}
+
+export function isAdminDevBypassEnabled() {
+  return ADMIN_DEV_BYPASS;
 }
 
 export function getSupabaseAdminClient() {
@@ -43,6 +78,22 @@ export function getBearerToken(request) {
 }
 
 export async function requireAdminSession(request) {
+  if (ADMIN_DEV_BYPASS) {
+    return {
+      accessToken: 'local-admin-dev-bypass',
+      user: {
+        id: 'local-admin-dev-bypass',
+        email: 'local-admin@localhost',
+      },
+      adminUser: {
+        id: 'local-admin-dev-bypass',
+        auth_user_id: 'local-admin-dev-bypass',
+        email: 'local-admin@localhost',
+        role: 'admin',
+      },
+    };
+  }
+
   const accessToken = getBearerToken(request);
   if (!accessToken) {
     throw new Error('Admin authentication is required.');

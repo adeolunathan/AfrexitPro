@@ -14,7 +14,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
-import { buildOwnerValuationRequest, type OwnerFieldId } from '@/valuation-engine/owner-intake';
+import { buildOwnerAnswersFromRequest, buildOwnerValuationRequest, type OwnerFieldId } from '@/valuation-engine/owner-intake';
 import type { FormData } from '@/types/valuation';
 import type { ResultData } from '@/types/valuation';
 import { resolveQuestionCopy } from '@/lib/adaptive-question-copy';
@@ -89,11 +89,19 @@ function normalizeAnswers(value: FormData | null | undefined): FormData {
 }
 
 function extractBaselineAnswers(entry: AdminSubmissionRecord | AdminScenarioRecord | null): FormData {
-  if (!entry || !entry.answersSnapshot) {
+  if (!entry) {
     return deepClone(EMPTY_ANSWERS);
   }
 
-  return normalizeAnswers(entry.answersSnapshot);
+  if (entry.answersSnapshot) {
+    return normalizeAnswers(entry.answersSnapshot);
+  }
+
+  if (entry.requestSnapshot) {
+    return normalizeAnswers(buildOwnerAnswersFromRequest(entry.requestSnapshot));
+  }
+
+  return deepClone(EMPTY_ANSWERS);
 }
 
 function buildQuestionSections(answers: FormData): Array<{ id: string; title: string; description?: string; questions: QuestionLike[] }> {

@@ -117,13 +117,15 @@ export interface InternalObservationRecord {
 }
 
 async function apiRequest<T>(path: string, token: string, init?: RequestInit): Promise<T> {
+  const headers = new Headers(init?.headers);
+  headers.set('Content-Type', 'application/json');
+  if (token) {
+    headers.set('Authorization', `Bearer ${token}`);
+  }
+
   const response = await fetch(`${API_URL}${path}`, {
     ...init,
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-      ...(init?.headers || {}),
-    },
+    headers,
   });
 
   const payload = (await response.json().catch(() => ({}))) as ApiEnvelope<T>;

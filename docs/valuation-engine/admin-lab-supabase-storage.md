@@ -15,16 +15,25 @@ This build moves Afrexit valuation persistence and internal testing onto **Supab
 Frontend:
 
 - `VITE_VALUATION_API_URL`
+- `VITE_ADMIN_DEV_BYPASS`
 - `VITE_SUPABASE_URL`
 - `VITE_SUPABASE_ANON_KEY`
 
 Backend:
 
+- `ADMIN_DEV_BYPASS`
 - `SUPABASE_URL`
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `VALUATION_PORT`
 
 The public questionnaire remains unauthenticated. Only admin routes require a Supabase bearer token that also matches an allowlisted row in `admin_users`.
+
+## Local dev modes
+
+- `npm run dev` is the dependable default path. It starts only the frontend and backend, leaves Docker alone, and works with the admin dev bypass plus in-memory admin storage.
+- `npm run dev:with-supabase` is the explicit local-Docker path. It starts or reuses local Supabase, injects those local keys into the app session, and keeps Docker lifecycle out of the default path.
+- `npm run supabase:start|status|stop|reset` manages the Dockerized Supabase stack directly when you want to inspect, stop, or force-clean it separately.
+- Hosted Supabase fits the later path: turn the bypass flags off, add real hosted Supabase credentials to `.env.local`, and keep using `npm run dev`.
 
 ## Supabase schema
 
@@ -42,14 +51,15 @@ Snapshots are stored as JSONB so the canonical request/result can be preserved e
 ## Admin workflow
 
 1. Open `/admin-lab.html`.
-2. Sign in with a Supabase user that is also present in `admin_users`.
-3. Start from:
+2. In default local mode, use the admin dev bypass.
+3. In real Supabase mode, sign in with a Supabase user that is also present in `admin_users`.
+4. Start from:
    - a blank scenario
    - a saved public submission
    - a saved admin scenario
-4. Use **Scenario Lab** to edit answers directly and rerun valuation without replaying the public flow.
-5. Use **Sensitivity Matrix** to mutate one question across multiple options from the same baseline.
-6. Save useful baselines back into `admin_scenarios`.
+5. Use **Scenario Lab** to edit answers directly and rerun valuation without replaying the public flow.
+6. Use **Sensitivity Matrix** to mutate one question across multiple options from the same baseline.
+7. Save useful baselines back into `admin_scenarios`.
 
 ## Monetary model
 
@@ -89,3 +99,5 @@ Admin:
 
 - The runtime no longer uses NDJSON submission or observation files.
 - Fixture regression and the sensitivity CLI remain useful for automated checks, but the admin lab is the main repeated-testing surface for humans.
+- In bypass-only local mode, admin records are intentionally in-memory and reset when the backend restarts.
+- In local Docker Supabase mode, the wrapper now attempts one automatic reset if Supabase is stuck in an unhealthy container loop.

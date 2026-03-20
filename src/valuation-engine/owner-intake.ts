@@ -849,6 +849,100 @@ function buildNormalizationSchedule(formData: FormData) {
   return schedule;
 }
 
+function toAnswerString(value: unknown) {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return `${value}`;
+  }
+
+  if (typeof value === 'string') {
+    return value;
+  }
+
+  return '';
+}
+
+function mapPurposeToTransactionGoal(
+  engagement: Pick<ValuationRequest['engagement'], 'purpose' | 'targetTransaction'>
+): FormData['transactionGoal'] {
+  if (engagement.targetTransaction === 'partial_sale') return 'partial_sale';
+  if (engagement.targetTransaction === 'minority_raise') return 'investor_entry';
+  if (engagement.purpose === 'succession') return 'internal_handover';
+  if (engagement.purpose === 'internal_planning') return 'value_improvement';
+  return 'external_sale';
+}
+
+function mapUrgencyToTransactionTimeline(urgency: ValuationRequest['engagement']['urgency']): FormData['transactionTimeline'] {
+  if (urgency === 'accelerated') return 'within_6m';
+  if (urgency === 'orderly') return '6_12m';
+  return 'not_sure';
+}
+
+function mapFounderDependenceToOwnerRelationship(value: unknown): FormData['ownerCustomerRelationship'] {
+  switch (String(value ?? '').trim()) {
+    case 'very_little':
+      return 'brand_not_personal';
+    case 'some':
+      return 'knows_not_expected';
+    case 'large_share':
+      return 'expects_involvement';
+    case 'most':
+      return 'buying_owner';
+    default:
+      return 'knows_not_expected';
+  }
+}
+
+function mapOwnerAbsence3Months(value: unknown) {
+  const normalized = String(value ?? '').trim();
+  if (normalized === 'smooth') return 'no_disruption';
+  return normalized;
+}
+
+function findHistoricalPeriod(request: ValuationRequest, periodId: string, fallbackIndex?: number) {
+  const byId = request.financials.historicals.find((period) => period.periodId === periodId);
+  if (byId) return byId;
+  if (typeof fallbackIndex === 'number') {
+    return request.financials.historicals[fallbackIndex];
+  }
+  return undefined;
+}
+
+function getNormalizationItem(
+  schedule: NormalizationLineItem[],
+  predicate: (item: NormalizationLineItem) => boolean
+) {
+  return schedule.find(predicate);
+}
+
+function getNormalizationAmount(item: NormalizationLineItem | undefined, key: 'reportedAmount' | 'normalizedAmount') {
+  const value = item?.[key];
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return value;
+  }
+
+  if (typeof item?.adjustmentAmount === 'number' && Number.isFinite(item.adjustmentAmount) && key === 'reportedAmount') {
+    return item.adjustmentAmount;
+  }
+
+  return 0;
+}
+
+function sumNormalizationAmounts(
+  schedule: NormalizationLineItem[],
+  predicate: (item: NormalizationLineItem) => boolean
+) {
+  return schedule.reduce((total, item) => {
+    if (!predicate(item)) return total;
+    const value =
+      typeof item.reportedAmount === 'number' && Number.isFinite(item.reportedAmount)
+        ? item.reportedAmount
+        : typeof item.adjustmentAmount === 'number' && Number.isFinite(item.adjustmentAmount)
+          ? item.adjustmentAmount
+          : 0;
+    return total + value;
+  }, 0);
+}
+
 export function buildOwnerValuationRequest(formData: FormData): ValuationRequest {
   const { policyGroupId, policyGroup } = resolveFrontendPolicyGroup(String(formData.level2 || ''));
   const submittedAt = new Date().toISOString();
@@ -1007,6 +1101,144 @@ export function buildOwnerValuationRequest(formData: FormData): ValuationRequest
   };
 
   return valuationRequestSchema.parse(request);
+}
+
+export function buildOwnerAnswersFromRequest(request: ValuationRequest): FormData {
+  const latestPeriod =
+    request.financials.historicals.find((period) => period.isRepresentative) ||
+    findHistoricalPeriod(request, 'latest_owner_input', 0) ||
+    request.financials.historicals[0];
+  const prior1 = findHistoricalPeriod(request, 'prior_year_1', 1);
+  const prior2 = findHistoricalPeriod(request, 'prior_year_2', 2);
+  const forecastYear = request.financials.forecast?.forecastYears?.[0];
+  const schedule = request.normalization?.schedule || [];
+
+  const ownerCompTotal = getNormalizationItem(schedule, (item) => item.id === 'owner-comp-total')
+    || getNormalizationItem(schedule, (item) => item.id === 'owner-comp-market-delta');
+  const ownerCompMarket = getNormalizationItem(schedule, (item) => item.id === 'owner-comp-market-delta');
+  const relatedPartyRent = getNormalizationItem(schedule, (item) => item.id === 'related-party-rent-delta');
+  const relatedPartyComp = getNormalizationItem(schedule, (item) => item.id === 'related-party-pay-delta');
+
+  const currentYear = new Date().getFullYear();
+
+  return {
+    respondentRole: request.meta.respondentRole || 'owner',
+    termsAccepted: Boolean(request.meta.acknowledged),
+    newsletterOptIn: Boolean(request.meta.newsletterOptIn),
+    level1: request.classification.level1,
+    level2: request.classification.level2,
+    industryFit: request.classification.industryFit,
+    businessDescription: request.company.businessSummary || '',
+    businessSummary: request.company.businessSummary || '',
+    businessName: request.company.businessName || '',
+    firstName: request.company.firstName || '',
+    lastName: request.company.lastName || '',
+    email: request.company.email || '',
+    whatsapp: request.company.whatsapp || '',
+    legalStructure: request.company.legalStructure,
+    ownerControl: request.company.ownerControlBand,
+    operatingYears: request.company.operatingYearsBand,
+    primaryState: request.company.primaryState,
+    transactionGoal: mapPurposeToTransactionGoal(request.engagement),
+    transactionTimeline: mapUrgencyToTransactionTimeline(request.engagement.urgency),
+    revenueLatest: toAnswerString(latestPeriod?.revenue),
+    operatingProfitLatest: toAnswerString(latestPeriod?.operatingProfit),
+    revenuePrevious1: toAnswerString(prior1?.revenue),
+    operatingProfitPrevious1: toAnswerString(prior1?.operatingProfit),
+    revenuePrevious2: toAnswerString(prior2?.revenue),
+    operatingProfitPrevious2: toAnswerString(prior2?.operatingProfit),
+    _financialPeriods: [
+      {
+        id: 'prior2',
+        label: `${currentYear - 3}`,
+        enabled: Boolean(prior2),
+        revenue: toAnswerString(prior2?.revenue),
+        operatingProfit: toAnswerString(prior2?.operatingProfit),
+      },
+      {
+        id: 'prior1',
+        label: `${currentYear - 2}`,
+        enabled: Boolean(prior1),
+        revenue: toAnswerString(prior1?.revenue),
+        operatingProfit: toAnswerString(prior1?.operatingProfit),
+      },
+      {
+        id: 'latest',
+        label: `${currentYear - 1} Actual`,
+        enabled: true,
+        revenue: toAnswerString(latestPeriod?.revenue),
+        operatingProfit: toAnswerString(latestPeriod?.operatingProfit),
+      },
+      {
+        id: 'forecast',
+        label: `${currentYear} Forecast`,
+        enabled: Boolean(forecastYear),
+        revenue: toAnswerString(forecastYear?.revenue),
+        operatingProfit: toAnswerString(forecastYear?.ebit),
+      },
+    ],
+    catchmentArea: request.operatingProfile.catchmentArea || '',
+    pricingPower: request.operatingProfile.pricingPower || '',
+    proofReadiness: request.financials.sourceQuality.proofReadiness || '',
+    marketDemand: request.operatingProfile.marketDemand || '',
+    traceablePaymentsShare: request.financials.sourceQuality.traceablePaymentsShare || '',
+    bankingQuality: request.financials.sourceQuality.bankingQuality || '',
+    financeTracking: request.financials.sourceQuality.bookkeepingQuality || '',
+    ownerAbsence2Weeks: request.readiness.ownerAbsence2Weeks || '',
+    ownerAbsence3Months: mapOwnerAbsence3Months(request.readiness.ownerAbsence3Months || ''),
+    ownerCustomerRelationship: mapFounderDependenceToOwnerRelationship(request.operatingProfile.founderRevenueDependence),
+    managementDepth: request.readiness.managementDepth || '',
+    processDocumentation: request.readiness.processDocumentation || '',
+    replacementDifficulty: request.readiness.replacementDifficulty || '',
+    laborMarketDifficulty: request.operatingProfile.hiringDifficulty || '',
+    growthPotential: request.operatingProfile.growthOutlook || '',
+    differentiation: request.operatingProfile.differentiation || '',
+    customerConcentration: request.operatingProfile.customerConcentration || '',
+    bestCustomerImpact: request.operatingProfile.bestCustomerRisk || '',
+    partnerDependency: request.operatingProfile.supplierTransferability || '',
+    assetSeparation: request.operatingProfile.assetSeparation || '',
+    fxExposure: request.operatingProfile.fxExposure || '',
+    founderRevenueDependence: request.operatingProfile.founderRevenueDependence || '',
+    recurringRevenueShare: request.operatingProfile.recurringRevenueShare || '',
+    revenueVisibility: request.operatingProfile.revenueVisibility || '',
+    inventoryProfile: request.operatingProfile.inventoryProfile || '',
+    workingCapitalHealth: request.operatingProfile.workingCapitalHealth || '',
+    productRights: request.operatingProfile.productRights || '',
+    quantities: request.operatingProfile.quantities || '',
+    productCustomisation: request.operatingProfile.productCustomisation || '',
+    grossMarginStability: request.operatingProfile.grossMarginStability || '',
+    supplierConcentration: request.operatingProfile.supplierConcentration || '',
+    shrinkageSpoilage: request.operatingProfile.shrinkageSpoilage || '',
+    peakSeasonDependency: request.operatingProfile.peakSeasonDependency || '',
+    staffUtilization: request.operatingProfile.staffUtilization || '',
+    keyPersonDependencies: request.operatingProfile.keyPersonDependencies || '',
+    pricingPowerVsMarket: request.operatingProfile.pricingPowerVsMarket || '',
+    capacityUtilization: request.operatingProfile.capacityUtilization || '',
+    manufacturingValueCreation: request.operatingProfile.manufacturingValueCreation || '',
+    equipmentAgeCondition: request.operatingProfile.equipmentAgeCondition || '',
+    rawMaterialPriceExposure: request.operatingProfile.rawMaterialPriceExposure || '',
+    qualityCertifications: request.operatingProfile.qualityCertifications || '',
+    receivablesLatest: toAnswerString(latestPeriod?.receivables),
+    inventoryValueLatest: toAnswerString(latestPeriod?.inventory),
+    payablesLatest: toAnswerString(latestPeriod?.payables),
+    maintenanceCapexLatest: toAnswerString(latestPeriod?.maintenanceCapex),
+    annualDepreciation: toAnswerString(latestPeriod?.depreciationAmortization),
+    cashBalance: toAnswerString(request.bridge.cashAndEquivalents),
+    financialDebt: toAnswerString(request.bridge.interestBearingDebt),
+    shareholderLoans: toAnswerString(request.bridge.shareholderLoans),
+    ownerTotalCompensation: toAnswerString(getNormalizationAmount(ownerCompTotal, 'reportedAmount')),
+    marketManagerCompensation: toAnswerString(getNormalizationAmount(ownerCompMarket, 'normalizedAmount')),
+    relatedPartyRentPaid: toAnswerString(getNormalizationAmount(relatedPartyRent, 'reportedAmount')),
+    marketRentEquivalent: toAnswerString(getNormalizationAmount(relatedPartyRent, 'normalizedAmount')),
+    relatedPartyCompPaid: toAnswerString(getNormalizationAmount(relatedPartyComp, 'reportedAmount')),
+    marketRelatedPartyCompEquivalent: toAnswerString(getNormalizationAmount(relatedPartyComp, 'normalizedAmount')),
+    privateExpensesAmount: toAnswerString(sumNormalizationAmounts(schedule, (item) => item.category === 'personal_expense')),
+    oneOffExpenseAmount: toAnswerString(sumNormalizationAmounts(schedule, (item) => item.category === 'one_off_expense')),
+    oneOffIncomeAmount: toAnswerString(sumNormalizationAmounts(schedule, (item) => item.category === 'one_off_income')),
+    nonCoreIncomeAmount: toAnswerString(sumNormalizationAmounts(schedule, (item) => item.category === 'non_operating_income')),
+    previousOffer: request.engagement.previousOfferStatus || '',
+    previousOfferAmount: toAnswerString(request.engagement.previousOfferAmount),
+  };
 }
 
 export function isOwnerAcknowledged(formData: FormData) {

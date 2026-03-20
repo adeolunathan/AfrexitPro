@@ -3,7 +3,7 @@ import { evaluateSubmission } from './owner-engine.mjs';
 import { isCanonicalRequest } from './modules/request-validation.mjs';
 import { parseInternalObservationPayload, updateInternalObservationPayload } from './internal-observations.mjs';
 import { calculatePartialValuation } from './partial-valuation.mjs';
-import { isSupabaseConfigured, requireAdminSession } from './supabase.mjs';
+import { getSupabaseMode, isAdminDevBypassEnabled, isSupabaseConfigured, requireAdminSession } from './supabase.mjs';
 import {
   createInternalObservation,
   createScenario,
@@ -136,6 +136,8 @@ const server = http.createServer(async (request, response) => {
       service: 'valuation-backend',
       port: PORT,
       supabaseConfigured: isSupabaseConfigured(),
+      supabaseMode: getSupabaseMode(),
+      adminDevBypassEnabled: isAdminDevBypassEnabled(),
     });
     return;
   }
@@ -146,6 +148,8 @@ const server = http.createServer(async (request, response) => {
       service: 'valuation-backend',
       message: 'Backend is running.',
       supabaseConfigured: isSupabaseConfigured(),
+      supabaseMode: getSupabaseMode(),
+      adminDevBypassEnabled: isAdminDevBypassEnabled(),
       endpoints: {
         health: 'GET /health',
         valuation: 'POST /api/valuation',

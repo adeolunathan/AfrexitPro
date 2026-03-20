@@ -9,7 +9,25 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 
-function AdminAuthShell() {
+const adminDevBypassEnabled = import.meta.env.VITE_ADMIN_DEV_BYPASS === 'true';
+const noopSignOut = async () => {};
+const DEV_BYPASS_SESSION = {
+  access_token: 'local-admin-dev-bypass',
+  token_type: 'bearer',
+  expires_in: 3600,
+  expires_at: Math.floor(Date.now() / 1000) + 3600,
+  refresh_token: 'local-admin-dev-bypass',
+  user: {
+    id: 'local-admin-dev-bypass',
+    email: 'local-admin@localhost',
+    app_metadata: {},
+    user_metadata: {},
+    aud: 'authenticated',
+    created_at: new Date().toISOString(),
+  },
+} as Session;
+
+function AdminSignInShell() {
   const [configError] = useState(() => {
     try {
       getSupabaseClient();
@@ -21,7 +39,7 @@ function AdminAuthShell() {
   const [session, setSession] = useState<Session | null>(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => !configError);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(configError);
 
@@ -29,7 +47,6 @@ function AdminAuthShell() {
 
   useEffect(() => {
     if (!supabase) {
-      setLoading(false);
       return;
     }
 
@@ -145,6 +162,18 @@ function AdminAuthShell() {
       </Card>
     </div>
   );
+}
+
+function AdminDevBypassShell() {
+  return <AdminValuationLab session={DEV_BYPASS_SESSION} onSignOut={noopSignOut} />;
+}
+
+export function AdminAuthShell() {
+  if (adminDevBypassEnabled) {
+    return <AdminDevBypassShell />;
+  }
+
+  return <AdminSignInShell />;
 }
 
 createRoot(document.getElementById('root')!).render(

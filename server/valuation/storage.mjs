@@ -1,4 +1,72 @@
-import { getSupabaseAdminClient } from './supabase.mjs';
+import { randomUUID } from 'node:crypto';
+import { getSupabaseAdminClient, isAdminDevBypassEnabled, isSupabaseConfigured } from './supabase.mjs';
+import fixturesData from '../../src/valuation-engine/owner-test-fixtures.json' with { type: 'json' };
+import extendedFixturesData from '../../src/valuation-engine/owner-test-fixtures-extended.json' with { type: 'json' };
+import { evaluateSubmission } from './owner-engine.mjs';
+
+const inMemorySubmissions = [];
+const inMemoryScenarios = [];
+const inMemoryInternalObservations = [];
+const scenarioSeedFixtures = [...fixturesData.fixtures, ...extendedFixturesData.fixtures];
+
+const DEFAULT_MEMORY_SCENARIO_DEFS = [
+  {
+    fixtureId: 'owner-manufacturing-two-year',
+    title: 'Scenario · Manufacturing Growth Base',
+    description: 'Food-processing manufacturer with normalization, working capital, and asset-heavy operating characteristics.',
+    tags: ['fixture', 'manufacturing', 'asset-heavy'],
+    notes: 'Good baseline for testing capex, working-capital, and branch-quality effects in manufacturing.',
+  },
+  {
+    fixtureId: 'owner-retail-one-year',
+    title: 'Scenario · Retail One-Year Base',
+    description: 'Retail chain with only one completed year of history and moderate operating resilience pressures.',
+    tags: ['fixture', 'retail', 'one-year-history'],
+    notes: 'Useful for testing lower-history confidence, inventory discipline, and sellability movement.',
+  },
+  {
+    fixtureId: 'owner-recurring-software-two-year',
+    title: 'Scenario · Recurring Software Base',
+    description: 'Subscription-led software business with strong repeatability, visibility, and buyer-transferability.',
+    tags: ['fixture', 'software', 'recurring-revenue'],
+    notes: 'Useful for testing high-quality recurring revenue, pricing power, and transferability upside.',
+  },
+];
+
+function useMemoryStorage() {
+  return isAdminDevBypassEnabled() && !isSupabaseConfigured();
+}
+
+function ensureMemoryScenarioSeeds() {
+  if (!useMemoryStorage() || inMemoryScenarios.length > 0) {
+    return;
+  }
+
+  const now = new Date().toISOString();
+
+  DEFAULT_MEMORY_SCENARIO_DEFS.forEach((definition, index) => {
+    const fixture = scenarioSeedFixtures.find((entry) => entry.id === definition.fixtureId);
+    if (!fixture) {
+      return;
+    }
+
+    const resultSnapshot = evaluateSubmission(fixture.request);
+    inMemoryScenarios.push({
+      id: randomUUID(),
+      title: definition.title,
+      description: definition.description,
+      source_type: 'fixture',
+      source_submission_id: null,
+      tags: definition.tags,
+      notes: definition.notes,
+      answers_snapshot_jsonb: null,
+      request_snapshot_jsonb: fixture.request,
+      result_snapshot_jsonb: resultSnapshot,
+      created_at: now,
+      updated_at: new Date(Date.now() + index).toISOString(),
+    });
+  });
+}
 
 function extractSubmissionSummary(request, result, source) {
   return {
@@ -67,7 +135,44 @@ function mapScenarioRow(row) {
   };
 }
 
+function createMemorySubmission({ source, answersSnapshot, requestSnapshot, resultSnapshot }) {
+  const now = new Date().toISOString();
+  const row = {
+    id: randomUUID(),
+    created_at: now,
+    updated_at: now,
+    answers_snapshot_jsonb: answersSnapshot || null,
+    ...extractSubmissionSummary(requestSnapshot, resultSnapshot, source),
+  };
+  inMemorySubmissions.unshift(row);
+  return mapSubmissionRow(row);
+}
+
+function createMemoryScenario(entry) {
+  const now = new Date().toISOString();
+  const row = {
+    id: randomUUID(),
+    title: entry.title,
+    description: entry.description || '',
+    source_type: entry.sourceType,
+    source_submission_id: entry.sourceSubmissionId || null,
+    tags: entry.tags || [],
+    notes: entry.notes || '',
+    answers_snapshot_jsonb: entry.answersSnapshot || null,
+    request_snapshot_jsonb: entry.requestSnapshot || null,
+    result_snapshot_jsonb: entry.resultSnapshot || null,
+    created_at: now,
+    updated_at: now,
+  };
+  inMemoryScenarios.unshift(row);
+  return mapScenarioRow(row);
+}
+
 export async function createSubmission({ source, answersSnapshot, requestSnapshot, resultSnapshot }) {
+  if (useMemoryStorage()) {
+    return createMemorySubmission({ source, answersSnapshot, requestSnapshot, resultSnapshot });
+  }
+
   const supabase = getSupabaseAdminClient();
   const payload = {
     ...extractSubmissionSummary(requestSnapshot, resultSnapshot, source),
@@ -88,6 +193,10 @@ export async function createSubmission({ source, answersSnapshot, requestSnapsho
 }
 
 export async function listSubmissions() {
+  if (useMemoryStorage()) {
+    return inMemorySubmissions.map(mapSubmissionRow);
+  }
+
   const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from('valuation_submissions')
@@ -102,6 +211,14 @@ export async function listSubmissions() {
 }
 
 export async function getSubmissionById(id) {
+  if (useMemoryStorage()) {
+    const row = inMemorySubmissions.find((entry) => entry.id === id);
+    if (!row) {
+      throw new Error(`Unknown submission: ${id}`);
+    }
+    return mapSubmissionRow(row);
+  }
+
   const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from('valuation_submissions')
@@ -121,6 +238,11 @@ export async function getSubmissionById(id) {
 }
 
 export async function listScenarios() {
+  if (useMemoryStorage()) {
+    ensureMemoryScenarioSeeds();
+    return inMemoryScenarios.map(mapScenarioRow);
+  }
+
   const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from('admin_scenarios')
@@ -135,6 +257,10 @@ export async function listScenarios() {
 }
 
 export async function createScenario(entry) {
+  if (useMemoryStorage()) {
+    return createMemoryScenario(entry);
+  }
+
   const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from('admin_scenarios')
@@ -160,6 +286,31 @@ export async function createScenario(entry) {
 }
 
 export async function updateScenario(id, patch) {
+  if (useMemoryStorage()) {
+    const rowIndex = inMemoryScenarios.findIndex((entry) => entry.id === id);
+    if (rowIndex === -1) {
+      throw new Error(`Unknown scenario: ${id}`);
+    }
+
+    const previous = inMemoryScenarios[rowIndex];
+    const next = {
+      ...previous,
+      ...(patch.title !== undefined ? { title: patch.title } : {}),
+      ...(patch.description !== undefined ? { description: patch.description || '' } : {}),
+      ...(patch.sourceType !== undefined ? { source_type: patch.sourceType } : {}),
+      ...(patch.sourceSubmissionId !== undefined ? { source_submission_id: patch.sourceSubmissionId || null } : {}),
+      ...(patch.tags !== undefined ? { tags: patch.tags || [] } : {}),
+      ...(patch.notes !== undefined ? { notes: patch.notes || '' } : {}),
+      ...(patch.answersSnapshot !== undefined ? { answers_snapshot_jsonb: patch.answersSnapshot || null } : {}),
+      ...(patch.requestSnapshot !== undefined ? { request_snapshot_jsonb: patch.requestSnapshot || null } : {}),
+      ...(patch.resultSnapshot !== undefined ? { result_snapshot_jsonb: patch.resultSnapshot || null } : {}),
+      updated_at: new Date().toISOString(),
+    };
+
+    inMemoryScenarios[rowIndex] = next;
+    return mapScenarioRow(next);
+  }
+
   const supabase = getSupabaseAdminClient();
   const updatePayload = {
     ...(patch.title !== undefined ? { title: patch.title } : {}),
@@ -188,6 +339,10 @@ export async function updateScenario(id, patch) {
 }
 
 export async function listInternalObservations() {
+  if (useMemoryStorage()) {
+    return [...inMemoryInternalObservations];
+  }
+
   const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from('internal_observations')
@@ -203,6 +358,44 @@ export async function listInternalObservations() {
 }
 
 export async function createInternalObservation(entry) {
+  if (useMemoryStorage()) {
+    const row = {
+      id: entry.id,
+      case_id: entry.caseId,
+      company_alias: entry.companyAlias || null,
+      case_type: entry.caseType,
+      case_stage: entry.caseStage,
+      transaction_context: entry.transactionContext,
+      policy_group_id: entry.policyGroupId,
+      level1: entry.level1 || null,
+      level2: entry.level2 || null,
+      primary_state: entry.primaryState || null,
+      metric: entry.metric,
+      basis: entry.basis,
+      value: entry.value,
+      source_kind: entry.sourceKind,
+      size_band: entry.sizeBand,
+      quality: entry.quality,
+      observed_at: entry.observedAt,
+      source_name: entry.sourceName,
+      source_url: entry.sourceUrl || null,
+      source_date: entry.sourceDate || null,
+      notes: entry.notes || null,
+      calibration_eligible: entry.calibrationEligible,
+      entered_by: entry.enteredBy || null,
+      source_submission_id: entry.sourceSubmissionId || null,
+      source_submission_timestamp: entry.sourceSubmissionTimestamp || null,
+      approval_status: entry.approvalStatus,
+      approval_notes: entry.approvalNotes || null,
+      approved_by: entry.approvedBy || null,
+      approved_at: entry.approvedAt || null,
+      created_at: entry.createdAt,
+      updated_at: entry.updatedAt,
+    };
+    inMemoryInternalObservations.unshift(row);
+    return row;
+  }
+
   const supabase = getSupabaseAdminClient();
   const payload = {
     id: entry.id,
@@ -252,6 +445,49 @@ export async function createInternalObservation(entry) {
 }
 
 export async function updateInternalObservation(id, nextEntry) {
+  if (useMemoryStorage()) {
+    const rowIndex = inMemoryInternalObservations.findIndex((entry) => entry.id === id);
+    if (rowIndex === -1) {
+      throw new Error(`Unknown internal observation: ${id}`);
+    }
+
+    const next = {
+      ...inMemoryInternalObservations[rowIndex],
+      case_id: nextEntry.caseId,
+      company_alias: nextEntry.companyAlias || null,
+      case_type: nextEntry.caseType,
+      case_stage: nextEntry.caseStage,
+      transaction_context: nextEntry.transactionContext,
+      policy_group_id: nextEntry.policyGroupId,
+      level1: nextEntry.level1 || null,
+      level2: nextEntry.level2 || null,
+      primary_state: nextEntry.primaryState || null,
+      metric: nextEntry.metric,
+      basis: nextEntry.basis,
+      value: nextEntry.value,
+      source_kind: nextEntry.sourceKind,
+      size_band: nextEntry.sizeBand,
+      quality: nextEntry.quality,
+      observed_at: nextEntry.observedAt,
+      source_name: nextEntry.sourceName,
+      source_url: nextEntry.sourceUrl || null,
+      source_date: nextEntry.sourceDate || null,
+      notes: nextEntry.notes || null,
+      calibration_eligible: nextEntry.calibrationEligible,
+      entered_by: nextEntry.enteredBy || null,
+      source_submission_id: nextEntry.sourceSubmissionId || null,
+      source_submission_timestamp: nextEntry.sourceSubmissionTimestamp || null,
+      approval_status: nextEntry.approvalStatus,
+      approval_notes: nextEntry.approvalNotes || null,
+      approved_by: nextEntry.approvedBy || null,
+      approved_at: nextEntry.approvedAt || null,
+      updated_at: nextEntry.updatedAt,
+    };
+
+    inMemoryInternalObservations[rowIndex] = next;
+    return next;
+  }
+
   const supabase = getSupabaseAdminClient();
   const payload = {
     case_id: nextEntry.caseId,
@@ -300,6 +536,15 @@ export async function updateInternalObservation(id, nextEntry) {
 }
 
 export async function deleteInternalObservation(id) {
+  if (useMemoryStorage()) {
+    const rowIndex = inMemoryInternalObservations.findIndex((entry) => entry.id === id);
+    if (rowIndex === -1) {
+      throw new Error(`Unknown internal observation: ${id}`);
+    }
+    const [removed] = inMemoryInternalObservations.splice(rowIndex, 1);
+    return removed;
+  }
+
   const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from('internal_observations')
