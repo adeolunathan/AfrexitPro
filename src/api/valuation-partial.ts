@@ -67,6 +67,9 @@ export interface PartialValuationResult {
   preciseAdjustedValue: number;
   preciseLowEstimate: number;
   preciseHighEstimate: number;
+  fundamentalEnterpriseMid?: number | null;
+  achievableEnterpriseMid?: number | null;
+  bridgeDelta?: number | null;
   readinessScore: number;
   confidence: 'very_low' | 'low' | 'medium' | 'high' | 'very_high';
   confidenceScore: number;
@@ -76,6 +79,7 @@ export interface PartialValuationResult {
   phase: string;
   nextPhase: string;
   primaryMethod: string | null;
+  primaryMethodDetail?: string | null;
   scorecard: PartialScorecardSummary | null;
   qualitativeAdjustments: PartialQualitativeAdjustments | null;
   factorCards: PartialFactorCard[];

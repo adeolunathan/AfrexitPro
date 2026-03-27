@@ -9,6 +9,7 @@ import { detectBranches, getBranchQuestions, type BranchModule, type BranchQuest
 import { formatRange } from '@/api/valuation-partial';
 import { ConfidenceMeter } from '@/components/ConfidenceMeter';
 import { LiveEstimateDebugPanel } from '@/components/LiveEstimateDebugPanel';
+import { ComboboxInput } from '@/components/ComboboxInput';
 import {
   FinancialSpreadsheet,
   buildFinancialPeriodsFromAnswers,
@@ -107,6 +108,8 @@ export function ContinuousQuestionnaire({
   const shouldAutoAdvance = useCallback((question: Question | BranchQuestion): boolean => {
     // Dropdowns with single selection auto-advance
     if (question.type === 'select') return true;
+    // Combobox auto-advances on selection
+    if (question.type === 'combobox') return true;
     // Checkboxes auto-advance
     if (question.type === 'checkbox') return true;
     // Text inputs, textareas, currency, financial table do NOT auto-advance
@@ -536,7 +539,7 @@ export function ContinuousQuestionnaire({
     // Render answered question (compact view with edit option)
     if (!isActive && !isEditing) {
       let displayValue: string;
-      if (q.type === 'select') {
+      if (q.type === 'select' || q.type === 'combobox') {
         const optionList = q.id === 'level2' ? level2Options : questionCopy.options || q.options;
         const option = optionList?.find(o => o.value === value);
         displayValue = option?.label || String(value || '');
@@ -582,7 +585,14 @@ export function ContinuousQuestionnaire({
         </div>
 
         <div className="w-full">
-          {q.type === 'select' ? (
+          {q.type === 'combobox' ? (
+            <ComboboxInput
+              value={String(value || '')}
+              onChange={(nextValue) => handleAnswer(q, nextValue, true)}
+              options={questionCopy.options || q.options || []}
+              placeholder={q.placeholder ?? 'Type to search…'}
+            />
+          ) : q.type === 'select' ? (
             <OptionListInput
               value={String(value || '')}
               onChange={(nextValue) => handleAnswer(q, nextValue, true)}
@@ -706,7 +716,7 @@ export function ContinuousQuestionnaire({
   const renderDebugToggle = () =>
     debugAvailable ? (
       <div className="mb-4 flex items-center justify-end gap-3">
-        <span className="text-xs font-medium uppercase tracking-[0.18em] text-slate-500">Internal live debug</span>
+        <span className="text-[11px] font-medium uppercase tracking-[0.2em] text-slate-400">Analyst view</span>
         <Switch checked={debugEnabled} onCheckedChange={setDebugEnabled} />
       </div>
     ) : null;
@@ -729,7 +739,7 @@ export function ContinuousQuestionnaire({
       <div className="min-h-screen bg-gray-50 px-4 py-8">
         <div className="mx-auto max-w-6xl">
           {renderDebugToggle()}
-          <div className={debugEnabled && preliminaryResult ? 'xl:grid xl:grid-cols-[minmax(0,1fr)_360px] xl:items-start xl:gap-8' : ''}>
+          <div className={debugEnabled && preliminaryResult ? 'xl:grid xl:grid-cols-[minmax(0,1fr)_380px] xl:items-start xl:gap-8' : ''}>
             <div>
               {/* Previous questions summary */}
               <div className="mb-8 space-y-4">
@@ -841,10 +851,16 @@ export function ContinuousQuestionnaire({
         </div>
         <div className="relative h-8 w-full overflow-hidden bg-slate-300">
           <div
-            className="h-full bg-purple-600 transition-all duration-300"
+            className="absolute inset-y-0 left-0 bg-purple-600 transition-[width] duration-300"
             style={{ width: `${progress}%` }}
           />
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center text-sm font-semibold text-white">
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center text-sm font-bold text-slate-900">
+            {progress}% Complete
+          </div>
+          <div
+            className="pointer-events-none absolute inset-0 flex items-center justify-center text-sm font-bold text-white"
+            style={{ clipPath: `inset(0 ${Math.max(0, 100 - progress)}% 0 0)` }}
+          >
             {progress}% Complete
           </div>
         </div>
@@ -853,7 +869,7 @@ export function ContinuousQuestionnaire({
       {/* Main Content */}
       <main className="mx-auto max-w-7xl px-4 py-8">
         {renderDebugToggle()}
-        <div className={debugEnabled && preliminaryResult ? 'xl:grid xl:grid-cols-[minmax(0,1fr)_360px] xl:items-start xl:gap-8' : ''}>
+        <div className={debugEnabled && preliminaryResult ? 'xl:grid xl:grid-cols-[minmax(0,1fr)_380px] xl:items-start xl:gap-8' : ''}>
           <div>
             {debugEnabled && preliminaryResult ? (
               <div className="mb-6 xl:hidden">

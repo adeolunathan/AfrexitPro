@@ -26,6 +26,32 @@ function getLatestFinancialSignal(answers) {
   };
 }
 
+function getFinancialPeriodSignals(answers) {
+  const periods = Array.isArray(answers?._financialPeriods) ? answers._financialPeriods : [];
+  const getSignal = (id, revenueFallback, profitFallback) => {
+    const period = periods.find(
+      (item) => item && typeof item === 'object' && String(item.id || '') === id
+    );
+    if (period) {
+      return {
+        revenue: toNumber(period.revenue),
+        operatingProfit: toNumber(period.operatingProfit),
+      };
+    }
+
+    return {
+      revenue: toNumber(revenueFallback),
+      operatingProfit: toNumber(profitFallback),
+    };
+  };
+
+  return {
+    latest: getSignal('latest', answers?.revenueLatest, answers?.operatingProfitLatest),
+    prior1: getSignal('prior1', answers?.revenuePrevious1 ?? answers?.revenuePrev1, answers?.operatingProfitPrevious1 ?? answers?.operatingProfitPrev1),
+    prior2: getSignal('prior2', answers?.revenuePrevious2 ?? answers?.revenuePrev2, answers?.operatingProfitPrevious2 ?? answers?.operatingProfitPrev2),
+  };
+}
+
 function hasMinimumPreviewInputs(answers) {
   const level1 = String(answers?.level1 ?? '').trim();
   const level2 = String(answers?.level2 ?? '').trim();
@@ -67,7 +93,48 @@ function mapConfidenceLevel(score) {
 }
 
 function buildPreviewCanonicalRequest(answers) {
-  const request = adaptOwnerRequest(answers || {});
+  const safeAnswers = answers || {};
+  const periodSignals = getFinancialPeriodSignals(safeAnswers);
+  const previewAnswers = {
+    ...safeAnswers,
+    revenueLatest:
+      String(safeAnswers.revenueLatest ?? '').trim() !== ''
+        ? safeAnswers.revenueLatest
+        : periodSignals.latest.revenue > 0
+          ? String(periodSignals.latest.revenue)
+          : safeAnswers.revenueLatest,
+    operatingProfitLatest:
+      String(safeAnswers.operatingProfitLatest ?? '').trim() !== ''
+        ? safeAnswers.operatingProfitLatest
+        : periodSignals.latest.operatingProfit !== 0
+          ? String(periodSignals.latest.operatingProfit)
+          : safeAnswers.operatingProfitLatest,
+    revenuePrevious1:
+      String(safeAnswers.revenuePrevious1 ?? safeAnswers.revenuePrev1 ?? '').trim() !== ''
+        ? (safeAnswers.revenuePrevious1 ?? safeAnswers.revenuePrev1)
+        : periodSignals.prior1.revenue > 0
+          ? String(periodSignals.prior1.revenue)
+          : safeAnswers.revenuePrevious1,
+    operatingProfitPrevious1:
+      String(safeAnswers.operatingProfitPrevious1 ?? safeAnswers.operatingProfitPrev1 ?? '').trim() !== ''
+        ? (safeAnswers.operatingProfitPrevious1 ?? safeAnswers.operatingProfitPrev1)
+        : periodSignals.prior1.operatingProfit !== 0
+          ? String(periodSignals.prior1.operatingProfit)
+          : safeAnswers.operatingProfitPrevious1,
+    revenuePrevious2:
+      String(safeAnswers.revenuePrevious2 ?? safeAnswers.revenuePrev2 ?? '').trim() !== ''
+        ? (safeAnswers.revenuePrevious2 ?? safeAnswers.revenuePrev2)
+        : periodSignals.prior2.revenue > 0
+          ? String(periodSignals.prior2.revenue)
+          : safeAnswers.revenuePrevious2,
+    operatingProfitPrevious2:
+      String(safeAnswers.operatingProfitPrevious2 ?? safeAnswers.operatingProfitPrev2 ?? '').trim() !== ''
+        ? (safeAnswers.operatingProfitPrevious2 ?? safeAnswers.operatingProfitPrev2)
+        : periodSignals.prior2.operatingProfit !== 0
+          ? String(periodSignals.prior2.operatingProfit)
+          : safeAnswers.operatingProfitPrevious2,
+  };
+  const request = adaptOwnerRequest(previewAnswers);
   request.company.businessName = request.company.businessName || 'Your Business';
   request.company.firstName = request.company.firstName || 'Business Owner';
   request.company.email = request.company.email || 'preview@afrexit.local';
@@ -123,6 +190,48 @@ function buildFactorCards(result) {
   }));
 }
 
+function formatDriverMetricLabel(value) {
+  switch (value) {
+    case 'adjustedEbit':
+      return 'adjusted EBIT';
+    case 'adjustedEbitda':
+      return 'adjusted EBITDA';
+    case 'sde':
+      return 'SDE';
+    case 'revenue':
+      return 'revenue';
+    default:
+      return String(value || '').replaceAll('_', ' ');
+  }
+}
+
+function buildPrimaryMethodDetail(result) {
+  const primaryMethod = result?.selectedMethods?.primaryMethod;
+  if (!primaryMethod) return null;
+
+  const ledgerEntry = result?.audit?.calculationLedger?.approaches?.find((approach) => approach.method === primaryMethod);
+  if (!ledgerEntry || typeof ledgerEntry.driverValue !== 'number' || !Number.isFinite(ledgerEntry.driverValue)) {
+    return primaryMethod.replaceAll('_', ' ');
+  }
+
+  const preAdjustmentMid = ledgerEntry.preAdjustment?.mid;
+  if (typeof preAdjustmentMid !== 'number' || !Number.isFinite(preAdjustmentMid) || preAdjustmentMid === 0) {
+    return primaryMethod.replaceAll('_', ' ');
+  }
+
+  if (primaryMethod === 'market_multiple' && ledgerEntry.driverValue !== 0) {
+    const multiple = preAdjustmentMid / ledgerEntry.driverValue;
+    return `market multiple (${multiple.toFixed(2)}x ${formatDriverMetricLabel(ledgerEntry.metric)})`;
+  }
+
+  if (primaryMethod === 'capitalized_earnings') {
+    const capRate = ledgerEntry.driverValue / preAdjustmentMid;
+    return `capitalized earnings (${(capRate * 100).toFixed(1)}% cap rate on ${formatDriverMetricLabel(ledgerEntry.metric)})`;
+  }
+
+  return primaryMethod.replaceAll('_', ' ');
+}
+
 export function calculatePartialValuation(answers) {
   const phase = determinePhase(answers);
   const nextPhase = getNextPhase(phase);
@@ -143,9 +252,13 @@ export function calculatePartialValuation(answers) {
       phase: 'initial',
       nextPhase: 'anchor',
       primaryMethod: null,
+      primaryMethodDetail: null,
       scorecard: null,
       qualitativeAdjustments: null,
       factorCards: [],
+      fundamentalEnterpriseMid: null,
+      achievableEnterpriseMid: null,
+      bridgeDelta: null,
       sourceModel: 'owner_engine',
     };
   }
@@ -181,9 +294,13 @@ export function calculatePartialValuation(answers) {
     phase,
     nextPhase,
     primaryMethod: result.selectedMethods.primaryMethod,
+    primaryMethodDetail: buildPrimaryMethodDetail(result),
     scorecard: result.summary.scorecard,
     qualitativeAdjustments,
     factorCards: buildFactorCards(result),
+    fundamentalEnterpriseMid: result.audit?.calculationLedger?.bridge?.fundamentalEnterpriseMid ?? null,
+    achievableEnterpriseMid: result.audit?.calculationLedger?.bridge?.achievableEnterpriseMid ?? null,
+    bridgeDelta: result.audit?.calculationLedger?.bridge?.bridgeDelta ?? null,
     sourceModel: 'owner_engine',
   };
 }

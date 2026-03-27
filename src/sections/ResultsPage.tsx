@@ -45,6 +45,46 @@ function formatMethodLabel(value: string) {
   return value.replaceAll('_', ' ');
 }
 
+function formatDriverMetricLabel(value: string) {
+  switch (value) {
+    case 'adjustedEbit':
+      return 'adjusted EBIT';
+    case 'adjustedEbitda':
+      return 'adjusted EBITDA';
+    case 'sde':
+      return 'SDE';
+    case 'revenue':
+      return 'revenue';
+    default:
+      return formatMethodLabel(value);
+  }
+}
+
+function formatMethodWithBasis(result: ResultData, method: string) {
+  const label = formatMethodLabel(method);
+  const ledgerEntry = result.audit.calculationLedger?.approaches?.find((approach) => approach.method === method);
+  if (!ledgerEntry || typeof ledgerEntry.driverValue !== 'number' || !Number.isFinite(ledgerEntry.driverValue)) {
+    return label;
+  }
+
+  const preAdjustmentMid = ledgerEntry.preAdjustment?.mid;
+  if (typeof preAdjustmentMid !== 'number' || !Number.isFinite(preAdjustmentMid) || preAdjustmentMid === 0) {
+    return label;
+  }
+
+  if (method === 'market_multiple' && ledgerEntry.driverValue !== 0) {
+    const multiple = preAdjustmentMid / ledgerEntry.driverValue;
+    return `${label} (${multiple.toFixed(2)}x ${formatDriverMetricLabel(ledgerEntry.metric)})`;
+  }
+
+  if (method === 'capitalized_earnings') {
+    const capRate = ledgerEntry.driverValue / preAdjustmentMid;
+    return `${label} (${(capRate * 100).toFixed(1)}% cap rate on ${formatDriverMetricLabel(ledgerEntry.metric)})`;
+  }
+
+  return label;
+}
+
 function formatAdjustmentDirection(value: string) {
   if (value === 'add_back') return 'Add-back';
   if (value === 'remove') return 'Remove';
@@ -178,9 +218,9 @@ export function ResultsPage({ result, onRestart, onEdit }: ResultsPageProps) {
             <div className="mt-5 rounded-2xl bg-gray-50 p-4 text-sm leading-7 text-gray-700">
               <div className="text-xs font-medium uppercase tracking-[0.18em] text-gray-500">Method policy</div>
               <div className="mt-2">Policy group: {result.classification.policyGroupId}</div>
-              <div>Primary method: {formatMethodLabel(result.selectedMethods.primaryMethod)}</div>
+              <div>Primary method: {formatMethodWithBasis(result, result.selectedMethods.primaryMethod)}</div>
               {result.selectedMethods.secondaryMethods.length > 0 ? (
-                <div>Secondary methods: {result.selectedMethods.secondaryMethods.map(formatMethodLabel).join(', ')}</div>
+                <div>Secondary methods: {result.selectedMethods.secondaryMethods.map((method) => formatMethodWithBasis(result, method)).join(', ')}</div>
               ) : null}
               <div className="mt-3 text-xs font-medium uppercase tracking-[0.18em] text-gray-500">Qualitative Adjustments</div>
               <div className="mt-2">Primary state bucket: {qualitativeAdjustments?.geographyBucket || 'N/A'}</div>
@@ -423,9 +463,9 @@ export function ResultsPage({ result, onRestart, onEdit }: ResultsPageProps) {
           ) : null}
           <div className="mb-5 text-sm text-slate-400">Method-specific normalization impact</div>
           <div className="grid gap-3 lg:grid-cols-3">
-            {methodNormalizationImpacts.map((impact) => (
+              {methodNormalizationImpacts.map((impact) => (
               <div key={impact.method} className="rounded-2xl bg-white/5 p-4 text-sm leading-7 text-slate-300">
-                <div className="font-medium text-white">{formatMethodLabel(impact.method)}</div>
+                <div className="font-medium text-white">{formatMethodWithBasis(result, impact.method)}</div>
                 <div className="text-xs uppercase tracking-[0.18em] text-slate-500">{formatMethodLabel(impact.driverMetric)}</div>
                 <div className="mt-3 grid gap-3">
                   <div className="rounded-xl bg-slate-950/30 p-3">

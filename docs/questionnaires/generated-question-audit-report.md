@@ -1,6 +1,6 @@
 # Generated Question Audit Report
 
-Generated at: 2026-03-27T15:01:03.081Z
+Generated at: 2026-03-27T17:21:58.496Z
 
 ## Coverage
 
@@ -36,14 +36,14 @@ Generated at: 2026-03-27T15:01:03.081Z
 | `financeTracking` | indirect_readiness_confidence_lever | `financials.sourceQuality.bookkeepingQuality` | Retail / commerce baseline | `summary.confidenceScore` | passing | ₦60.00m | 43.479 | 39.629 | — |
 | `financialDebt` | direct_value_lever | `bridge.interestBearingDebt` | Retail / commerce baseline | `summary.adjustedValue` | passing | ₦60.00m | 72.266 | 41.201 | — |
 | `firstName` | operational_exception | `company.firstName` | custom | `n/a` | context-only by design | — | — | — | — |
-| `founderRevenueDependence` | indirect_readiness_confidence_lever | `operatingProfile.founderRevenueDependence` | Project / service baseline | `summary.readinessScore` | passing | ₦181.00m | 73.625 | 71.375 | — |
+| `founderRevenueDependence` | indirect_readiness_confidence_lever | `operatingProfile.founderRevenueDependence` | Project / service baseline | `summary.readinessScore` | passing | ₦127.00m | 73.625 | 71.375 | — |
 | `fxExposure` | direct_value_lever | `operatingProfile.fxExposure` | Retail / commerce baseline | `summary.adjustedValue` | passing | ₦60.00m | 59.84 | 56.535 | — |
 | `grossMarginStability` | direct_value_lever | `operatingProfile.grossMarginStability` | Retail / commerce baseline | `summary.adjustedValue` | passing | ₦60.00m | 60.192 | 58.487 | — |
 | `growthPotential` | indirect_readiness_confidence_lever | `operatingProfile.growthOutlook` | Retail / commerce baseline | `summary.confidenceScore` | passing | ₦60.00m | 43.312 | 41.846 | — |
 | `industryFit` | indirect_readiness_confidence_lever | `classification.industryFit` | Retail / commerce baseline | `summary.confidenceScore` | passing | ₦60.00m | 42.642 | 41.504 | — |
 | `inventoryProfile` | indirect_readiness_confidence_lever | `operatingProfile.inventoryProfile` | Retail / commerce baseline | `summary.confidenceScore` | passing | ₦60.00m | 42.505 | 42.303 | — |
 | `inventoryValueLatest` | direct_value_lever | `financials.historicals[0].inventory` | Manufacturing baseline | `summary.adjustedValue` | passing | ₦99.00m | 103.438 | 64.753 | — |
-| `keyPersonDependencies` | direct_value_lever | `operatingProfile.keyPersonDependencies` | Project / service baseline | `summary.adjustedValue` | passing | ₦181.00m | 184.004 | 178.78 | — |
+| `keyPersonDependencies` | direct_value_lever | `operatingProfile.keyPersonDependencies` | Project / service baseline | `summary.adjustedValue` | passing | ₦127.00m | 128.947 | 125.399 | — |
 | `largestSupplierShare` | indirect_readiness_confidence_lever | `operatingProfile.largestSupplierShare` | Retail / commerce baseline | `summary.confidenceScore` | passing | ₦60.00m | 42.379 | 42.246 | — |
 | `lastName` | operational_exception | `company.lastName` | custom | `n/a` | context-only by design | — | — | — | — |
 | `legalStructure` | indirect_readiness_confidence_lever | `company.legalStructure` | Local owner-led service baseline | `summary.readinessScore` | passing | ₦75.00m | 68.425 | 66.675 | — |
@@ -70,7 +70,7 @@ Generated at: 2026-03-27T15:01:03.081Z
 | `previousOffer` | operational_exception | `engagement.previousOfferStatus` | custom | `n/a` | context-only by design | — | — | — | — |
 | `previousOfferAmount` | operational_exception | `engagement.previousOfferAmount` | custom | `n/a` | context-only by design | — | — | — | — |
 | `pricingPower` | direct_value_lever | `operatingProfile.pricingPower` | Retail / commerce baseline | `summary.adjustedValue` | passing | ₦60.00m | 62.158 | 59.84 | — |
-| `pricingPowerVsMarket` | direct_value_lever | `operatingProfile.pricingPowerVsMarket` | Project / service baseline | `summary.adjustedValue` | passing | ₦181.00m | 184.256 | 179.201 | — |
+| `pricingPowerVsMarket` | direct_value_lever | `operatingProfile.pricingPowerVsMarket` | Project / service baseline | `summary.adjustedValue` | passing | ₦127.00m | 129.119 | 125.685 | — |
 | `primaryState` | direct_value_lever | `company.primaryState` | Retail / commerce baseline | `summary.adjustedValue` | passing | ₦60.00m | 59.84 | 56.798 | — |
 | `privateExpensesAmount` | direct_value_lever | `normalization.schedule.private_expense_addbacks` | Retail / commerce baseline | `summary.adjustedValue` | passing | ₦60.00m | 61.242 | 59.403 | — |
 | `processDocumentation` | indirect_readiness_confidence_lever | `readiness.processDocumentation` | Local owner-led service baseline | `summary.readinessScore` | passing | ₦75.00m | 72.3 | 60.675 | — |
@@ -81,16 +81,16 @@ Generated at: 2026-03-27T15:01:03.081Z
 | `quantities` | direct_value_lever | `operatingProfile.quantities` | Manufacturing baseline | `summary.adjustedValue` | passing | ₦99.00m | 99.755 | 97.649 | — |
 | `rawMaterialPriceExposure` | direct_value_lever | `operatingProfile.rawMaterialPriceExposure` | Manufacturing baseline | `summary.adjustedValue` | passing | ₦99.00m | 100.67 | 98.23 | — |
 | `receivablesLatest` | direct_value_lever | `financials.historicals[0].receivables` | Retail / commerce baseline | `summary.adjustedValue` | passing | ₦60.00m | 82.579 | 55.509 | — |
-| `recurringRevenueShare` | indirect_readiness_confidence_lever | `operatingProfile.recurringRevenueShare` | Project / service baseline | `summary.readinessScore` | passing | ₦181.00m | 73.325 | 71.675 | — |
+| `recurringRevenueShare` | indirect_readiness_confidence_lever | `operatingProfile.recurringRevenueShare` | Project / service baseline | `summary.readinessScore` | passing | ₦127.00m | 73.325 | 71.675 | — |
 | `relatedPartyCompPaid` | direct_value_lever | `normalization.schedule.related_party_comp_actual` | Local owner-led service baseline | `summary.adjustedValue` | passing | ₦75.00m | 94.963 | 74.647 | — |
 | `relatedPartyRentPaid` | direct_value_lever | `normalization.schedule.related_party_rent_actual` | Retail / commerce baseline | `summary.adjustedValue` | passing | ₦60.00m | 63.978 | 59.84 | — |
 | `replacementDifficulty` | indirect_readiness_confidence_lever | `readiness.replacementDifficulty` | Local owner-led service baseline | `summary.readinessScore` | passing | ₦75.00m | 69.925 | 67.825 | — |
 | `respondentRole` | operational_exception | `meta.respondentRole` | custom | `n/a` | context-only by design | — | — | — | — |
 | `revenueLatest` | direct_value_lever | `financials.historicals[0].revenue` | Retail / commerce baseline | `summary.adjustedValue` | passing | ₦60.00m | 66.771 | 52.909 | — |
-| `revenueVisibility` | indirect_readiness_confidence_lever | `operatingProfile.revenueVisibility` | Project / service baseline | `summary.readinessScore` | passing | ₦181.00m | 73.925 | 72.125 | — |
+| `revenueVisibility` | indirect_readiness_confidence_lever | `operatingProfile.revenueVisibility` | Project / service baseline | `summary.readinessScore` | passing | ₦127.00m | 73.925 | 72.125 | — |
 | `shareholderLoans` | direct_value_lever | `bridge.shareholderLoans` | Retail / commerce baseline | `summary.adjustedValue` | passing | ₦60.00m | 59.84 | 39.84 | — |
 | `shrinkageSpoilage` | direct_value_lever | `operatingProfile.shrinkageSpoilage` | Retail / commerce baseline | `summary.adjustedValue` | passing | ₦60.00m | 60.381 | 58.622 | — |
-| `staffUtilization` | direct_value_lever | `operatingProfile.staffUtilization` | Project / service baseline | `summary.adjustedValue` | passing | ₦181.00m | 184.256 | 179.623 | — |
+| `staffUtilization` | direct_value_lever | `operatingProfile.staffUtilization` | Project / service baseline | `summary.adjustedValue` | passing | ₦127.00m | 129.119 | 125.971 | — |
 | `supplierConcentration` | direct_value_lever | `operatingProfile.supplierConcentration` | Retail / commerce baseline | `summary.adjustedValue` | passing | ₦60.00m | 60.381 | 58.622 | — |
 | `supplierReplacementTime` | indirect_readiness_confidence_lever | `operatingProfile.supplierReplacementTime` | Retail / commerce baseline | `summary.confidenceScore` | passing | ₦60.00m | 42.379 | 42.246 | — |
 | `termsAccepted` | operational_exception | `meta.acknowledged` | custom | `n/a` | context-only by design | — | — | — | — |

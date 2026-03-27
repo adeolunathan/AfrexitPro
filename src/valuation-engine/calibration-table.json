@@ -292,11 +292,11 @@
           "mid": 0.3239,
           "high": 0.3567
         },
-        "marketMetric": "revenue",
+        "marketMetric": "adjustedEbitda",
         "marketMultipleRange": {
-          "low": 1.0205,
-          "mid": 1.085,
-          "high": 1.408
+          "low": 3.2,
+          "mid": 4.1,
+          "high": 5.2
         },
         "assetFloorRevenuePct": 0.08,
         "workingCapitalTargetPct": 0.05,

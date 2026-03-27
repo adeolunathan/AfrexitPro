@@ -439,6 +439,15 @@ function formatSignedMillionsDelta(value: number | null | undefined) {
   return `${value > 0 ? '+' : '-'}${formatMillionsPrecise(Math.abs(value))}`;
 }
 
+function formatSignedNumericDelta(value: number | null | undefined, maximumFractionDigits = 1, suffix = '') {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return '—';
+  if (value === 0) return `0${suffix}`;
+  return `${value > 0 ? '+' : ''}${value.toLocaleString('en-NG', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits,
+  })}${suffix}`;
+}
+
 function isMonotonic(rows: SensitivityRow[], direction: 'asc' | 'desc') {
   const values = rows.map(getMetricValue);
   if (values.some((value) => !Number.isFinite(value))) {
@@ -1715,8 +1724,14 @@ export function AdminValuationLab({
                         <th className="px-3 py-2 font-medium">Baseline adjusted value</th>
                         <th className="px-3 py-2 font-medium">Adjusted value Δ</th>
                         <th className="px-3 py-2 font-medium">Adjusted value</th>
+                        {showSensitivityReadinessColumn ? <th className="px-3 py-2 font-medium">Baseline readiness</th> : null}
+                        {showSensitivityReadinessColumn ? <th className="px-3 py-2 font-medium">Readiness Δ</th> : null}
                         {showSensitivityReadinessColumn ? <th className="px-3 py-2 font-medium">Readiness</th> : null}
+                        {showSensitivityConfidenceColumn ? <th className="px-3 py-2 font-medium">Baseline confidence</th> : null}
+                        {showSensitivityConfidenceColumn ? <th className="px-3 py-2 font-medium">Confidence Δ</th> : null}
                         {showSensitivityConfidenceColumn ? <th className="px-3 py-2 font-medium">Confidence</th> : null}
+                        {showSensitivityRangeWidthColumn ? <th className="px-3 py-2 font-medium">Baseline range width</th> : null}
+                        {showSensitivityRangeWidthColumn ? <th className="px-3 py-2 font-medium">Range width Δ</th> : null}
                         {showSensitivityRangeWidthColumn ? <th className="px-3 py-2 font-medium">Range width</th> : null}
                         <th className="px-3 py-2 font-medium">Market factor</th>
                         <th className="px-3 py-2 font-medium">Baseline {sensitivityNormalizationMetric.label}</th>
@@ -1796,8 +1811,84 @@ export function AdminValuationLab({
                             )}
                           </td>
                           <td className="px-3 py-3 align-top">{formatMillionsPrecise(row.summary.preciseAdjustedValue ?? row.summary.adjustedValue)}</td>
+                          {showSensitivityReadinessColumn ? (
+                            <td className="px-3 py-3 align-top">
+                              {sensitivityBaselineRow ? sensitivityBaselineRow.summary.readinessScore.toFixed(1) : '—'}
+                            </td>
+                          ) : null}
+                          {showSensitivityReadinessColumn ? (
+                            <td className="px-3 py-3 align-top">
+                              {sensitivityBaselineRow
+                                ? (
+                                    <span
+                                      className={
+                                        row.summary.readinessScore > sensitivityBaselineRow.summary.readinessScore
+                                          ? 'text-emerald-600'
+                                          : row.summary.readinessScore < sensitivityBaselineRow.summary.readinessScore
+                                            ? 'text-rose-600'
+                                            : 'text-slate-600'
+                                      }
+                                    >
+                                      {formatSignedNumericDelta(row.summary.readinessScore - sensitivityBaselineRow.summary.readinessScore, 1)}
+                                    </span>
+                                  )
+                                : '—'}
+                            </td>
+                          ) : null}
                           {showSensitivityReadinessColumn ? <td className="px-3 py-3 align-top">{row.summary.readinessScore.toFixed(1)}</td> : null}
+                          {showSensitivityConfidenceColumn ? (
+                            <td className="px-3 py-3 align-top">
+                              {sensitivityBaselineRow ? sensitivityBaselineRow.summary.confidenceScore.toFixed(1) : '—'}
+                            </td>
+                          ) : null}
+                          {showSensitivityConfidenceColumn ? (
+                            <td className="px-3 py-3 align-top">
+                              {sensitivityBaselineRow
+                                ? (
+                                    <span
+                                      className={
+                                        row.summary.confidenceScore > sensitivityBaselineRow.summary.confidenceScore
+                                          ? 'text-emerald-600'
+                                          : row.summary.confidenceScore < sensitivityBaselineRow.summary.confidenceScore
+                                            ? 'text-rose-600'
+                                            : 'text-slate-600'
+                                      }
+                                    >
+                                      {formatSignedNumericDelta(row.summary.confidenceScore - sensitivityBaselineRow.summary.confidenceScore, 1)}
+                                    </span>
+                                  )
+                                : '—'}
+                            </td>
+                          ) : null}
                           {showSensitivityConfidenceColumn ? <td className="px-3 py-3 align-top">{row.summary.confidenceScore.toFixed(1)}</td> : null}
+                          {showSensitivityRangeWidthColumn ? (
+                            <td className="px-3 py-3 align-top">
+                              {sensitivityBaselineRow ? `${sensitivityBaselineRow.result.confidenceAssessment.rangeWidthPct.toFixed(1)}%` : '—'}
+                            </td>
+                          ) : null}
+                          {showSensitivityRangeWidthColumn ? (
+                            <td className="px-3 py-3 align-top">
+                              {sensitivityBaselineRow
+                                ? (
+                                    <span
+                                      className={
+                                        row.result.confidenceAssessment.rangeWidthPct < sensitivityBaselineRow.result.confidenceAssessment.rangeWidthPct
+                                          ? 'text-emerald-600'
+                                          : row.result.confidenceAssessment.rangeWidthPct > sensitivityBaselineRow.result.confidenceAssessment.rangeWidthPct
+                                            ? 'text-rose-600'
+                                            : 'text-slate-600'
+                                      }
+                                    >
+                                      {formatSignedNumericDelta(
+                                        row.result.confidenceAssessment.rangeWidthPct - sensitivityBaselineRow.result.confidenceAssessment.rangeWidthPct,
+                                        1,
+                                        '%'
+                                      )}
+                                    </span>
+                                  )
+                                : '—'}
+                            </td>
+                          ) : null}
                           {showSensitivityRangeWidthColumn ? (
                             <td className="px-3 py-3 align-top">{row.result.confidenceAssessment.rangeWidthPct.toFixed(1)}%</td>
                           ) : null}

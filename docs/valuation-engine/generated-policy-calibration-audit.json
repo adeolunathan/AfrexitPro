@@ -1,0 +1,1076 @@
+{
+  "summary": {
+    "generatedAt": "2026-03-27T17:21:20.655Z",
+    "totalPolicyGroups": 20,
+    "groupsWithCalibrationOverrides": 20,
+    "marketMetricBasisOverrides": 13,
+    "capitalizedMetricBasisOverrides": 13,
+    "highPriorityGroups": [
+      "PG_AGRI_PRIMARY",
+      "PG_AGRO_PROCESSING",
+      "PG_CONTRACT_MANUFACTURING",
+      "PG_CREATIVE_AGENCY",
+      "PG_EDUCATION_ENROLLMENT",
+      "PG_HEALTHCARE_DISTRIBUTION",
+      "PG_HEALTHCARE_SERVICE",
+      "PG_HOSPITALITY_VENUE",
+      "PG_LOGISTICS_ASSET",
+      "PG_PROFESSIONAL_PLATFORM",
+      "PG_PROJECT_CONTRACTING",
+      "PG_REAL_ESTATE_SERVICE",
+      "PG_RETAIL_COMMERCE"
+    ],
+    "fixedNowGroups": [
+      "PG_PROJECT_SOFTWARE_IT"
+    ]
+  },
+  "rows": [
+    {
+      "id": "PG_PROJECT_SOFTWARE_IT",
+      "label": "Project Software, IT Services, and Support",
+      "metricOverride": null,
+      "capitalizedMetricOverride": null,
+      "baseMarketMetric": "adjustedEbitda",
+      "calibratedMarketMetric": "adjustedEbitda",
+      "baseMarketMultipleRange": {
+        "low": 3.2,
+        "mid": 4.1,
+        "high": 5.2
+      },
+      "calibratedMarketMultipleRange": {
+        "low": 3.2,
+        "mid": 4.1,
+        "high": 5.2
+      },
+      "baseCapitalizedMetric": "sde",
+      "calibratedCapitalizedMetric": "sde",
+      "baseCapitalizationRateRange": {
+        "low": 0.18,
+        "mid": 0.24,
+        "high": 0.3
+      },
+      "calibratedCapitalizationRateRange": {
+        "low": 0.3077,
+        "mid": 0.3239,
+        "high": 0.3567
+      },
+      "rangeOverrides": {
+        "marketMultipleRangeChanged": false,
+        "capitalizationRateRangeChanged": true,
+        "reconciliationWeightsChanged": false
+      },
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_PROJECT_SOFTWARE_IT_2026Q1"
+      ],
+      "sourceMix": [
+        "curated_transaction_proxy",
+        "curated_secondary"
+      ],
+      "sourceNotes": [
+        "This set is rebuilt from locally curated proxy values. It is not a live scrape of the listed external pages.",
+        "External URLs in this set are manual reference links from the sourcing pass and may become stale.",
+        "Technology pack blends sold-business averages for IT/software services, all technology, graphic/web design, and websites/e-commerce.",
+        "This is still a proxy for Nigeria owner mode and should be replaced over time with Nigeria-native service tech observations.",
+        "These are still external small-business transaction proxies and should be replaced over time with Nigeria-native Afrexit observations."
+      ],
+      "severity": "fixed_now",
+      "recommendation": "Restored to EBITDA-led market multiples because the prior revenue-multiple override was based on a broad proxy pack and produced misleading early outputs for high-margin IT-support cases."
+    },
+    {
+      "id": "PG_AGRI_PRIMARY",
+      "label": "Primary Agriculture and Raw Supply",
+      "metricOverride": {
+        "from": "adjustedEbit",
+        "to": "revenue"
+      },
+      "capitalizedMetricOverride": {
+        "from": "adjustedEbit",
+        "to": "sde"
+      },
+      "baseMarketMetric": "adjustedEbit",
+      "calibratedMarketMetric": "revenue",
+      "baseMarketMultipleRange": {
+        "low": 2.2,
+        "mid": 2.9,
+        "high": 3.5
+      },
+      "calibratedMarketMultipleRange": {
+        "low": 0.528,
+        "mid": 0.76,
+        "high": 1.0305
+      },
+      "baseCapitalizedMetric": "adjustedEbit",
+      "calibratedCapitalizedMetric": "sde",
+      "baseCapitalizationRateRange": {
+        "low": 0.22,
+        "mid": 0.28,
+        "high": 0.34
+      },
+      "calibratedCapitalizationRateRange": {
+        "low": 0.2741,
+        "mid": 0.3367,
+        "high": 0.4489
+      },
+      "rangeOverrides": {
+        "marketMultipleRangeChanged": true,
+        "capitalizationRateRangeChanged": true,
+        "reconciliationWeightsChanged": false
+      },
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_AGRI_PRIMARY_2026Q1"
+      ],
+      "sourceMix": [
+        "curated_transaction_proxy",
+        "curated_secondary"
+      ],
+      "sourceNotes": [
+        "This set is rebuilt from locally curated proxy values. It is not a live scrape of the listed external pages.",
+        "External URLs in this set are manual reference links from the sourcing pass and may become stale.",
+        "Agriculture page reports sold-business revenue and earnings multiple quartiles for the last five years.",
+        "These are still external small-business transaction proxies and should be replaced over time with Nigeria-native Afrexit observations."
+      ],
+      "severity": "high",
+      "recommendation": "Review whether the calibration has become too revenue-led for a business model that base policy treats as earnings-sensitive."
+    },
+    {
+      "id": "PG_AGRO_PROCESSING",
+      "label": "Agro-processing",
+      "metricOverride": {
+        "from": "adjustedEbitda",
+        "to": "revenue"
+      },
+      "capitalizedMetricOverride": {
+        "from": "adjustedEbit",
+        "to": "sde"
+      },
+      "baseMarketMetric": "adjustedEbitda",
+      "calibratedMarketMetric": "revenue",
+      "baseMarketMultipleRange": {
+        "low": 2.8,
+        "mid": 3.7,
+        "high": 4.6
+      },
+      "calibratedMarketMultipleRange": {
+        "low": 0.6025,
+        "mid": 0.675,
+        "high": 0.764
+      },
+      "baseCapitalizedMetric": "adjustedEbit",
+      "calibratedCapitalizedMetric": "sde",
+      "baseCapitalizationRateRange": {
+        "low": 0.2,
+        "mid": 0.25,
+        "high": 0.31
+      },
+      "calibratedCapitalizationRateRange": {
+        "low": 0.3083,
+        "mid": 0.3377,
+        "high": 0.3603
+      },
+      "rangeOverrides": {
+        "marketMultipleRangeChanged": true,
+        "capitalizationRateRangeChanged": true,
+        "reconciliationWeightsChanged": false
+      },
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_AGRO_PROCESSING_2026Q1"
+      ],
+      "sourceMix": [
+        "curated_transaction_proxy",
+        "curated_secondary"
+      ],
+      "sourceNotes": [
+        "This set is rebuilt from locally curated proxy values. It is not a live scrape of the listed external pages.",
+        "External URLs in this set are manual reference links from the sourcing pass and may become stale.",
+        "Anchored to sold-business averages on the manufacturing benchmarks page, including Food Products and overall Manufacturing.",
+        "Upper bounds remain constrained to the same published manufacturing-page context rather than public-company multiples.",
+        "These are still external small-business transaction proxies and should be replaced over time with Nigeria-native Afrexit observations."
+      ],
+      "severity": "high",
+      "recommendation": "Review whether revenue should really replace EBITDA as the primary market basis here, especially if the benchmark set is a proxy blend rather than a tight sector dataset."
+    },
+    {
+      "id": "PG_CONTRACT_MANUFACTURING",
+      "label": "Contract Manufacturing",
+      "metricOverride": {
+        "from": "adjustedEbitda",
+        "to": "revenue"
+      },
+      "capitalizedMetricOverride": {
+        "from": "adjustedEbit",
+        "to": "sde"
+      },
+      "baseMarketMetric": "adjustedEbitda",
+      "calibratedMarketMetric": "revenue",
+      "baseMarketMultipleRange": {
+        "low": 3.2,
+        "mid": 4.2,
+        "high": 5
+      },
+      "calibratedMarketMultipleRange": {
+        "low": 0.632,
+        "mid": 0.76,
+        "high": 0.866
+      },
+      "baseCapitalizedMetric": "adjustedEbit",
+      "calibratedCapitalizedMetric": "sde",
+      "baseCapitalizationRateRange": {
+        "low": 0.19,
+        "mid": 0.24,
+        "high": 0.29
+      },
+      "calibratedCapitalizationRateRange": {
+        "low": 0.2633,
+        "mid": 0.3099,
+        "high": 0.343
+      },
+      "rangeOverrides": {
+        "marketMultipleRangeChanged": true,
+        "capitalizationRateRangeChanged": true,
+        "reconciliationWeightsChanged": false
+      },
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_CONTRACT_MANUFACTURING_2026Q1"
+      ],
+      "sourceMix": [
+        "curated_transaction_proxy",
+        "curated_secondary"
+      ],
+      "sourceNotes": [
+        "This set is rebuilt from locally curated proxy values. It is not a live scrape of the listed external pages.",
+        "External URLs in this set are manual reference links from the sourcing pass and may become stale.",
+        "Derived from sold-business Manufacturing, Industrial Machinery, and other manufacturing comparison rows on the BizBuySell benchmarks page.",
+        "These are still external small-business transaction proxies and should be replaced over time with Nigeria-native Afrexit observations."
+      ],
+      "severity": "high",
+      "recommendation": "Review whether revenue should really replace EBITDA as the primary market basis here, especially if the benchmark set is a proxy blend rather than a tight sector dataset."
+    },
+    {
+      "id": "PG_CREATIVE_AGENCY",
+      "label": "Creative and Agency Services",
+      "metricOverride": {
+        "from": "adjustedEbitda",
+        "to": "revenue"
+      },
+      "capitalizedMetricOverride": null,
+      "baseMarketMetric": "adjustedEbitda",
+      "calibratedMarketMetric": "revenue",
+      "baseMarketMultipleRange": {
+        "low": 2.8,
+        "mid": 3.6,
+        "high": 4.5
+      },
+      "calibratedMarketMultipleRange": {
+        "low": 0.633,
+        "mid": 0.91,
+        "high": 1.022
+      },
+      "baseCapitalizedMetric": "sde",
+      "calibratedCapitalizedMetric": "sde",
+      "baseCapitalizationRateRange": {
+        "low": 0.2,
+        "mid": 0.27,
+        "high": 0.34
+      },
+      "calibratedCapitalizationRateRange": {
+        "low": 0.3812,
+        "mid": 0.4039,
+        "high": 0.5034
+      },
+      "rangeOverrides": {
+        "marketMultipleRangeChanged": true,
+        "capitalizationRateRangeChanged": true,
+        "reconciliationWeightsChanged": false
+      },
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_CREATIVE_AGENCY_2026Q1"
+      ],
+      "sourceMix": [
+        "curated_transaction_proxy",
+        "curated_secondary"
+      ],
+      "sourceNotes": [
+        "This set is rebuilt from locally curated proxy values. It is not a live scrape of the listed external pages.",
+        "External URLs in this set are manual reference links from the sourcing pass and may become stale.",
+        "Creative-agency owner mode uses sold-business service and graphic/web design comparisons because direct Nigeria agency transaction evidence is still sparse.",
+        "These are still external small-business transaction proxies and should be replaced over time with Nigeria-native Afrexit observations."
+      ],
+      "severity": "high",
+      "recommendation": "Review whether revenue should really replace EBITDA as the primary market basis here, especially if the benchmark set is a proxy blend rather than a tight sector dataset."
+    },
+    {
+      "id": "PG_EDUCATION_ENROLLMENT",
+      "label": "Enrollment-based Education",
+      "metricOverride": {
+        "from": "adjustedEbitda",
+        "to": "revenue"
+      },
+      "capitalizedMetricOverride": {
+        "from": "adjustedEbit",
+        "to": "sde"
+      },
+      "baseMarketMetric": "adjustedEbitda",
+      "calibratedMarketMetric": "revenue",
+      "baseMarketMultipleRange": {
+        "low": 3.1,
+        "mid": 4,
+        "high": 5
+      },
+      "calibratedMarketMultipleRange": {
+        "low": 0.5835,
+        "mid": 0.765,
+        "high": 0.941
+      },
+      "baseCapitalizedMetric": "adjustedEbit",
+      "calibratedCapitalizedMetric": "sde",
+      "baseCapitalizationRateRange": {
+        "low": 0.18,
+        "mid": 0.24,
+        "high": 0.3
+      },
+      "calibratedCapitalizationRateRange": {
+        "low": 0.3501,
+        "mid": 0.4039,
+        "high": 0.5034
+      },
+      "rangeOverrides": {
+        "marketMultipleRangeChanged": true,
+        "capitalizationRateRangeChanged": true,
+        "reconciliationWeightsChanged": false
+      },
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_EDUCATION_ENROLLMENT_2026Q1"
+      ],
+      "sourceMix": [
+        "curated_transaction_proxy",
+        "curated_secondary"
+      ],
+      "sourceNotes": [
+        "This set is rebuilt from locally curated proxy values. It is not a live scrape of the listed external pages.",
+        "External URLs in this set are manual reference links from the sourcing pass and may become stale.",
+        "Service-business sold benchmarks are being used as a proxy where a narrower sold-business page was not sourceable during this refresh.",
+        "These are still external small-business transaction proxies and should be replaced over time with Nigeria-native Afrexit observations."
+      ],
+      "severity": "high",
+      "recommendation": "Review whether revenue should really replace EBITDA as the primary market basis here, especially if the benchmark set is a proxy blend rather than a tight sector dataset."
+    },
+    {
+      "id": "PG_HEALTHCARE_DISTRIBUTION",
+      "label": "Healthcare Distribution and Retail",
+      "metricOverride": {
+        "from": "adjustedEbit",
+        "to": "revenue"
+      },
+      "capitalizedMetricOverride": {
+        "from": "adjustedEbit",
+        "to": "sde"
+      },
+      "baseMarketMetric": "adjustedEbit",
+      "calibratedMarketMetric": "revenue",
+      "baseMarketMultipleRange": {
+        "low": 2.9,
+        "mid": 3.8,
+        "high": 4.8
+      },
+      "calibratedMarketMultipleRange": {
+        "low": 0.4695,
+        "mid": 0.61,
+        "high": 0.745
+      },
+      "baseCapitalizedMetric": "adjustedEbit",
+      "calibratedCapitalizedMetric": "sde",
+      "baseCapitalizationRateRange": {
+        "low": 0.2,
+        "mid": 0.25,
+        "high": 0.31
+      },
+      "calibratedCapitalizationRateRange": {
+        "low": 0.3387,
+        "mid": 0.3664,
+        "high": 0.4119
+      },
+      "rangeOverrides": {
+        "marketMultipleRangeChanged": true,
+        "capitalizationRateRangeChanged": true,
+        "reconciliationWeightsChanged": false
+      },
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_HEALTHCARE_DISTRIBUTION_2026Q1"
+      ],
+      "sourceMix": [
+        "curated_transaction_proxy",
+        "curated_secondary"
+      ],
+      "sourceNotes": [
+        "This set is rebuilt from locally curated proxy values. It is not a live scrape of the listed external pages.",
+        "External URLs in this set are manual reference links from the sourcing pass and may become stale.",
+        "Healthcare distribution uses pharmacy/retail and healthcare sold-business comparisons as the closest sourceable owner-mode proxy.",
+        "These are still external small-business transaction proxies and should be replaced over time with Nigeria-native Afrexit observations."
+      ],
+      "severity": "high",
+      "recommendation": "Review whether the calibration has become too revenue-led for a business model that base policy treats as earnings-sensitive."
+    },
+    {
+      "id": "PG_HEALTHCARE_SERVICE",
+      "label": "Healthcare Services",
+      "metricOverride": {
+        "from": "adjustedEbitda",
+        "to": "revenue"
+      },
+      "capitalizedMetricOverride": {
+        "from": "adjustedEbit",
+        "to": "sde"
+      },
+      "baseMarketMetric": "adjustedEbitda",
+      "calibratedMarketMetric": "revenue",
+      "baseMarketMultipleRange": {
+        "low": 3.5,
+        "mid": 4.6,
+        "high": 5.8
+      },
+      "calibratedMarketMultipleRange": {
+        "low": 0.735,
+        "mid": 0.925,
+        "high": 1.159
+      },
+      "baseCapitalizedMetric": "adjustedEbit",
+      "calibratedCapitalizedMetric": "sde",
+      "baseCapitalizationRateRange": {
+        "low": 0.17,
+        "mid": 0.22,
+        "high": 0.27
+      },
+      "calibratedCapitalizationRateRange": {
+        "low": 0.2385,
+        "mid": 0.3223,
+        "high": 0.372
+      },
+      "rangeOverrides": {
+        "marketMultipleRangeChanged": true,
+        "capitalizationRateRangeChanged": true,
+        "reconciliationWeightsChanged": false
+      },
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_HEALTHCARE_SERVICE_2026Q1"
+      ],
+      "sourceMix": [
+        "curated_transaction_proxy",
+        "curated_secondary"
+      ],
+      "sourceNotes": [
+        "This set is rebuilt from locally curated proxy values. It is not a live scrape of the listed external pages.",
+        "External URLs in this set are manual reference links from the sourcing pass and may become stale.",
+        "Healthcare pack blends all-healthcare, home-health, dental, and medical-billing sold-business comparisons to avoid pure public-comp anchoring.",
+        "These are still external small-business transaction proxies and should be replaced over time with Nigeria-native Afrexit observations."
+      ],
+      "severity": "high",
+      "recommendation": "Review whether revenue should really replace EBITDA as the primary market basis here, especially if the benchmark set is a proxy blend rather than a tight sector dataset."
+    },
+    {
+      "id": "PG_HOSPITALITY_VENUE",
+      "label": "Hospitality, Travel, and Leisure Venues",
+      "metricOverride": {
+        "from": "adjustedEbitda",
+        "to": "revenue"
+      },
+      "capitalizedMetricOverride": {
+        "from": "adjustedEbit",
+        "to": "sde"
+      },
+      "baseMarketMetric": "adjustedEbitda",
+      "calibratedMarketMetric": "revenue",
+      "baseMarketMultipleRange": {
+        "low": 2.7,
+        "mid": 3.5,
+        "high": 4.4
+      },
+      "calibratedMarketMultipleRange": {
+        "low": 0.275,
+        "mid": 0.385,
+        "high": 0.5005
+      },
+      "baseCapitalizedMetric": "adjustedEbit",
+      "calibratedCapitalizedMetric": "sde",
+      "baseCapitalizationRateRange": {
+        "low": 0.21,
+        "mid": 0.27,
+        "high": 0.34
+      },
+      "calibratedCapitalizationRateRange": {
+        "low": 0.4424,
+        "mid": 0.5202,
+        "high": 0.6537
+      },
+      "rangeOverrides": {
+        "marketMultipleRangeChanged": true,
+        "capitalizationRateRangeChanged": true,
+        "reconciliationWeightsChanged": false
+      },
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_HOSPITALITY_VENUE_2026Q1"
+      ],
+      "sourceMix": [
+        "curated_transaction_proxy",
+        "curated_secondary"
+      ],
+      "sourceNotes": [
+        "This set is rebuilt from locally curated proxy values. It is not a live scrape of the listed external pages.",
+        "External URLs in this set are manual reference links from the sourcing pass and may become stale.",
+        "Hospitality owner mode blends restaurant and catering sold-business benchmarks from BizBuySell.",
+        "These are still external small-business transaction proxies and should be replaced over time with Nigeria-native Afrexit observations."
+      ],
+      "severity": "high",
+      "recommendation": "Review whether revenue should really replace EBITDA as the primary market basis here, especially if the benchmark set is a proxy blend rather than a tight sector dataset."
+    },
+    {
+      "id": "PG_LOGISTICS_ASSET",
+      "label": "Logistics and Asset-backed Mobility",
+      "metricOverride": {
+        "from": "adjustedEbitda",
+        "to": "revenue"
+      },
+      "capitalizedMetricOverride": {
+        "from": "adjustedEbit",
+        "to": "sde"
+      },
+      "baseMarketMetric": "adjustedEbitda",
+      "calibratedMarketMetric": "revenue",
+      "baseMarketMultipleRange": {
+        "low": 2.8,
+        "mid": 3.7,
+        "high": 4.5
+      },
+      "calibratedMarketMultipleRange": {
+        "low": 0.7505,
+        "mid": 0.85,
+        "high": 0.944
+      },
+      "baseCapitalizedMetric": "adjustedEbit",
+      "calibratedCapitalizedMetric": "sde",
+      "baseCapitalizationRateRange": {
+        "low": 0.21,
+        "mid": 0.27,
+        "high": 0.33
+      },
+      "calibratedCapitalizationRateRange": {
+        "low": 0.2516,
+        "mid": 0.2868,
+        "high": 0.3546
+      },
+      "rangeOverrides": {
+        "marketMultipleRangeChanged": true,
+        "capitalizationRateRangeChanged": true,
+        "reconciliationWeightsChanged": false
+      },
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_LOGISTICS_ASSET_2026Q1"
+      ],
+      "sourceMix": [
+        "curated_transaction_proxy",
+        "curated_secondary"
+      ],
+      "sourceNotes": [
+        "This set is rebuilt from locally curated proxy values. It is not a live scrape of the listed external pages.",
+        "External URLs in this set are manual reference links from the sourcing pass and may become stale.",
+        "Transport pack is anchored to trucking-company sold-business benchmarks from BizBuySell insight tables, with the midpoint expanded conservatively for broader owner-mode logistics use.",
+        "These are still external small-business transaction proxies and should be replaced over time with Nigeria-native Afrexit observations."
+      ],
+      "severity": "high",
+      "recommendation": "Review whether revenue should really replace EBITDA as the primary market basis here, especially if the benchmark set is a proxy blend rather than a tight sector dataset."
+    },
+    {
+      "id": "PG_PROFESSIONAL_PLATFORM",
+      "label": "Platform-style Professional Services",
+      "metricOverride": {
+        "from": "adjustedEbitda",
+        "to": "revenue"
+      },
+      "capitalizedMetricOverride": {
+        "from": "adjustedEbit",
+        "to": "sde"
+      },
+      "baseMarketMetric": "adjustedEbitda",
+      "calibratedMarketMetric": "revenue",
+      "baseMarketMultipleRange": {
+        "low": 3.4,
+        "mid": 4.4,
+        "high": 5.5
+      },
+      "calibratedMarketMultipleRange": {
+        "low": 1.1515,
+        "mid": 1.375,
+        "high": 1.527
+      },
+      "baseCapitalizedMetric": "adjustedEbit",
+      "calibratedCapitalizedMetric": "sde",
+      "baseCapitalizationRateRange": {
+        "low": 0.18,
+        "mid": 0.23,
+        "high": 0.29
+      },
+      "calibratedCapitalizationRateRange": {
+        "low": 0.2715,
+        "mid": 0.2818,
+        "high": 0.3345
+      },
+      "rangeOverrides": {
+        "marketMultipleRangeChanged": true,
+        "capitalizationRateRangeChanged": true,
+        "reconciliationWeightsChanged": false
+      },
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_PROFESSIONAL_PLATFORM_2026Q1"
+      ],
+      "sourceMix": [
+        "curated_transaction_proxy",
+        "curated_secondary"
+      ],
+      "sourceNotes": [
+        "This set is rebuilt from locally curated proxy values. It is not a live scrape of the listed external pages.",
+        "External URLs in this set are manual reference links from the sourcing pass and may become stale.",
+        "Professional platform businesses are anchored to sold financial/accounting-service benchmarks rather than public-company proxies.",
+        "These are still external small-business transaction proxies and should be replaced over time with Nigeria-native Afrexit observations."
+      ],
+      "severity": "high",
+      "recommendation": "Review whether revenue should really replace EBITDA as the primary market basis here, especially if the benchmark set is a proxy blend rather than a tight sector dataset."
+    },
+    {
+      "id": "PG_PROJECT_CONTRACTING",
+      "label": "Project Contracting and Engineering",
+      "metricOverride": {
+        "from": "adjustedEbitda",
+        "to": "revenue"
+      },
+      "capitalizedMetricOverride": {
+        "from": "adjustedEbit",
+        "to": "sde"
+      },
+      "baseMarketMetric": "adjustedEbitda",
+      "calibratedMarketMetric": "revenue",
+      "baseMarketMultipleRange": {
+        "low": 2.8,
+        "mid": 3.6,
+        "high": 4.5
+      },
+      "calibratedMarketMultipleRange": {
+        "low": 0.5555,
+        "mid": 0.7,
+        "high": 0.828
+      },
+      "baseCapitalizedMetric": "adjustedEbit",
+      "calibratedCapitalizedMetric": "sde",
+      "baseCapitalizationRateRange": {
+        "low": 0.21,
+        "mid": 0.27,
+        "high": 0.33
+      },
+      "calibratedCapitalizationRateRange": {
+        "low": 0.3484,
+        "mid": 0.3947,
+        "high": 0.482
+      },
+      "rangeOverrides": {
+        "marketMultipleRangeChanged": true,
+        "capitalizationRateRangeChanged": true,
+        "reconciliationWeightsChanged": false
+      },
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_PROJECT_CONTRACTING_2026Q1"
+      ],
+      "sourceMix": [
+        "curated_transaction_proxy",
+        "curated_secondary"
+      ],
+      "sourceNotes": [
+        "This set is rebuilt from locally curated proxy values. It is not a live scrape of the listed external pages.",
+        "External URLs in this set are manual reference links from the sourcing pass and may become stale.",
+        "Architecture and engineering sold-business benchmarks provide explicit revenue and earnings quartiles usable as owner-mode project contracting proxies.",
+        "These are still external small-business transaction proxies and should be replaced over time with Nigeria-native Afrexit observations."
+      ],
+      "severity": "high",
+      "recommendation": "Review whether revenue should really replace EBITDA as the primary market basis here, especially if the benchmark set is a proxy blend rather than a tight sector dataset."
+    },
+    {
+      "id": "PG_REAL_ESTATE_SERVICE",
+      "label": "Real Estate and Facility Services",
+      "metricOverride": {
+        "from": "adjustedEbitda",
+        "to": "revenue"
+      },
+      "capitalizedMetricOverride": {
+        "from": "adjustedEbit",
+        "to": "sde"
+      },
+      "baseMarketMetric": "adjustedEbitda",
+      "calibratedMarketMetric": "revenue",
+      "baseMarketMultipleRange": {
+        "low": 2.8,
+        "mid": 3.7,
+        "high": 4.6
+      },
+      "calibratedMarketMultipleRange": {
+        "low": 0.8335,
+        "mid": 0.89,
+        "high": 0.9795
+      },
+      "baseCapitalizedMetric": "adjustedEbit",
+      "calibratedCapitalizedMetric": "sde",
+      "baseCapitalizationRateRange": {
+        "low": 0.2,
+        "mid": 0.26,
+        "high": 0.32
+      },
+      "calibratedCapitalizationRateRange": {
+        "low": 0.3452,
+        "mid": 0.3684,
+        "high": 0.3799
+      },
+      "rangeOverrides": {
+        "marketMultipleRangeChanged": true,
+        "capitalizationRateRangeChanged": true,
+        "reconciliationWeightsChanged": false
+      },
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_REAL_ESTATE_SERVICE_2026Q1"
+      ],
+      "sourceMix": [
+        "curated_transaction_proxy",
+        "curated_secondary"
+      ],
+      "sourceNotes": [
+        "This set is rebuilt from locally curated proxy values. It is not a live scrape of the listed external pages.",
+        "External URLs in this set are manual reference links from the sourcing pass and may become stale.",
+        "Property-management and adjacent facility-service sold-business benchmarks are the closest sourceable owner-mode proxy currently available.",
+        "These are still external small-business transaction proxies and should be replaced over time with Nigeria-native Afrexit observations."
+      ],
+      "severity": "high",
+      "recommendation": "Review whether revenue should really replace EBITDA as the primary market basis here, especially if the benchmark set is a proxy blend rather than a tight sector dataset."
+    },
+    {
+      "id": "PG_RETAIL_COMMERCE",
+      "label": "Retail and Commerce",
+      "metricOverride": {
+        "from": "adjustedEbit",
+        "to": "revenue"
+      },
+      "capitalizedMetricOverride": {
+        "from": "adjustedEbit",
+        "to": "sde"
+      },
+      "baseMarketMetric": "adjustedEbit",
+      "calibratedMarketMetric": "revenue",
+      "baseMarketMultipleRange": {
+        "low": 2.4,
+        "mid": 3,
+        "high": 3.8
+      },
+      "calibratedMarketMultipleRange": {
+        "low": 0.353,
+        "mid": 0.48,
+        "high": 0.607
+      },
+      "baseCapitalizedMetric": "adjustedEbit",
+      "calibratedCapitalizedMetric": "sde",
+      "baseCapitalizationRateRange": {
+        "low": 0.23,
+        "mid": 0.29,
+        "high": 0.35
+      },
+      "calibratedCapitalizationRateRange": {
+        "low": 0.3503,
+        "mid": 0.4121,
+        "high": 0.5386
+      },
+      "rangeOverrides": {
+        "marketMultipleRangeChanged": true,
+        "capitalizationRateRangeChanged": true,
+        "reconciliationWeightsChanged": false
+      },
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_RETAIL_COMMERCE_2026Q1"
+      ],
+      "sourceMix": [
+        "curated_transaction_proxy",
+        "curated_secondary"
+      ],
+      "sourceNotes": [
+        "This set is rebuilt from locally curated proxy values. It is not a live scrape of the listed external pages.",
+        "External URLs in this set are manual reference links from the sourcing pass and may become stale.",
+        "Retail page reports sold-business revenue and earnings quartiles for the last five years.",
+        "These are still external small-business transaction proxies and should be replaced over time with Nigeria-native Afrexit observations."
+      ],
+      "severity": "high",
+      "recommendation": "Review whether the calibration has become too revenue-led for a business model that base policy treats as earnings-sensitive."
+    },
+    {
+      "id": "PG_PROPERTY_ASSET_NAV",
+      "label": "Property Asset and Development Support",
+      "metricOverride": null,
+      "capitalizedMetricOverride": {
+        "from": "adjustedEbit",
+        "to": "sde"
+      },
+      "baseMarketMetric": "revenue",
+      "calibratedMarketMetric": "revenue",
+      "baseMarketMultipleRange": {
+        "low": 0.5,
+        "mid": 0.8,
+        "high": 1.2
+      },
+      "calibratedMarketMultipleRange": {
+        "low": 0.8335,
+        "mid": 0.89,
+        "high": 0.9795
+      },
+      "baseCapitalizedMetric": "adjustedEbit",
+      "calibratedCapitalizedMetric": "sde",
+      "baseCapitalizationRateRange": {
+        "low": 0.18,
+        "mid": 0.24,
+        "high": 0.3
+      },
+      "calibratedCapitalizationRateRange": {
+        "low": 0.3452,
+        "mid": 0.3684,
+        "high": 0.3799
+      },
+      "rangeOverrides": {
+        "marketMultipleRangeChanged": true,
+        "capitalizationRateRangeChanged": true,
+        "reconciliationWeightsChanged": false
+      },
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_PROPERTY_ASSET_NAV_2026Q1"
+      ],
+      "sourceMix": [
+        "curated_transaction_proxy",
+        "curated_secondary"
+      ],
+      "sourceNotes": [
+        "This set is rebuilt from locally curated proxy values. It is not a live scrape of the listed external pages.",
+        "External URLs in this set are manual reference links from the sourcing pass and may become stale.",
+        "Property-management and adjacent facility-service sold-business benchmarks are the closest sourceable owner-mode proxy currently available.",
+        "These are still external small-business transaction proxies and should be replaced over time with Nigeria-native Afrexit observations."
+      ],
+      "severity": "medium",
+      "recommendation": "Confirm that the owner-mode calibration should truly anchor on SDE rather than maintainable EBIT for this policy family."
+    },
+    {
+      "id": "PG_ASSET_HEAVY_MANUFACTURING",
+      "label": "Asset-heavy Manufacturing",
+      "metricOverride": null,
+      "capitalizedMetricOverride": null,
+      "baseMarketMetric": "adjustedEbitda",
+      "calibratedMarketMetric": "adjustedEbitda",
+      "baseMarketMultipleRange": {
+        "low": 3,
+        "mid": 4,
+        "high": 5
+      },
+      "calibratedMarketMultipleRange": {
+        "low": 3.24,
+        "mid": 4,
+        "high": 4.74
+      },
+      "baseCapitalizedMetric": "adjustedEbit",
+      "calibratedCapitalizedMetric": "adjustedEbit",
+      "baseCapitalizationRateRange": {
+        "low": 0.19,
+        "mid": 0.24,
+        "high": 0.29
+      },
+      "calibratedCapitalizationRateRange": {
+        "low": 0.216,
+        "mid": 0.23,
+        "high": 0.244
+      },
+      "rangeOverrides": {
+        "marketMultipleRangeChanged": true,
+        "capitalizationRateRangeChanged": true,
+        "reconciliationWeightsChanged": true
+      },
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_ASSET_HEAVY_MANUFACTURING_2026Q1"
+      ],
+      "sourceMix": [
+        "curated_secondary",
+        "private_observation"
+      ],
+      "sourceNotes": [],
+      "severity": "low",
+      "recommendation": "No immediate action beyond normal calibration monitoring."
+    },
+    {
+      "id": "PG_LOCAL_SERVICE_OWNER_OP",
+      "label": "Local Owner-operated Services",
+      "metricOverride": null,
+      "capitalizedMetricOverride": null,
+      "baseMarketMetric": "sde",
+      "calibratedMarketMetric": "sde",
+      "baseMarketMultipleRange": {
+        "low": 2.1,
+        "mid": 2.9,
+        "high": 3.6
+      },
+      "calibratedMarketMultipleRange": {
+        "low": 2.18,
+        "mid": 2.6,
+        "high": 3.02
+      },
+      "baseCapitalizedMetric": "sde",
+      "calibratedCapitalizedMetric": "sde",
+      "baseCapitalizationRateRange": {
+        "low": 0.22,
+        "mid": 0.29,
+        "high": 0.36
+      },
+      "calibratedCapitalizationRateRange": {
+        "low": 0.2475,
+        "mid": 0.265,
+        "high": 0.2825
+      },
+      "rangeOverrides": {
+        "marketMultipleRangeChanged": true,
+        "capitalizationRateRangeChanged": true,
+        "reconciliationWeightsChanged": true
+      },
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_LOCAL_SERVICE_OWNER_OP_2026Q1"
+      ],
+      "sourceMix": [
+        "curated_secondary",
+        "private_observation"
+      ],
+      "sourceNotes": [],
+      "severity": "low",
+      "recommendation": "No immediate action beyond normal calibration monitoring."
+    },
+    {
+      "id": "PG_PROFESSIONAL_OWNER_LED",
+      "label": "Owner-led Professional Services",
+      "metricOverride": null,
+      "capitalizedMetricOverride": null,
+      "baseMarketMetric": "sde",
+      "calibratedMarketMetric": "sde",
+      "baseMarketMultipleRange": {
+        "low": 2.6,
+        "mid": 3.5,
+        "high": 4.4
+      },
+      "calibratedMarketMultipleRange": {
+        "low": 2.88,
+        "mid": 3.3,
+        "high": 3.775
+      },
+      "baseCapitalizedMetric": "sde",
+      "calibratedCapitalizedMetric": "sde",
+      "baseCapitalizationRateRange": {
+        "low": 0.2,
+        "mid": 0.26,
+        "high": 0.33
+      },
+      "calibratedCapitalizationRateRange": {
+        "low": 0.236,
+        "mid": 0.25,
+        "high": 0.264
+      },
+      "rangeOverrides": {
+        "marketMultipleRangeChanged": true,
+        "capitalizationRateRangeChanged": true,
+        "reconciliationWeightsChanged": true
+      },
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_PROFESSIONAL_OWNER_LED_2026Q1"
+      ],
+      "sourceMix": [
+        "curated_secondary",
+        "private_observation"
+      ],
+      "sourceNotes": [],
+      "severity": "low",
+      "recommendation": "No immediate action beyond normal calibration monitoring."
+    },
+    {
+      "id": "PG_RECURRING_SOFTWARE",
+      "label": "Recurring Software and Digital Products",
+      "metricOverride": null,
+      "capitalizedMetricOverride": null,
+      "baseMarketMetric": "revenue",
+      "calibratedMarketMetric": "revenue",
+      "baseMarketMultipleRange": {
+        "low": 0.9,
+        "mid": 1.8,
+        "high": 3.2
+      },
+      "calibratedMarketMultipleRange": {
+        "low": 1.18,
+        "mid": 1.7,
+        "high": 2.44
+      },
+      "baseCapitalizedMetric": null,
+      "calibratedCapitalizedMetric": null,
+      "baseCapitalizationRateRange": null,
+      "calibratedCapitalizationRateRange": null,
+      "rangeOverrides": {
+        "marketMultipleRangeChanged": true,
+        "capitalizationRateRangeChanged": false,
+        "reconciliationWeightsChanged": true
+      },
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_RECURRING_SOFTWARE_2026Q1"
+      ],
+      "sourceMix": [
+        "curated_secondary",
+        "private_observation"
+      ],
+      "sourceNotes": [],
+      "severity": "low",
+      "recommendation": "No immediate action beyond normal calibration monitoring."
+    },
+    {
+      "id": "PG_TRADING_DISTRIBUTION",
+      "label": "Trading and Distribution",
+      "metricOverride": null,
+      "capitalizedMetricOverride": null,
+      "baseMarketMetric": "adjustedEbit",
+      "calibratedMarketMetric": "adjustedEbit",
+      "baseMarketMultipleRange": {
+        "low": 2.6,
+        "mid": 3.4,
+        "high": 4.1
+      },
+      "calibratedMarketMultipleRange": {
+        "low": 2.74,
+        "mid": 3.4,
+        "high": 3.96
+      },
+      "baseCapitalizedMetric": "adjustedEbit",
+      "calibratedCapitalizedMetric": "adjustedEbit",
+      "baseCapitalizationRateRange": {
+        "low": 0.22,
+        "mid": 0.28,
+        "high": 0.34
+      },
+      "calibratedCapitalizationRateRange": {
+        "low": 0.2475,
+        "mid": 0.265,
+        "high": 0.2825
+      },
+      "rangeOverrides": {
+        "marketMultipleRangeChanged": true,
+        "capitalizationRateRangeChanged": true,
+        "reconciliationWeightsChanged": false
+      },
+      "benchmarkSetIds": [
+        "BMK_OWNER_NG_TRADING_DISTRIBUTION_2026Q1"
+      ],
+      "sourceMix": [
+        "curated_secondary",
+        "private_observation"
+      ],
+      "sourceNotes": [],
+      "severity": "low",
+      "recommendation": "No immediate action beyond normal calibration monitoring."
+    }
+  ]
+}

@@ -249,12 +249,34 @@ function buildBranchQualityScore(answers: Partial<FormData>) {
 }
 
 function getForecastBlendWeight(answers: Partial<FormData>) {
+  const rawPeriods = Array.isArray(answers._financialPeriods) ? answers._financialPeriods : [];
+  const hasPrior1FromPeriods = rawPeriods.some((period) => period && typeof period === 'object' && 'id' in period && (period as { id?: unknown; enabled?: unknown }).id === 'prior1' && (period as { enabled?: unknown }).enabled === true && String((period as { revenue?: unknown }).revenue ?? '').trim() !== '');
+  const hasPrior2FromPeriods = rawPeriods.some((period) => period && typeof period === 'object' && 'id' in period && (period as { id?: unknown; enabled?: unknown }).id === 'prior2' && (period as { enabled?: unknown }).enabled === true && String((period as { revenue?: unknown }).revenue ?? '').trim() !== '');
   const actualYears =
     1 +
-    (answers.revenuePrevious1 || answers.revenuePrev1 ? 1 : 0) +
-    (answers.revenuePrevious2 || answers.revenuePrev2 ? 1 : 0);
+    ((answers.revenuePrevious1 || answers.revenuePrev1 || hasPrior1FromPeriods) ? 1 : 0) +
+    ((answers.revenuePrevious2 || answers.revenuePrev2 || hasPrior2FromPeriods) ? 1 : 0);
   const depthModifier = actualYears >= 3 ? 0.75 : actualYears === 2 ? 0.9 : 1;
   return Math.max(0.12, Math.min(0.18 * depthModifier, 0.22));
+}
+
+function getPeriodValue(
+  answers: Partial<FormData>,
+  periodId: 'latest' | 'prior1' | 'prior2',
+  field: 'revenue' | 'operatingProfit',
+  fallback: unknown
+) {
+  const rawPeriods = Array.isArray(answers._financialPeriods) ? answers._financialPeriods : [];
+  const period = rawPeriods.find(
+    (entry): entry is { id?: unknown; enabled?: unknown; revenue?: unknown; operatingProfit?: unknown } =>
+      Boolean(entry && typeof entry === 'object' && 'id' in entry && (entry as { id?: unknown }).id === periodId)
+  );
+
+  if (period && (periodId === 'latest' || period.enabled === true)) {
+    return field === 'revenue' ? toNumber(period.revenue) : toNumber(period.operatingProfit);
+  }
+
+  return toNumber(fallback);
 }
 
 function getForecastSignal(answers: Partial<FormData>) {
@@ -305,7 +327,7 @@ function determinePhase(answers: Partial<FormData>) {
 
   if (hasClosingData) return 'closing';
   if (hasBranchData) return 'branch';
-  if (answers.revenueLatest && answers.operatingProfitLatest) return 'anchor';
+  if (getPeriodValue(answers, 'latest', 'revenue', answers.revenueLatest) > 0 || getPeriodValue(answers, 'latest', 'operatingProfit', answers.operatingProfitLatest) !== 0) return 'anchor';
   return 'initial';
 }
 
@@ -503,11 +525,28 @@ function buildFallbackFactorCards({
   ];
 }
 
+function formatFallbackMetricLabel(value: string) {
+  switch (value) {
+    case 'adjustedEbit':
+      return 'adjusted EBIT';
+    case 'adjustedEbitda':
+      return 'adjusted EBITDA';
+    case 'sde':
+      return 'SDE';
+    case 'revenue':
+      return 'revenue';
+    default:
+      return value.replaceAll('_', ' ');
+  }
+}
+
 export function calculatePartialValuation(answers: Partial<FormData>): PartialValuationResult {
   const flags: PartialValuationResult['flags'] = [];
   const level2 = String(answers.level2 || '');
   const forecastSignal = getForecastSignal(answers);
-  const revenue = forecastSignal ? blendTowardForecast(toNumber(answers.revenueLatest), forecastSignal.revenue, forecastSignal.weight) : toNumber(answers.revenueLatest);
+  const latestRevenue = getPeriodValue(answers, 'latest', 'revenue', answers.revenueLatest);
+  const latestOperatingProfit = getPeriodValue(answers, 'latest', 'operatingProfit', answers.operatingProfitLatest);
+  const revenue = forecastSignal ? blendTowardForecast(latestRevenue, forecastSignal.revenue, forecastSignal.weight) : latestRevenue;
 
   if (!level2 || revenue <= 0) {
     return {
@@ -525,9 +564,13 @@ export function calculatePartialValuation(answers: Partial<FormData>): PartialVa
       phase: 'initial',
       nextPhase: 'anchor',
       primaryMethod: null,
+      primaryMethodDetail: null,
       scorecard: null,
       qualitativeAdjustments: null,
       factorCards: [],
+      fundamentalEnterpriseMid: null,
+      achievableEnterpriseMid: null,
+      bridgeDelta: null,
       sourceModel: 'fallback',
     };
   }
@@ -556,6 +599,7 @@ export function calculatePartialValuation(answers: Partial<FormData>): PartialVa
   const marketMultiple = policyGroup?.ownerPhase?.marketMultipleRange?.mid || 3.5;
   const multipleLow = policyGroup?.ownerPhase?.marketMultipleRange?.low || 2.5;
   const multipleHigh = policyGroup?.ownerPhase?.marketMultipleRange?.high || 4.5;
+  const marketMetric = policyGroup?.ownerPhase?.marketMetric || 'revenue';
   const baseValue = revenue * (marketMultiple / 10);
   const phaseAdjustment = getPhaseAdjustment(phase);
   const qualitativeFactor =
@@ -598,8 +642,8 @@ export function calculatePartialValuation(answers: Partial<FormData>): PartialVa
     benchmarkCoverage: observationCount > 50 ? 75 : observationCount > 20 ? 60 : observationCount === 0 ? 30 : 50,
   };
 
-  if (answers.revenuePrevious1 || answers.revenuePrev1) confidenceBreakdown.dataCompleteness += 5;
-  if (answers.revenuePrevious2 || answers.revenuePrev2) confidenceBreakdown.dataCompleteness += 3;
+  if (getPeriodValue(answers, 'prior1', 'revenue', answers.revenuePrevious1 || answers.revenuePrev1) > 0) confidenceBreakdown.dataCompleteness += 5;
+  if (getPeriodValue(answers, 'prior2', 'revenue', answers.revenuePrevious2 || answers.revenuePrev2) > 0) confidenceBreakdown.dataCompleteness += 3;
   if (forecastSignal) confidenceBreakdown.dataCompleteness += 2;
   if (typeof branchQualityScore === 'number') confidenceBreakdown.dataCompleteness += 4;
 
@@ -619,8 +663,8 @@ export function calculatePartialValuation(answers: Partial<FormData>): PartialVa
 
   const profit =
     forecastSignal && forecastSignal.hasProfit
-      ? blendTowardForecast(toNumber(answers.operatingProfitLatest), forecastSignal.profit, forecastSignal.weight)
-      : toNumber(answers.operatingProfitLatest) || 0;
+      ? blendTowardForecast(latestOperatingProfit, forecastSignal.profit, forecastSignal.weight)
+      : latestOperatingProfit || 0;
   const margin = profit / revenue;
   if (margin < 0.05) confidenceScore -= 10;
   if (margin < 0) confidenceScore -= 20;
@@ -717,6 +761,7 @@ export function calculatePartialValuation(answers: Partial<FormData>): PartialVa
     phase,
     nextPhase: getNextPhase(phase),
     primaryMethod: 'market_multiple',
+    primaryMethodDetail: `market multiple (${marketMultiple.toFixed(2)}x ${formatFallbackMetricLabel(marketMetric)})`,
     scorecard: {
       marketPosition: Math.round(
         buildMarketPositionAdjustmentFromValues({
@@ -780,6 +825,9 @@ export function calculatePartialValuation(answers: Partial<FormData>): PartialVa
       partialTransactionFactor,
       partialUrgencyFactor,
     }),
+    fundamentalEnterpriseMid: mid,
+    achievableEnterpriseMid: mid,
+    bridgeDelta: 0,
     sourceModel: 'fallback',
   };
 }

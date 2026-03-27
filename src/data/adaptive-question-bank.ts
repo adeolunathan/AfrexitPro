@@ -5,6 +5,7 @@ export { level2ByLevel1 };
 
 export type QuestionType =
   | 'select'
+  | 'combobox'
   | 'number'
   | 'text'
   | 'textarea'
@@ -150,7 +151,7 @@ export const anchorQuestions: Question[] = [
   },
   {
     id: 'primaryState',
-    type: 'select',
+    type: 'combobox',
     prompt: 'Where is the business mainly based?',
     required: true,
     options: stateOptions,
