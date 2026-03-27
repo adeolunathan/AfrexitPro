@@ -4,6 +4,11 @@ Status: canonical internal planning document
 Last updated: March 7, 2026  
 Scope: owner-first implementation with advisor and analyst architecture defined upfront
 
+Related references:
+
+- [Benchmark Provenance and Refresh Workflow](/Users/deolunathan/Downloads/BB/AfrexitPro/docs/valuation-engine/benchmark-provenance-and-refresh-workflow.md)
+- [Admin Lab Sensitivity and Audit Guide](/Users/deolunathan/Downloads/BB/AfrexitPro/docs/valuation-engine/admin-lab-sensitivity-and-audit-guide.md)
+
 ## Status Tracker
 
 ### Done
@@ -25,6 +30,7 @@ Scope: owner-first implementation with advisor and analyst architecture defined 
 - owner-mode confidence now directly penalizes stale benchmark evidence and weak source quality instead of only showing that risk in admin review
 - saved valuation submissions can now surface as draft internal-case candidates in admin, so real Afrexit cases can be promoted into observations without retyping everything from scratch
 - owner-phase valuation logic traceability is now documented so each question, mapping, and engine effect can be audited explicitly
+- a practical readiness/confidence/methods reference now exists for current live engine behavior and policy-group multiple ranges
 
 ### In Progress
 

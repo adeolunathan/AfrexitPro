@@ -106,7 +106,6 @@ export const anchorQuestions: Question[] = [
     id: 'respondentRole',
     type: 'select',
     prompt: 'Are you the business owner completing this assessment?',
-    helperText: 'This only changes how we phrase owner-related questions. It does not change the valuation logic.',
     required: true,
     options: [
       { value: 'owner', label: 'Yes, I am the owner' },
@@ -120,10 +119,10 @@ export const anchorQuestions: Question[] = [
     helperText: 'This helps us use the right benchmarks and also flag classification uncertainty early.',
     required: true,
     options: [
-      { value: 'perfect_fit', label: 'Fits perfectly' },
-      { value: 'mostly_fit', label: 'Mostly fits' },
-      { value: 'partial_fit', label: 'Partly fits' },
-      { value: 'poor_fit', label: 'Not a great fit' },
+      { value: 'perfect_fit', label: 'The selected industry describes the core business accurately' },
+      { value: 'mostly_fit', label: 'The selected industry is broadly right, with only minor mismatch' },
+      { value: 'partial_fit', label: 'The selected industry is only partly right and misses an important part of the business' },
+      { value: 'poor_fit', label: 'The selected industry is a weak fit for how the business actually operates' },
       { value: 'not_sure', label: 'Not sure' },
     ],
   },
@@ -131,7 +130,6 @@ export const anchorQuestions: Question[] = [
     id: 'businessDescription',
     type: 'textarea',
     prompt: 'How would you describe your company in your own words?',
-    helperText: 'Useful for classification QA, future analytics, and audit context.',
     required: true,
     placeholder: 'Describe what you do, who you serve, and how the business earns money.',
   },
@@ -189,7 +187,8 @@ export const anchorQuestions: Question[] = [
   {
     id: 'transactionGoal',
     type: 'select',
-    prompt: 'What outcome are you preparing for?',
+    prompt: 'What transaction or decision are you primarily preparing for with this valuation?',
+    helperText: 'This helps us frame the valuation context. A sale, investor entry, succession, or internal planning case is not interpreted exactly the same way.',
     required: true,
     options: [
       { value: 'external_sale', label: 'Full sale to an external buyer' },
@@ -207,10 +206,10 @@ export const anchorQuestions: Question[] = [
       'This measures how quickly a buyer could verify the numbers. Strong proof improves confidence and usually supports a tighter valuation range.',
     required: true,
     options: [
-      { value: 'immediate', label: 'Immediately, with bank records and clear books' },
-      { value: 'organize_fast', label: 'Within a day or two after pulling records together' },
-      { value: 'show_patterns', label: 'I can show patterns, but not clean proof' },
-      { value: 'difficult', label: 'It would be difficult to prove properly' },
+      { value: 'immediate', label: 'Immediately, with clean books, bank records, and supporting documents' },
+      { value: 'organize_fast', label: 'Within a day or two after pulling the records together' },
+      { value: 'show_patterns', label: 'Broad patterns can be shown, but not clean documentary proof' },
+      { value: 'difficult', label: 'It would be difficult to prove the numbers properly' },
     ],
   },
   {
@@ -256,13 +255,13 @@ export const closingQuestions: Question[] = [
   {
     id: 'bankingQuality',
     type: 'select',
-    prompt: 'How clean are your business banking records?',
+    prompt: 'How clean and well-separated are your business banking records?',
     required: true,
     options: [
-      { value: 'clean', label: 'Clean business transactions with little mixing' },
-      { value: 'mostly_clean', label: 'Mostly business, some personal mixing' },
-      { value: 'incomplete', label: 'Incomplete or inconsistent in some periods' },
-      { value: 'informal', label: 'Many transactions do not pass through formal banking' },
+      { value: 'clean', label: 'Business banking is clean and fully separated, with no meaningful personal mixing' },
+      { value: 'mostly_clean', label: 'Business banking is mostly clean, with occasional personal or mixed transactions' },
+      { value: 'incomplete', label: 'Records are incomplete, inconsistent, or hard to follow in some periods' },
+      { value: 'informal', label: 'A large share of business activity does not pass through formal banking records' },
     ],
   },
   {
@@ -271,31 +270,31 @@ export const closingQuestions: Question[] = [
     prompt: 'How do you currently track sales, expenses, and business performance?',
     required: true,
     options: [
-      { value: 'software', label: 'Accounting software or a proper business app' },
-      { value: 'spreadsheet', label: 'Spreadsheet or disciplined ledger' },
-      { value: 'notes', label: 'Notes and partial records' },
-      { value: 'informal', label: 'Mostly in my head or informally' },
+      { value: 'software', label: 'Structured accounting software or a proper business management system' },
+      { value: 'spreadsheet', label: 'A disciplined spreadsheet, ledger, or manual record process' },
+      { value: 'notes', label: 'Partial notes or records, but not a consistently structured system' },
+      { value: 'informal', label: 'Mostly informal, memory-based, or not tracked consistently' },
     ],
   },
   {
     id: 'ownerAbsence2Weeks',
     type: 'select',
-    prompt: 'If you stepped away for 2 weeks, what would happen?',
+    prompt: 'If you stepped away for 2 weeks, what would most likely happen to day-to-day operations, delivery, sales, and approvals?',
     tooltipText:
       "This helps us assess how dependent the business is on the owner's presence for day-to-day decisions and operations.",
     required: true,
     options: [
-      { value: 'smooth', label: 'It would continue normally with no material issues' },
-      { value: 'minor_issues', label: 'It would continue with minor issues or under about 5% disruption' },
-      { value: 'struggle', label: 'It would struggle materially during that period' },
-      { value: 'almost_stop', label: 'It would nearly stop without me' },
+      { value: 'smooth', label: 'Operations would continue normally, with no material disruption to delivery, sales, or approvals' },
+      { value: 'minor_issues', label: 'Operations would continue, with only minor delays or under about 5% disruption' },
+      { value: 'struggle', label: 'Operations or sales would be materially disrupted during that period' },
+      { value: 'almost_stop', label: 'Core operations would largely stop without direct owner involvement' },
     ],
   },
   {
     id: 'ownerAbsence3Months',
     type: 'select',
     prompt: 'If you were unavailable for 3 months, what is the most realistic impact on operations and revenue?',
-    helperText: 'Base this on what would happen without your direct involvement, not on a best-case hope. This is one of the strongest transferability signals in owner mode.',
+    helperText: 'Base this on what would happen without your direct involvement, not on a best-case hope.',
     tooltipText:
       "This helps us assess the risk to the company if the owner is unavailable for an extended period and how independent the business really is.",
     required: true,
@@ -311,15 +310,14 @@ export const closingQuestions: Question[] = [
     id: 'ownerCustomerRelationship',
     type: 'select',
     prompt: 'How are customer relationships tied to you personally?',
-    helperText: 'We use this as the universal founder-dependence signal when a more specific branch resolver is not available.',
     tooltipText:
       "This helps us assess whether customer loyalty depends on the owner's direct involvement or would continue if the owner stepped back.",
     required: true,
     options: [
-      { value: 'brand_not_personal', label: 'Customers buy the brand or service, not me personally' },
-      { value: 'knows_not_expected', label: 'Customers know me, but do not expect my direct involvement' },
-      { value: 'expects_involvement', label: 'Customers know me and expect my personal involvement' },
-      { value: 'buying_owner', label: 'Many customers are effectively buying me or my relationships' },
+      { value: 'brand_not_personal', label: 'Customers buy the brand or service, not the owner personally' },
+      { value: 'knows_not_expected', label: "Customers know the owner, but do not expect the owner's direct involvement" },
+      { value: 'expects_involvement', label: "Customers know the owner and expect the owner's personal involvement" },
+      { value: 'buying_owner', label: "Many customers are effectively buying the owner or the owner's relationships" },
     ],
   },
   {
@@ -328,10 +326,10 @@ export const closingQuestions: Question[] = [
     prompt: 'Who currently carries most day-to-day operating control and key decisions?',
     required: true,
     options: [
-      { value: 'team_controls', label: 'A management team with clear roles, controls, and delegated authority' },
-      { value: 'trusted_manager', label: 'A trusted manager runs most of it, with my oversight' },
-      { value: 'founder_plus_support', label: 'I still run most of it, with occasional help from staff or family' },
-      { value: 'founder_only', label: 'The business still depends on me for most key decisions and coordination' },
+      { value: 'team_controls', label: 'A management team carries day-to-day control, with clear roles and delegated authority' },
+      { value: 'trusted_manager', label: 'One trusted manager carries most operations, with owner oversight' },
+      { value: 'founder_plus_support', label: 'The owner still carries most operations, with occasional support from staff or family' },
+      { value: 'founder_only', label: 'The business still depends on the owner for most key decisions and coordination' },
     ],
   },
   {
@@ -340,10 +338,10 @@ export const closingQuestions: Question[] = [
     prompt: 'How well is important operating knowledge documented?',
     required: true,
     options: [
-      { value: 'documented_multi', label: 'Documented and several people can follow them' },
-      { value: 'partly_documented', label: 'Some documented, a few people know how things work' },
-      { value: 'little_documented', label: 'Only a small amount is documented' },
-      { value: 'founder_head', label: 'Most of it sits in my head' },
+      { value: 'documented_multi', label: 'Key processes are documented and several people can follow them' },
+      { value: 'partly_documented', label: 'Some key processes are documented and a few people know how they work' },
+      { value: 'little_documented', label: 'Only a small portion of important operating knowledge is documented' },
+      { value: 'founder_head', label: 'Most important operating knowledge still sits with the owner or a few key people' },
     ],
   },
   {
@@ -355,19 +353,35 @@ export const closingQuestions: Question[] = [
       { value: 'easy', label: 'A credible replacement could be found and stabilised within a few weeks' },
       { value: 'possible', label: 'A replacement is possible, but would likely take 1 to 2 months' },
       { value: 'difficult', label: 'A replacement would likely take several months and real handover effort' },
-      { value: 'founder_tied', label: 'Very difficult; too much of the role is still tied to me personally' },
+      { value: 'founder_tied', label: 'Very difficult; too much of the role is still tied to the owner personally' },
     ],
   },
   {
-    id: 'laborMarketDifficulty',
+    id: 'criticalHireTime',
     type: 'select',
-    prompt: 'If you needed to hire one solid skilled employee today, how long would it usually take to find and onboard the right person?',
+    prompt: 'If one important skilled employee left today, how long would it usually take to hire and stabilise a strong replacement?',
+    tooltipText:
+      'This helps us measure people-market risk using a more concrete hiring timeline rather than a general opinion about the labour market.',
     required: true,
     options: [
-      { value: 'easy', label: 'Usually within 30 days' },
-      { value: 'feasible', label: 'Usually about 1 to 3 months' },
-      { value: 'difficult', label: 'Usually about 3 to 6 months' },
-      { value: 'severe', label: 'Usually over 6 months or very uncertain' },
+      { value: 'lt_30d', label: 'Usually within 30 days' },
+      { value: '1_3m', label: 'Usually about 1 to 3 months' },
+      { value: '3_6m', label: 'Usually about 3 to 6 months' },
+      { value: 'gt_6m', label: 'Usually over 6 months or very uncertain' },
+    ],
+  },
+  {
+    id: 'criticalHireSalaryPremium',
+    type: 'select',
+    prompt: 'Compared with a normal market rate, how much extra pay would you usually need to attract that replacement?',
+    tooltipText:
+      'This gives us a second quantitative read on hiring difficulty. If a replacement only comes with a material pay premium, the role is harder to replace cleanly.',
+    required: true,
+    options: [
+      { value: 'none', label: 'No material premium beyond a normal market package' },
+      { value: 'up_to_10', label: 'Usually up to about 10% above normal market pay' },
+      { value: '10_25', label: 'Usually about 10% to 25% above normal market pay' },
+      { value: 'gt_25', label: 'Usually more than 25% above normal market pay' },
     ],
   },
   {
@@ -395,7 +409,7 @@ export const closingQuestions: Question[] = [
       { value: 'price', label: 'Mostly lower price, convenience, or location' },
       { value: 'reliability', label: 'Mostly more reliable delivery, service, or execution' },
       { value: 'hard_to_copy', label: 'Mostly something hard to copy: brand, capability, process, distribution, or certification' },
-      { value: 'founder_trust', label: 'Mostly personal trust in me or my relationships' },
+      { value: 'founder_trust', label: "Mostly personal trust in the owner or the owner's relationships" },
       { value: 'not_sure', label: 'Not sure' },
     ],
   },
@@ -429,15 +443,31 @@ export const closingQuestions: Question[] = [
     ],
   },
   {
-    id: 'partnerDependency',
+    id: 'largestSupplierShare',
     type: 'select',
-    prompt: 'If you lost your most important supplier or operating partner, how hard would it be to replace them without major disruption?',
+    prompt: 'About what share of purchases or critical operating inputs comes from your single largest supplier or external operating partner?',
+    tooltipText:
+      'This gives us a quantitative view of supplier concentration. The more the business depends on one source, the harder it is to transfer or de-risk.',
     required: true,
     options: [
-      { value: 'very_easy', label: 'Replaceable in under 2 weeks' },
-      { value: 'manageable', label: 'Replaceable in about 2 to 8 weeks' },
-      { value: 'uncertain', label: 'Possible, but likely 2 to 6 months or uncertain' },
-      { value: 'very_difficult', label: 'Very difficult; likely over 6 months or not realistically replaceable' },
+      { value: 'lt_20', label: 'Under about 20%' },
+      { value: '20_35', label: 'About 20% to 35%' },
+      { value: '35_60', label: 'About 35% to 60%' },
+      { value: 'gt_60', label: 'Over about 60% or effectively single-source' },
+    ],
+  },
+  {
+    id: 'supplierReplacementTime',
+    type: 'select',
+    prompt: 'If that largest supplier or partner failed today, how long would it realistically take to replace them without major disruption?',
+    tooltipText:
+      'This measures switchability. We combine this with supplier concentration to estimate how transferable and resilient the operating model is.',
+    required: true,
+    options: [
+      { value: 'lt_2w', label: 'Usually under 2 weeks' },
+      { value: '2_8w', label: 'Usually about 2 to 8 weeks' },
+      { value: '2_6m', label: 'Usually about 2 to 6 months' },
+      { value: 'gt_6m', label: 'Usually over 6 months or not realistically replaceable' },
     ],
   },
   {
@@ -484,7 +514,8 @@ export const closingQuestions: Question[] = [
   {
     id: 'transactionTimeline',
     type: 'select',
-    prompt: 'When do you realistically expect a transaction process could begin?',
+    prompt: 'If you wanted a real transaction process to begin, when would you realistically want it to start?',
+    helperText: 'Shorter timelines leave less time to prepare records, fix issues, and negotiate well, so they can push the estimate toward a more time-pressured outcome.',
     required: true,
     options: [
       { value: 'within_6m', label: 'Within 6 months' },
@@ -498,7 +529,7 @@ export const closingQuestions: Question[] = [
     id: 'receivablesLatest',
     type: 'currency',
     prompt: 'How much are customers owing the business at month-end?',
-    helperText: 'Trade receivables only. Enter the amount in ₦ millions. Enter 0 if customers pay immediately.',
+    helperText: 'Trade receivables only. Enter 0 if customers pay immediately.',
     tooltipText:
       'Receivables are part of working capital. We use them to understand how much cash is tied up in the business and how that affects equity value at deal time.',
     required: true,
@@ -509,7 +540,7 @@ export const closingQuestions: Question[] = [
     id: 'payablesLatest',
     type: 'currency',
     prompt: 'How much does the business owe suppliers?',
-    helperText: 'Exclude bank loans or director loans. Enter the amount in ₦ millions.',
+    helperText: 'Exclude bank loans or director loans.',
     tooltipText:
       'Payables are part of working capital. They help us estimate the funding the business needs to operate normally and the likely deal-time working-capital position.',
     required: true,
@@ -520,7 +551,7 @@ export const closingQuestions: Question[] = [
     id: 'cashBalance',
     type: 'currency',
     prompt: 'What is the current cash balance?',
-    helperText: 'Include bank balances available to operations. Enter the amount in ₦ millions.',
+    helperText: 'Include bank balances available to operations.',
     tooltipText:
       'Cash affects the equity bridge directly. More available operating cash can increase the equity value available to a seller.',
     required: true,
@@ -531,7 +562,7 @@ export const closingQuestions: Question[] = [
     id: 'ownerTotalCompensation',
     type: 'currency',
     prompt: 'What is your total annual all-in compensation from the business?',
-    helperText: 'Include salary, bonuses, benefits, allowances, and regular owner pay. Enter the amount in ₦ millions. Enter 0 only if you take nothing out.',
+    helperText: 'Include salary, bonuses, benefits, allowances, and regular owner pay. Enter 0 only if you take nothing out.',
     tooltipText:
       'We use this to normalize earnings. Buyer value is based on maintainable profit after allowing for a realistic replacement cost, not just the current owner draw.',
     required: true,
@@ -542,7 +573,7 @@ export const closingQuestions: Question[] = [
     id: 'marketManagerCompensation',
     type: 'currency',
     prompt: 'If you had to hire a full-time non-owner manager to do your role properly, what total annual pay package would be realistic?',
-    helperText: 'Include salary, bonuses, benefits, pension, and statutory costs. Enter the amount in ₦ millions and use your best realistic estimate for your size of business and location.',
+    helperText: 'Include salary, bonuses, benefits, pension, and statutory costs, and use your best realistic estimate for your size of business and location.',
     tooltipText:
       'This is the replacement cost we compare against current owner pay to estimate maintainable earnings for a buyer.',
     required: true,
@@ -553,7 +584,7 @@ export const closingQuestions: Question[] = [
     id: 'relatedPartyRentPaid',
     type: 'currency',
     prompt: 'What total annual rent does the business currently pay for premises that are related-party, subsidized, or otherwise not at market terms?',
-    helperText: 'Enter the amount in ₦ millions. Enter 0 if the business already pays a clear market rent.',
+    helperText: 'Enter 0 if the business already pays a clear market rent.',
     tooltipText:
       'If the business uses below-market or related-party premises, we normalize that cost so profit better reflects what a buyer would likely face after a deal.',
     required: true,
@@ -564,7 +595,7 @@ export const closingQuestions: Question[] = [
     id: 'marketRentEquivalent',
     type: 'currency',
     prompt: 'What would the total annual market rent be for the same premises on arm\'s-length terms?',
-    helperText: 'Enter the amount in ₦ millions. Enter 0 only if there is no rent normalization issue.',
+    helperText: 'Enter 0 only if there is no rent normalization issue.',
     tooltipText:
       'This is the market cost benchmark we use to adjust reported profit if current rent is not on normal commercial terms.',
     required: true,
@@ -575,7 +606,7 @@ export const closingQuestions: Question[] = [
     id: 'relatedPartyCompPaid',
     type: 'currency',
     prompt: 'What is the total annual all-in amount paid to related parties or family members working in the business?',
-    helperText: 'Include salary, wages, bonuses, allowances, pension, benefits, and any other compensation. Enter the amount in ₦ millions. Enter 0 if none.',
+    helperText: 'Include salary, wages, bonuses, allowances, pension, benefits, and any other compensation. Enter 0 if none.',
     tooltipText:
       'We compare current related-party pay with a normal market replacement cost so maintainable earnings are not overstated or understated.',
     required: true,
@@ -586,7 +617,7 @@ export const closingQuestions: Question[] = [
     id: 'marketRelatedPartyCompEquivalent',
     type: 'currency',
     prompt: 'What would be the total annual all-in market cost to hire non-related staff for those same roles?',
-    helperText: 'Use a realistic replacement cost including salary, benefits, and statutory costs. Enter the amount in ₦ millions. Enter 0 if none.',
+    helperText: 'Use a realistic replacement cost including salary, benefits, and statutory costs. Enter 0 if none.',
     tooltipText:
       'This estimates what a buyer would likely need to pay independent staff to perform those same roles after a transaction.',
     required: true,
@@ -597,7 +628,7 @@ export const closingQuestions: Question[] = [
     id: 'privateExpensesAmount',
     type: 'currency',
     prompt: 'How much personal or private spending runs through the business each year?',
-    helperText: 'Enter the amount in ₦ millions. Enter 0 if none.',
+    helperText: 'Enter 0 if none.',
     tooltipText:
       'We add back personal expenses that are not needed to operate the business so the valuation reflects true maintainable business earnings.',
     required: true,
@@ -608,7 +639,7 @@ export const closingQuestions: Question[] = [
     id: 'oneOffExpenseAmount',
     type: 'currency',
     prompt: 'In the latest year, how much expense in reported profit came from unusual or non-recurring items that should not be treated as ongoing?',
-    helperText: 'Examples: one-time repairs, legal settlements, exceptional losses, or relocation costs. Enter the amount in ₦ millions. Enter 0 if none.',
+    helperText: 'Examples: one-time repairs, legal settlements, exceptional losses, or relocation costs. Enter 0 if none.',
     tooltipText:
       'We remove one-time expenses that are unlikely to repeat so the valuation is based on maintainable operating performance, not a distorted bad year.',
     required: true,
@@ -619,7 +650,7 @@ export const closingQuestions: Question[] = [
     id: 'oneOffIncomeAmount',
     type: 'currency',
     prompt: 'In the latest year, how much income in reported profit came from unusual or non-recurring items that are unlikely to happen again?',
-    helperText: 'Examples: asset sale gains, insurance recoveries, exceptional rebates, or one-time settlements. Enter the amount in ₦ millions. Enter 0 if none.',
+    helperText: 'Examples: asset sale gains, insurance recoveries, exceptional rebates, or one-time settlements. Enter 0 if none.',
     tooltipText:
       'We remove unusual income that is unlikely to repeat so the valuation reflects maintainable earnings rather than one-time boosts.',
     required: true,
@@ -630,7 +661,7 @@ export const closingQuestions: Question[] = [
     id: 'nonCoreIncomeAmount',
     type: 'currency',
     prompt: 'In the latest year, how much income in reported profit came from activities outside the main business?',
-    helperText: 'Examples: rent from non-core property, investment income, side ventures, or other income not required to run the core business. Enter the amount in ₦ millions. Enter 0 if none.',
+    helperText: 'Examples: rent from non-core property, investment income, side ventures, or other income not required to run the core business. Enter 0 if none.',
     tooltipText:
       'We separate non-core income so the valuation focuses on the operating business a buyer is actually assessing.',
     required: true,
@@ -641,7 +672,7 @@ export const closingQuestions: Question[] = [
     id: 'annualDepreciation',
     type: 'currency',
     prompt: 'What is the annual depreciation expense for the latest year?',
-    helperText: 'Enter the amount in ₦ millions. Enter 0 if negligible or unknown.',
+    helperText: 'Enter 0 if negligible or unknown.',
     tooltipText:
       'Depreciation helps us bridge between EBIT and EBITDA-style earnings and improves comparability across valuation methods.',
     required: false,
@@ -652,7 +683,7 @@ export const closingQuestions: Question[] = [
     id: 'financialDebt',
     type: 'currency',
     prompt: 'What is the current financial debt balance?',
-    helperText: 'Include loans and finance obligations. Enter the amount in ₦ millions.',
+    helperText: 'Include loans and finance obligations.',
     tooltipText:
       'Financial debt reduces the equity value available to the seller even when enterprise value stays the same.',
     required: true,
@@ -663,7 +694,7 @@ export const closingQuestions: Question[] = [
     id: 'shareholderLoans',
     type: 'currency',
     prompt: 'What is the balance of shareholder or director loans?',
-    helperText: 'Enter the amount in ₦ millions. Enter 0 if none.',
+    helperText: 'Enter 0 if none.',
     tooltipText:
       'Shareholder or director loans can change the final equity bridge and are important for understanding what a buyer would actually assume or repay.',
     required: true,
@@ -685,7 +716,7 @@ export const closingQuestions: Question[] = [
     id: 'previousOfferAmount',
     type: 'currency',
     prompt: 'If yes, what was the offer amount?',
-    helperText: 'Shown only when there was a specific offer. Enter the amount in ₦ millions.',
+    helperText: 'Shown only when there was a specific offer.',
     required: false,
     placeholder: 'e.g. 50',
     min: 0,

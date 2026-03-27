@@ -17,6 +17,44 @@ export interface ConfidenceBreakdown {
   benchmarkCoverage: number;
 }
 
+export interface PartialScorecardSummary {
+  marketPosition: number;
+  financialQuality: number;
+  ownerIndependence: number;
+  revenueQuality: number;
+  operatingResilience: number;
+  transactionReadiness: number;
+}
+
+export interface PartialFactorCard {
+  key: string;
+  label: string;
+  factor: number;
+  note?: string;
+  appliesTo?: string[];
+  signalScore?: number;
+}
+
+export interface PartialQualitativeAdjustments {
+  geographyBucket?: string;
+  normalizedPrimaryState?: string;
+  geographyAdjustmentFactor?: number;
+  level1Bucket?: string;
+  level1AdjustmentFactor?: number;
+  transactionContextLabel?: string;
+  transactionContextFactor?: number;
+  achievableUrgencyFactor?: number;
+  marketPositionSignalScore?: number;
+  marketPositionAdjustmentFactor?: number;
+  fxExposure?: string;
+  fxExposureAdjustmentFactor?: number;
+  traceablePaymentsShare?: string;
+  traceabilityAdjustmentFactor?: number;
+  branchFamily?: string;
+  branchQualityFactor?: number;
+  branchSignalScore?: number;
+}
+
 export interface Flag {
   type: 'warning' | 'info';
   message: string;
@@ -25,12 +63,23 @@ export interface Flag {
 
 export interface PartialValuationResult {
   range: PreliminaryRange;
+  adjustedValue: number;
+  preciseAdjustedValue: number;
+  preciseLowEstimate: number;
+  preciseHighEstimate: number;
+  readinessScore: number;
   confidence: 'very_low' | 'low' | 'medium' | 'high' | 'very_high';
   confidenceScore: number;
+  rangeWidthPct: number;
   confidenceBreakdown: ConfidenceBreakdown;
   flags: Flag[];
   phase: string;
   nextPhase: string;
+  primaryMethod: string | null;
+  scorecard: PartialScorecardSummary | null;
+  qualitativeAdjustments: PartialQualitativeAdjustments | null;
+  factorCards: PartialFactorCard[];
+  sourceModel: 'owner_engine' | 'fallback';
 }
 
 /**

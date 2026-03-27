@@ -1,6 +1,11 @@
 import { average, clamp, safeDivide } from './utils.mjs';
 import { scoreFromMap } from './scorecards.mjs';
-import { buildBranchQualityAdjustment, scoreOperatingYearsBand } from './qualitative-adjustments.mjs';
+import {
+  buildBranchQualityAdjustment,
+  buildFxExposureAdjustment,
+  buildMarketPositionAdjustment,
+  scoreOperatingYearsBand,
+} from './qualitative-adjustments.mjs';
 
 function buildNormalizationQualityScore(normalizationSchedule) {
   if (!normalizationSchedule.length) {
@@ -37,6 +42,7 @@ function buildMethodDispersionPct(approaches) {
 export function buildConfidenceAssessment(request, scorecard, policyResolution, normalizationSchedule, historicalSummary, normalizedMetrics, approaches, policyGroup) {
   const yearsAvailableScore = clamp(38 + (historicalSummary.yearsAvailable - 1) * 18, 38, 86);
   const operatingYearsScore = scoreOperatingYearsBand(request.company.operatingYearsBand);
+  const classificationFitScore = scoreFromMap('industryFit', request.classification.industryFit);
   const forecastCoverageScore =
     request.financials?.forecast?.forecastYears?.length
       ? request.financials.forecast.forecastConfidence === 'high'
@@ -50,6 +56,8 @@ export function buildConfidenceAssessment(request, scorecard, policyResolution, 
     typeof normalizedMetrics.actualWorkingCapital === 'number' && typeof normalizedMetrics.normalizedWorkingCapital === 'number' ? 72 : 42;
   const normalizationQuality = buildNormalizationQualityScore(normalizationSchedule);
   const branchQuality = buildBranchQualityAdjustment(request);
+  const marketPositionAdjustment = buildMarketPositionAdjustment(request);
+  const fxExposureAdjustment = buildFxExposureAdjustment(request);
   const calibrationEvidenceScore = policyGroup?.calibration?.evidenceScore ?? 35;
   const calibrationFreshnessStatus = policyGroup?.calibration?.freshnessStatus ?? 'stale';
   const freshnessCoverage = calibrationFreshnessStatus === 'fresh' ? 85 : calibrationFreshnessStatus === 'aging' ? 65 : 40;
@@ -58,6 +66,7 @@ export function buildConfidenceAssessment(request, scorecard, policyResolution, 
   const internalObservationCount = policyGroup?.calibration?.internalObservationCount ?? 0;
   const benchmarkCoverage = average([
     policyResolution.fallback ? 45 : 68,
+    classificationFitScore,
     request.evidence.benchmarkCoverage?.transactionCompsAvailable ? 72 : 45,
     request.evidence.benchmarkCoverage?.publicCompsAvailable ? 65 : 42,
     request.evidence.benchmarkCoverage?.workingCapitalBenchmarkAvailable ? 68 : 45,
@@ -70,6 +79,7 @@ export function buildConfidenceAssessment(request, scorecard, policyResolution, 
     scoreFromMap('growthOutlook', request.operatingProfile.growthOutlook),
     scoreFromMap('marketDemand', request.operatingProfile.marketDemand),
     scoreFromMap('workingCapitalHealth', request.operatingProfile.workingCapitalHealth),
+    scorecard.operatingResilience,
     branchQuality.branchSignalScore,
   ]);
   const methodDispersionPct = buildMethodDispersionPct(approaches);
@@ -93,16 +103,22 @@ export function buildConfidenceAssessment(request, scorecard, policyResolution, 
     90
   );
 
-  const rangeWidthPct = clamp(34 - overallScore * 0.17 + methodDispersionPct * 0.12, 12, 38);
+  const rangeWidthPct = clamp(26.5 - overallScore * 0.13 + methodDispersionPct * 0.075, 9, 30);
   const notes = [];
 
   if (historicalSummary.yearsAvailable < 3) notes.push('Owner mode currently has limited historical depth, so the range remains wider than an advisor-grade output.');
   if (request.financials?.forecast?.forecastYears?.length) {
     notes.push('Current-year forecast inputs are included with cautious weight and modestly improve data completeness, but they are still treated as less reliable than completed-year actuals.');
   }
+  if (request.engagement.urgency !== 'orderly') {
+    notes.push('A shorter transaction timeline is being reflected in achievable-today value, which should be read separately from the fundamental going-concern estimate.');
+  }
   if (operatingYearsScore < 50) notes.push('The short operating history of the business itself also increases owner-mode uncertainty.');
   if (normalizationSchedule.length > 0) notes.push('Normalization adjustments are quantified from owner-provided amounts, but they remain unverified until advisor review.');
   if (policyResolution.fallback) notes.push('Level 2 policy fell back to a generic owner-operated service policy due to missing registry match.');
+  if (classificationFitScore < 55) {
+    notes.push('Industry fit is weak or uncertain, so benchmark relevance and confidence are reduced until classification is clarified.');
+  }
   if (policyGroup?.calibration?.source === 'benchmark_calibrated') {
     notes.push(`Policy-group calibration is benchmark-backed, using ${policyGroup.calibration.observationCount} recorded observations across ${policyGroup.calibration.benchmarkSetIds.length} set(s).`);
   }
@@ -123,6 +139,14 @@ export function buildConfidenceAssessment(request, scorecard, policyResolution, 
   if (Math.abs(normalizedMetrics.workingCapitalDelta || 0) > normalizedMetrics.revenue * 0.08) {
     notes.push('Working-capital adjustment is material relative to revenue, so the equity bridge is more sensitive than usual.');
   }
+  if ((marketPositionAdjustment.marketPositionSignalScore || 0) >= 75) {
+    notes.push('Market-position signals are strong enough to support a modest capped uplift on market and earnings methods.');
+  } else if ((marketPositionAdjustment.marketPositionSignalScore || 0) <= 50) {
+    notes.push('Market-position signals are softer, so market and earnings methods are being capped modestly downward.');
+  }
+  if ((fxExposureAdjustment.fxExposureAdjustmentFactor || 1) < 0.98) {
+    notes.push('Foreign-currency-linked operating exposure is applying a capped sensitivity discount to market and earnings methods.');
+  }
   if (branchQuality.branchFamily && typeof branchQuality.branchSignalScore === 'number') {
     notes.push(
       branchQuality.branchSignalScore >= 65
@@ -139,5 +163,41 @@ export function buildConfidenceAssessment(request, scorecard, policyResolution, 
     earningsStability: Math.round(earningsStability),
     rangeWidthPct: Number(rangeWidthPct.toFixed(1)),
     notes,
+    ledger: {
+      historicalDepthScore,
+      yearsAvailableScore,
+      operatingYearsScore,
+      forecastCoverageScore,
+      workingCapitalCoverage,
+      normalizationQuality,
+      benchmarkCoverage,
+      earningsStability,
+      methodDispersionPct,
+      freshnessPenalty,
+      weakEvidencePenalty,
+      internalEvidenceBonus,
+      dispersionPenaltyWeight,
+      overallBeforeClamp:
+        historicalDepthScore * 0.2 +
+        scorecard.financialQuality * 0.22 +
+        normalizationQuality * 0.16 +
+        workingCapitalCoverage * 0.12 +
+        benchmarkCoverage * 0.14 +
+        earningsStability * 0.16 -
+        freshnessPenalty -
+        weakEvidencePenalty +
+        internalEvidenceBonus -
+        methodDispersionPct * dispersionPenaltyWeight,
+      overallAfterClamp: overallScore,
+      rangeWidthPct: Number(rangeWidthPct.toFixed(1)),
+      weights: {
+        historicalDepth: 0.2,
+        financialQuality: 0.22,
+        normalizationQuality: 0.16,
+        workingCapitalCoverage: 0.12,
+        benchmarkCoverage: 0.14,
+        earningsStability: 0.16,
+      },
+    },
   };
 }

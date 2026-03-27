@@ -41,6 +41,12 @@ export function ConfidenceMeter({
           100
       )
     : 0;
+  const displayedRangeWidth =
+    typeof result.rangeWidthPct === 'number' && Number.isFinite(result.rangeWidthPct)
+      ? result.rangeWidthPct
+      : range.mid > 0
+        ? Math.round(((range.high - range.low) / 2 / range.mid) * 100)
+        : 0;
 
   return (
     <div className="rounded-2xl border border-purple-100 bg-purple-50 p-6">
@@ -157,7 +163,7 @@ export function ConfidenceMeter({
       <div className="mb-4 rounded-lg bg-white/60 p-3">
         <p className="text-sm text-purple-900">
           <span className="font-medium">Range width: </span>
-          ±{range.mid > 0 ? Math.round(((range.high - range.low) / 2 / range.mid) * 100) : 0}%
+          ±{displayedRangeWidth.toFixed(1)}%
         </p>
         {phase !== 'closing' && (
           <p className="text-xs text-purple-700">

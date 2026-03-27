@@ -42,9 +42,9 @@ export function selectOwnerMethods(request, policyGroup, normalizedMetrics, scor
       rationale.push('Owner-led service businesses anchor on maintainable owner earnings first.');
     }
 
-    if (hasPositiveMarketMetric && ownerIndependence >= 65) {
+    if (hasPositiveMarketMetric && ownerIndependence >= 70) {
       pushMethod(methods, 'market_multiple');
-      rationale.push('A market multiple is included because management depth suggests the business is somewhat transferable beyond the founder.');
+      rationale.push('A market multiple is included because multiple independence signals suggest the business is transferable beyond the founder.');
     }
 
     if (policyGroup.floorMethod === 'asset_approach' && (normalizedMetrics.actualWorkingCapital > 0 || normalizedMetrics.maintenanceCapex > 0)) {
@@ -56,7 +56,7 @@ export function selectOwnerMethods(request, policyGroup, normalizedMetrics, scor
       rationale.push('Comparable market-style multiples are usable with the current owner-mode inputs for this business model.');
     }
 
-    if (normalizedMetrics.adjustedEbit > 0 && (yearsAvailable >= 2 || financialQuality >= 60)) {
+    if (normalizedMetrics.adjustedEbit > 0 && (yearsAvailable >= 2 || financialQuality >= 50)) {
       pushMethod(methods, 'capitalized_earnings');
       rationale.push('Capitalized earnings is included because there is enough earnings support or record quality to estimate maintainable profit.');
     }
@@ -95,13 +95,14 @@ export function selectOwnerMethods(request, policyGroup, normalizedMetrics, scor
 
 export function reconcileApproaches(policyGroup, approaches) {
   if (!approaches.length) {
-    return { low: 0, mid: 0, high: 0, appliedWeights: {} };
+    return { low: 0, mid: 0, high: 0, appliedWeights: {}, contributions: [] };
   }
 
   const configuredWeights = policyGroup.ownerPhase.reconciliationWeights || {};
   const weightTotal = approaches.reduce((sum, approach) => sum + (configuredWeights[approach.method] || 1), 0);
 
   const appliedWeights = {};
+  const contributions = [];
   let low = 0;
   let mid = 0;
   let high = 0;
@@ -110,10 +111,23 @@ export function reconcileApproaches(policyGroup, approaches) {
     const rawWeight = configuredWeights[approach.method] || 1;
     const weight = rawWeight / weightTotal;
     appliedWeights[approach.method] = Number(weight.toFixed(4));
-    low += approach.low * weight;
-    mid += approach.mid * weight;
-    high += approach.high * weight;
+    const weightedLow = approach.low * weight;
+    const weightedMid = approach.mid * weight;
+    const weightedHigh = approach.high * weight;
+    low += weightedLow;
+    mid += weightedMid;
+    high += weightedHigh;
+    contributions.push({
+      method: approach.method,
+      weight: Number(weight.toFixed(4)),
+      low: approach.low,
+      mid: approach.mid,
+      high: approach.high,
+      weightedLow,
+      weightedMid,
+      weightedHigh,
+    });
   }
 
-  return { low, mid, high, appliedWeights };
+  return { low, mid, high, appliedWeights, contributions };
 }

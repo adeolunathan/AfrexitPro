@@ -44,6 +44,7 @@ export function buildNormalizedMetrics(request, policyGroup, historicalSummary) 
   const actualWorkingCapital = inferActualWorkingCapital(request, latestPeriod);
   const normalizedWorkingCapital = inferNormalizedWorkingCapital(request, policyGroup, revenue);
   const workingCapitalDelta = actualWorkingCapital - normalizedWorkingCapital;
+  const workingCapitalTargetPct = policyGroup.ownerPhase.workingCapitalTargetPct ?? 0.06;
 
   const rawEbit = operatingProfit;
   const rawEbitda = rawEbit + depreciationAmortization;
@@ -71,5 +72,24 @@ export function buildNormalizedMetrics(request, policyGroup, historicalSummary) 
     workingCapitalDelta,
     maintenanceCapex,
     netDebt,
+    ledger: {
+      rawEbit,
+      rawEbitda,
+      rawSde,
+      ebitAdjustment,
+      sdeAdjustment,
+      depreciationAmortization,
+      interestExpense,
+      taxExpense,
+      adjustedEbit,
+      adjustedEbitda,
+      sde,
+      actualWorkingCapital,
+      normalizedWorkingCapital,
+      workingCapitalDelta,
+      workingCapitalTargetPct,
+      maintenanceCapex,
+      netDebt,
+    },
   };
 }

@@ -60,8 +60,30 @@ export function buildAssumptions(request, selectedMethods, historicalSummary, no
   if (request.normalization.schedule.length > 0) {
     assumptions.push('Owner-mode normalization amounts have been captured explicitly, but they are still treated as owner estimates until verified.');
   }
+  if (
+    request.normalization.schedule.length > 0 &&
+    selectedMethods.primaryMethod === 'market_multiple' &&
+    (policyGroup?.ownerPhase?.marketMetric || 'revenue') === 'revenue'
+  ) {
+    assumptions.push('The selected primary method is revenue-based, so profit normalization affects maintainable earnings analysis and secondary methods more than the primary market-multiple driver.');
+  }
   if (typeof normalizedMetrics.normalizedWorkingCapital === 'number') {
     assumptions.push('A normalized working-capital requirement is inferred from business-model policy and current owner inputs.');
+  }
+  if (request.engagement.urgency !== 'orderly') {
+    assumptions.push('Shorter transaction timing is reducing achievable-today value relative to a fully orderly sale process.');
+  }
+  if (request.engagement.standardOfValue === 'investment_value') {
+    assumptions.push('The valuation context is framed as investment value rather than only a plain fair-market sale value.');
+  }
+  if (['high', 'very_high'].includes(String(request.operatingProfile.fxExposure || ''))) {
+    assumptions.push('Foreign-currency-linked cost exposure is applying a capped sensitivity discount to market and earnings methods.');
+  }
+  if (['20_49', 'lt_20'].includes(String(request.financials?.sourceQuality?.traceablePaymentsShare || ''))) {
+    assumptions.push('Low payment traceability is reducing achievable-today value modestly because buyer verification and diligence execution are weaker.');
+  }
+  if (request.operatingProfile.catchmentArea || request.operatingProfile.differentiation || request.operatingProfile.pricingPower) {
+    assumptions.push('Catchment breadth, differentiation, and pricing power now feed a capped market-position adjustment on market and earnings methods.');
   }
   if (policyGroup?.calibration?.source === 'benchmark_calibrated') {
     assumptions.push(
@@ -92,6 +114,80 @@ export function buildOwnerResult({
 }) {
   const rating = ratingFromReadiness(readinessAssessment.overallScore);
   const warnings = [...redFlags];
+  const calculationLedger = {
+    history: historicalSummary.ledger,
+    normalization: normalizedMetrics.ledger,
+    approaches: approaches.map((approach) => approach.ledger).filter(Boolean),
+    reconciliation: {
+      contributions: values.appliedContributions || [],
+      appliedWeights: values.appliedWeights || {},
+      blendedLow: values.enterpriseValue.fundamentalLow,
+      blendedMid: values.enterpriseValue.fundamentalMid,
+      blendedHigh: values.enterpriseValue.fundamentalHigh,
+    },
+    bridge: values.ledger,
+    readiness: readinessAssessment.ledger,
+    confidence: confidenceAssessment.ledger,
+    qualitativeFactors: [
+      {
+        key: 'marketability',
+        label: 'Readiness-to-marketability factor',
+        factor: Number((values.ledger?.marketabilityFactor || 1).toFixed(4)),
+        note: 'Converts the fundamental value view into achievable-today value based on readiness.',
+      },
+      {
+        key: 'geography',
+        label: 'Geography factor',
+        factor: values.qualitativeAdjustments?.geographyAdjustmentFactor || 1,
+        note: 'Applied to achievable-today value only.',
+      },
+      {
+        key: 'level1',
+        label: 'Level 1 family factor',
+        factor: values.qualitativeAdjustments?.level1AdjustmentFactor || 1,
+        note: 'Broad family adjustment applied to achievable-today value.',
+      },
+      {
+        key: 'transaction_context',
+        label: 'Transaction-context factor',
+        factor: values.qualitativeAdjustments?.transactionContextFactor || 1,
+        note: 'Sale vs planning vs investment context applied to achievable-today value.',
+      },
+      {
+        key: 'traceability',
+        label: 'Traceability factor',
+        factor: values.qualitativeAdjustments?.traceabilityAdjustmentFactor || 1,
+        note: 'Applies to achievable-today value only.',
+      },
+      {
+        key: 'urgency',
+        label: 'Achievable urgency factor',
+        factor: values.qualitativeAdjustments?.achievableUrgencyFactor || 1,
+        note: 'Applied to achievable-today value only.',
+      },
+      {
+        key: 'market_position',
+        label: 'Market-position factor',
+        factor: values.qualitativeAdjustments?.marketPositionAdjustmentFactor || 1,
+        note: 'Applied to market and capitalized-earnings methods only.',
+        appliesTo: ['market_multiple', 'capitalized_earnings'],
+      },
+      {
+        key: 'fx_exposure',
+        label: 'FX sensitivity factor',
+        factor: values.qualitativeAdjustments?.fxExposureAdjustmentFactor || 1,
+        note: 'Applied to market and capitalized-earnings methods only.',
+        appliesTo: ['market_multiple', 'capitalized_earnings'],
+      },
+      {
+        key: 'branch_quality',
+        label: 'Branch-quality factor',
+        factor: values.qualitativeAdjustments?.branchQualityFactor || 1,
+        note: 'Applied to market and capitalized-earnings methods only.',
+        appliesTo: ['market_multiple', 'capitalized_earnings'],
+      },
+    ],
+  };
 
   return {
     meta: {
@@ -234,15 +330,8 @@ export function buildOwnerResult({
     audit: {
       warnings,
       validationPassed: true,
-      qualitativeAdjustments: {
-        geographyBucket: geographyAdjustment?.geographyBucket,
-        normalizedPrimaryState: geographyAdjustment?.normalizedPrimaryState,
-        geographyAdjustmentFactor: geographyAdjustment?.geographyAdjustmentFactor,
-        branchFamily: branchQuality?.branchFamily,
-        branchQualityFactor: branchQuality?.branchQualityFactor,
-        branchSignalScore: branchQuality?.branchSignalScore,
-        branchSignals: branchQuality?.branchSignals,
-      },
+      qualitativeAdjustments: values.qualitativeAdjustments,
+      calculationLedger,
     },
   };
 }

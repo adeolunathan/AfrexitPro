@@ -3,6 +3,8 @@ import { evaluateSubmission } from './owner-engine.mjs';
 import { isCanonicalRequest } from './modules/request-validation.mjs';
 import { parseInternalObservationPayload, updateInternalObservationPayload } from './internal-observations.mjs';
 import { calculatePartialValuation } from './partial-valuation.mjs';
+import { listAuditBaselines } from './question-audit/fixtures.mjs';
+import { runFullQuestionAudit, runQuestionAudit } from './question-audit/runner.mjs';
 import { getSupabaseMode, isAdminDevBypassEnabled, isSupabaseConfigured, requireAdminSession } from './supabase.mjs';
 import {
   createInternalObservation,
@@ -59,25 +61,50 @@ function getByPath(target, path) {
     .reduce((current, segment) => current?.[segment], target);
 }
 
+function resolveAdminMetricPath(metricPath) {
+  if (metricPath === 'summary.adjustedValue') return 'audit.calculationLedger.bridge.achievableEquityMid';
+  if (metricPath === 'summary.lowEstimate') return 'audit.calculationLedger.bridge.achievableEquityLow';
+  if (metricPath === 'summary.highEstimate') return 'audit.calculationLedger.bridge.achievableEquityHigh';
+  if (metricPath === 'summary.readinessScore') return 'audit.calculationLedger.readiness.overallScore';
+  if (metricPath === 'summary.confidenceScore') return 'audit.calculationLedger.confidence.overallAfterClamp';
+  return metricPath;
+}
+
 function formatAdminRunSummary(result) {
+  const qualitativeAdjustments =
+    result.valueConclusion?.reconciliation?.qualitativeAdjustments || result.audit?.qualitativeAdjustments || {};
+  const preciseAdjustedValue = result.audit?.calculationLedger?.bridge?.achievableEquityMid ?? result.summary.adjustedValue;
+  const preciseLowEstimate = result.audit?.calculationLedger?.bridge?.achievableEquityLow ?? result.summary.lowEstimate;
+  const preciseHighEstimate = result.audit?.calculationLedger?.bridge?.achievableEquityHigh ?? result.summary.highEstimate;
+
   return {
     adjustedValue: result.summary.adjustedValue,
     lowEstimate: result.summary.lowEstimate,
     highEstimate: result.summary.highEstimate,
+    preciseAdjustedValue,
+    preciseLowEstimate,
+    preciseHighEstimate,
     readinessScore: result.summary.readinessScore,
     confidenceScore: result.summary.confidenceScore,
     primaryMethod: result.selectedMethods.primaryMethod,
     secondaryMethods: result.selectedMethods.secondaryMethods || [],
     scorecard: result.summary.scorecard,
-    branchQualityFactor: result.audit?.qualitativeAdjustments?.branchQualityFactor ?? 1,
-    geographyAdjustmentFactor: result.audit?.qualitativeAdjustments?.geographyAdjustmentFactor ?? 1,
+    branchQualityFactor: qualitativeAdjustments.branchQualityFactor ?? 1,
+    geographyAdjustmentFactor: qualitativeAdjustments.geographyAdjustmentFactor ?? 1,
+    level1AdjustmentFactor: qualitativeAdjustments.level1AdjustmentFactor ?? 1,
+    transactionContextFactor: qualitativeAdjustments.transactionContextFactor ?? 1,
+    achievableUrgencyFactor: qualitativeAdjustments.achievableUrgencyFactor ?? 1,
+    marketPositionAdjustmentFactor: qualitativeAdjustments.marketPositionAdjustmentFactor ?? 1,
+    fxExposureAdjustmentFactor: qualitativeAdjustments.fxExposureAdjustmentFactor ?? 1,
+    traceabilityAdjustmentFactor: qualitativeAdjustments.traceabilityAdjustmentFactor ?? 1,
   };
 }
 
 function buildSensitivityRow(label, result, metricPath) {
+  const resolvedMetricPath = metricPath ? resolveAdminMetricPath(metricPath) : null;
   return {
     label,
-    metricValue: metricPath ? getByPath(result, metricPath) : result.summary.adjustedValue,
+    metricValue: resolvedMetricPath ? getByPath(result, resolvedMetricPath) : result.audit?.calculationLedger?.bridge?.achievableEquityMid ?? result.summary.adjustedValue,
     summary: formatAdminRunSummary(result),
     result,
   };
@@ -123,6 +150,7 @@ const server = http.createServer(async (request, response) => {
   const adminSubmissionMatch = pathname.match(/^\/api\/admin\/submissions\/([^/]+)$/);
   const adminScenarioMatch = pathname.match(/^\/api\/admin\/scenarios\/([^/]+)$/);
   const adminScenarioRunMatch = pathname.match(/^\/api\/admin\/scenarios\/([^/]+)\/run$/);
+  const adminQuestionAuditMatch = pathname.match(/^\/api\/admin\/question-audit\/([^/]+)$/);
   const adminObservationMatch = pathname.match(/^\/api\/admin\/internal-observations\/([^/]+)$/);
 
   if (request.method === 'OPTIONS') {
@@ -158,6 +186,7 @@ const server = http.createServer(async (request, response) => {
         adminSubmissions: 'GET /api/admin/submissions',
         adminScenarios: 'GET|POST|PATCH /api/admin/scenarios',
         adminSensitivity: 'POST /api/admin/sensitivity',
+        adminQuestionAudit: 'GET /api/admin/question-audit',
         adminInternalObservations: 'GET|POST|PATCH|DELETE /api/admin/internal-observations',
       },
     });
@@ -409,6 +438,47 @@ const server = http.createServer(async (request, response) => {
         writeJson(response, 400, {
           status: 'error',
           message: error instanceof Error ? error.message : 'Failed to run sensitivity analysis.',
+        });
+      }
+      return;
+    }
+
+    if (request.method === 'GET' && pathname === '/api/admin/question-audit') {
+      try {
+        const report = runFullQuestionAudit();
+        const baselines = listAuditBaselines().map((baseline) => ({
+          id: baseline.id,
+          label: baseline.label,
+          fixtureId: baseline.fixtureId,
+        }));
+        writeJson(response, 200, {
+          status: 'success',
+          data: {
+            ...report,
+            baselines,
+          },
+        });
+      } catch (error) {
+        writeJson(response, 500, {
+          status: 'error',
+          message: error instanceof Error ? error.message : 'Failed to generate question audit report.',
+        });
+      }
+      return;
+    }
+
+    if (request.method === 'GET' && adminQuestionAuditMatch) {
+      try {
+        const baselineId = parsedUrl.searchParams.get('baselineId') || undefined;
+        const result = runQuestionAudit(adminQuestionAuditMatch[1], baselineId);
+        writeJson(response, 200, {
+          status: 'success',
+          data: result,
+        });
+      } catch (error) {
+        writeJson(response, 400, {
+          status: 'error',
+          message: error instanceof Error ? error.message : 'Failed to run question audit.',
         });
       }
       return;

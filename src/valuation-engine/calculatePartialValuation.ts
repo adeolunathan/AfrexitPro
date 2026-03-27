@@ -1,6 +1,13 @@
 import type { FormData } from '@/types/valuation';
 import type { PartialValuationResult } from '@/api/valuation-partial';
 import { resolveFrontendPolicyGroup } from './policy-registry';
+import {
+  buildFxExposureAdjustmentFromValue,
+  buildGeographyAdjustmentFromPrimaryState,
+  buildLevel1AdjustmentFromLevel1,
+  buildMarketPositionAdjustmentFromValues,
+  scoreOperatingYearsBand,
+} from './shared/live-preview-factors';
 
 function toNumber(value: unknown) {
   const cleaned = String(value ?? '').replace(/[^0-9.-]/g, '');
@@ -45,27 +52,143 @@ function normalizeFounderDependence(value: unknown) {
   }
 }
 
-function normalizePrimaryState(value: unknown) {
-  const normalized = String(value ?? '').trim().toLowerCase();
-  if (!normalized) return 'lagos_mainland';
-
-  const aliases: Record<string, string> = {
-    abuja_fct: 'fct',
-    abuja: 'fct',
-    port_harcourt: 'rivers',
-  };
-
-  return aliases[normalized] || normalized;
+function normalizeCustomerConcentration(value: unknown) {
+  switch (String(value ?? '').trim()) {
+    case 'no_material':
+    case 'none_material':
+      return 'none_material';
+    case 'lt_20':
+      return 'manageable';
+    case '20_50':
+    case 'high':
+      return 'high';
+    case '50_80':
+    case 'gt_80':
+    case 'extreme':
+      return 'extreme';
+    case 'manageable':
+    case 'not_sure':
+      return String(value);
+    default:
+      return 'not_sure';
+  }
 }
 
 function getGeographyAdjustment(primaryState: unknown) {
-  const normalizedPrimaryState = normalizePrimaryState(primaryState);
-  if (['lagos_island', 'lagos_mainland', 'fct'].includes(normalizedPrimaryState)) return 1.025;
-  if (['rivers', 'ogun', 'oyo', 'kano', 'anambra', 'delta', 'edo', 'kaduna', 'akwa_ibom'].includes(normalizedPrimaryState)) {
-    return 1;
-  }
+  return buildGeographyAdjustmentFromPrimaryState(primaryState).geographyAdjustmentFactor;
+}
 
-  return 0.975;
+function getLevel1Adjustment(level1: unknown) {
+  return buildLevel1AdjustmentFromLevel1(level1).level1AdjustmentFactor;
+}
+
+function getMarketPositionAdjustment(answers: Partial<FormData>) {
+  return buildMarketPositionAdjustmentFromValues({
+    catchmentArea: answers.catchmentArea,
+    differentiation: answers.differentiation,
+    pricingPower: answers.pricingPower,
+  }).marketPositionAdjustmentFactor;
+}
+
+function getFxExposureAdjustment(fxExposure: unknown) {
+  return buildFxExposureAdjustmentFromValue(fxExposure).fxExposureAdjustmentFactor;
+}
+
+function getTransactionContextAdjustment(transactionGoal: unknown) {
+  switch (String(transactionGoal ?? '').trim()) {
+    case 'investor_entry':
+      return 1.01;
+    case 'partial_sale':
+      return 0.995;
+    case 'value_improvement':
+      return 1.005;
+    default:
+      return 1;
+  }
+}
+
+function getAchievableUrgencyAdjustment(transactionTimeline: unknown, transactionGoal: unknown) {
+  const normalizedTimeline = String(transactionTimeline ?? '').trim();
+  const normalizedGoal = String(transactionGoal ?? '').trim();
+  if (normalizedTimeline === 'within_6m') {
+    return normalizedGoal === 'external_sale' || normalizedGoal === 'partial_sale' ? 0.9 : 0.96;
+  }
+  if (normalizedTimeline === '6_12m') return 0.96;
+  return 1;
+}
+
+function scoreLargestSupplierShare(value: unknown) {
+  switch (String(value ?? '').trim()) {
+    case 'lt_20':
+      return 85;
+    case '20_35':
+      return 65;
+    case '35_60':
+      return 40;
+    case 'gt_60':
+      return 20;
+    default:
+      return undefined;
+  }
+}
+
+function scoreSupplierReplacementTime(value: unknown) {
+  switch (String(value ?? '').trim()) {
+    case 'lt_2w':
+      return 85;
+    case '2_8w':
+      return 65;
+    case '2_6m':
+      return 40;
+    case 'gt_6m':
+      return 20;
+    default:
+      return undefined;
+  }
+}
+
+function scoreCriticalHireTime(value: unknown) {
+  switch (String(value ?? '').trim()) {
+    case 'lt_30d':
+      return 82;
+    case '1_3m':
+      return 65;
+    case '3_6m':
+      return 40;
+    case 'gt_6m':
+      return 20;
+    default:
+      return undefined;
+  }
+}
+
+function scoreCriticalHireSalaryPremium(value: unknown) {
+  switch (String(value ?? '').trim()) {
+    case 'none':
+      return 82;
+    case 'up_to_10':
+      return 68;
+    case '10_25':
+      return 45;
+    case 'gt_25':
+      return 25;
+    default:
+      return undefined;
+  }
+}
+
+function getSupplierRiskScore(answers: Partial<FormData>) {
+  return average([
+    scoreLargestSupplierShare(answers.largestSupplierShare || answers.partnerDependency),
+    scoreSupplierReplacementTime(answers.supplierReplacementTime),
+  ], 60);
+}
+
+function getHiringRiskScore(answers: Partial<FormData>) {
+  return average([
+    scoreCriticalHireTime(answers.criticalHireTime || answers.laborMarketDifficulty),
+    scoreCriticalHireSalaryPremium(answers.criticalHireSalaryPremium),
+  ], 60);
 }
 
 function average(values: Array<number | undefined>, fallback = 50) {
@@ -205,6 +328,181 @@ function getNextPhase(currentPhase: string) {
   return phases[currentIndex + 1] || 'final';
 }
 
+function scoreProofReadiness(value: unknown) {
+  switch (String(value ?? '').trim()) {
+    case 'immediate':
+      return 88;
+    case 'organize_fast':
+      return 72;
+    case 'show_patterns':
+      return 52;
+    case 'difficult':
+      return 28;
+    default:
+      return 52;
+  }
+}
+
+function scoreOwnerAbsence2Weeks(value: unknown) {
+  switch (String(value ?? '').trim()) {
+    case 'smooth':
+      return 84;
+    case 'minor_issues':
+      return 68;
+    case 'struggle':
+      return 42;
+    case 'almost_stop':
+      return 18;
+    default:
+      return 55;
+  }
+}
+
+function scoreOwnerAbsence3Months(value: unknown) {
+  switch (String(value ?? '').trim()) {
+    case 'no_disruption':
+      return 88;
+    case 'limited_disruption':
+      return 72;
+    case 'risky_but_possible':
+      return 48;
+    case 'very_difficult':
+      return 25;
+    case 'not_realistic':
+      return 12;
+    default:
+      return 52;
+  }
+}
+
+function scoreManagementDepth(value: unknown) {
+  switch (String(value ?? '').trim()) {
+    case 'team_controls':
+      return 84;
+    case 'trusted_manager':
+      return 70;
+    case 'founder_plus_support':
+      return 48;
+    case 'founder_only':
+      return 24;
+    default:
+      return 55;
+  }
+}
+
+function scoreDocumentation(value: unknown) {
+  switch (String(value ?? '').trim()) {
+    case 'fully_documented':
+      return 84;
+    case 'partly_documented':
+      return 66;
+    case 'little_documented':
+      return 44;
+    case 'founder_head':
+      return 22;
+    default:
+      return 52;
+  }
+}
+
+function scoreReplacementDifficulty(value: unknown) {
+  switch (String(value ?? '').trim()) {
+    case 'easy':
+      return 82;
+    case 'possible':
+      return 64;
+    case 'hard':
+      return 40;
+    case 'founder_tied':
+      return 20;
+    default:
+      return 52;
+  }
+}
+
+function buildFallbackReadinessScore(answers: Partial<FormData>) {
+  const readinessSignal = average([
+    scoreProofReadiness(answers.proofReadiness),
+    scoreOwnerAbsence2Weeks(answers.ownerAbsence2Weeks),
+    scoreOwnerAbsence3Months(answers.ownerAbsence3Months),
+    scoreManagementDepth(answers.managementDepth),
+    scoreDocumentation(answers.processDocumentation),
+    scoreReplacementDifficulty(answers.replacementDifficulty),
+  ], 58);
+
+  return Math.round(readinessSignal * 0.9 + scoreOperatingYearsBand(answers.operatingYears) * 0.1);
+}
+
+function buildFallbackFactorCards({
+  partialGeographyFactor,
+  partialBranchFactor,
+  partialLevel1Factor,
+  partialMarketPositionFactor,
+  partialFxFactor,
+  partialTransactionFactor,
+  partialUrgencyFactor,
+}: {
+  partialGeographyFactor: number;
+  partialBranchFactor: number;
+  partialLevel1Factor: number;
+  partialMarketPositionFactor: number;
+  partialFxFactor: number;
+  partialTransactionFactor: number;
+  partialUrgencyFactor: number;
+}) {
+  return [
+    {
+      key: 'geography',
+      label: 'Geography factor',
+      factor: Number(partialGeographyFactor.toFixed(4)),
+      note: 'Light preview weighting of buyer-liquidity geography.',
+      appliesTo: ['achievable_value'],
+    },
+    {
+      key: 'level1',
+      label: 'Level 1 family factor',
+      factor: Number(partialLevel1Factor.toFixed(4)),
+      note: 'Broad family adjustment carried into the live preview.',
+      appliesTo: ['achievable_value'],
+    },
+    {
+      key: 'transaction_context',
+      label: 'Transaction-context factor',
+      factor: Number(partialTransactionFactor.toFixed(4)),
+      note: 'Context weighting for sale, investment, or planning cases.',
+      appliesTo: ['achievable_value'],
+    },
+    {
+      key: 'urgency',
+      label: 'Urgency factor',
+      factor: Number(partialUrgencyFactor.toFixed(4)),
+      note: 'Time pressure reduces achievable-today value.',
+      appliesTo: ['achievable_value'],
+    },
+    {
+      key: 'market_position',
+      label: 'Market-position factor',
+      factor: Number(partialMarketPositionFactor.toFixed(4)),
+      note: 'Catchment, differentiation, and pricing power in the live preview.',
+      appliesTo: ['value'],
+    },
+    {
+      key: 'fx_exposure',
+      label: 'FX sensitivity factor',
+      factor: Number(partialFxFactor.toFixed(4)),
+      note: 'FX-linked input sensitivity in the live preview.',
+      appliesTo: ['value'],
+    },
+    {
+      key: 'branch_quality',
+      label: 'Branch-quality factor',
+      factor: Number(partialBranchFactor.toFixed(4)),
+      note: 'Branch-specific operating signals in the live preview.',
+      appliesTo: ['value'],
+    },
+  ];
+}
+
 export function calculatePartialValuation(answers: Partial<FormData>): PartialValuationResult {
   const flags: PartialValuationResult['flags'] = [];
   const level2 = String(answers.level2 || '');
@@ -214,12 +512,23 @@ export function calculatePartialValuation(answers: Partial<FormData>): PartialVa
   if (!level2 || revenue <= 0) {
     return {
       range: { low: 0, high: 0, mid: 0 },
+      adjustedValue: 0,
+      preciseAdjustedValue: 0,
+      preciseLowEstimate: 0,
+      preciseHighEstimate: 0,
+      readinessScore: 0,
       confidence: 'very_low',
       confidenceScore: 0,
+      rangeWidthPct: 0,
       confidenceBreakdown: { dataCompleteness: 0, recordsQuality: 0, benchmarkCoverage: 0 },
       flags: [{ type: 'warning', message: 'Insufficient data for preliminary estimate' }],
       phase: 'initial',
       nextPhase: 'anchor',
+      primaryMethod: null,
+      scorecard: null,
+      qualitativeAdjustments: null,
+      factorCards: [],
+      sourceModel: 'fallback',
     };
   }
 
@@ -230,6 +539,11 @@ export function calculatePartialValuation(answers: Partial<FormData>): PartialVa
   const partialGeographyFactor = 1 + (geographyFactor - 1) * 0.6;
   const partialBranchFactor =
     typeof branchQualityScore === 'number' ? 1 + ((1 + (branchQualityScore - 60) / 500) - 1) * 0.55 : 1;
+  const partialLevel1Factor = 1 + (getLevel1Adjustment(answers.level1) - 1) * 0.7;
+  const partialMarketPositionFactor = 1 + (getMarketPositionAdjustment(answers) - 1) * 0.65;
+  const partialFxFactor = 1 + (getFxExposureAdjustment(answers.fxExposure) - 1) * 0.65;
+  const partialTransactionFactor = 1 + (getTransactionContextAdjustment(answers.transactionGoal) - 1) * 0.8;
+  const partialUrgencyFactor = 1 + (getAchievableUrgencyAdjustment(answers.transactionTimeline, answers.transactionGoal) - 1) * 0.75;
 
   if (fallback) {
     flags.push({
@@ -244,11 +558,19 @@ export function calculatePartialValuation(answers: Partial<FormData>): PartialVa
   const multipleHigh = policyGroup?.ownerPhase?.marketMultipleRange?.high || 4.5;
   const baseValue = revenue * (marketMultiple / 10);
   const phaseAdjustment = getPhaseAdjustment(phase);
-  const qualitativeFactor = partialGeographyFactor * partialBranchFactor;
+  const qualitativeFactor =
+    partialGeographyFactor
+    * partialBranchFactor
+    * partialLevel1Factor
+    * partialMarketPositionFactor
+    * partialFxFactor
+    * partialTransactionFactor
+    * partialUrgencyFactor;
 
   const low = Math.round(baseValue * (multipleLow / marketMultiple) * 0.8 * phaseAdjustment.low * qualitativeFactor);
   const high = Math.round(baseValue * (multipleHigh / marketMultiple) * 1.2 * phaseAdjustment.high * qualitativeFactor);
   const mid = Math.round((low + high) / 2);
+  const rangeWidthPct = mid > 0 ? Number((((high - low) / 2 / mid) * 100).toFixed(1)) : 0;
 
   const proofReadiness = String(answers.proofReadiness || '');
   const operatingYears = String(answers.operatingYears || '');
@@ -303,6 +625,8 @@ export function calculatePartialValuation(answers: Partial<FormData>): PartialVa
   if (margin < 0.05) confidenceScore -= 10;
   if (margin < 0) confidenceScore -= 20;
   if (typeof branchQualityScore === 'number') confidenceScore += (branchQualityScore - 60) * 0.08;
+  confidenceScore += (getSupplierRiskScore(answers) - 60) * 0.03;
+  confidenceScore += (getHiringRiskScore(answers) - 60) * 0.03;
   if (forecastSignal) confidenceScore += 2;
 
   confidenceScore = Math.max(10, Math.min(95, Math.round(confidenceScore)));
@@ -352,6 +676,22 @@ export function calculatePartialValuation(answers: Partial<FormData>): PartialVa
     });
   }
 
+  if (getFxExposureAdjustment(answers.fxExposure) < 0.98) {
+    flags.push({
+      type: 'info',
+      message: 'Foreign-currency-linked input costs are reducing the preliminary valuation modestly.',
+      field: 'fxExposure',
+    });
+  }
+
+  if (getAchievableUrgencyAdjustment(answers.transactionTimeline, answers.transactionGoal) < 0.97) {
+    flags.push({
+      type: 'info',
+      message: 'A shorter transaction timeline is reducing the preliminary value to reflect time pressure.',
+      field: 'transactionTimeline',
+    });
+  }
+
   if (forecastSignal) {
     flags.push({
       type: 'info',
@@ -360,14 +700,87 @@ export function calculatePartialValuation(answers: Partial<FormData>): PartialVa
     });
   }
 
+  const readinessScore = buildFallbackReadinessScore(answers);
+
   return {
     range: { low, high, mid },
+    adjustedValue: mid,
+    preciseAdjustedValue: mid,
+    preciseLowEstimate: low,
+    preciseHighEstimate: high,
+    readinessScore,
     confidence: mapConfidenceLevel(confidenceScore),
     confidenceScore,
+    rangeWidthPct,
     confidenceBreakdown,
     flags,
     phase,
     nextPhase: getNextPhase(phase),
+    primaryMethod: 'market_multiple',
+    scorecard: {
+      marketPosition: Math.round(
+        buildMarketPositionAdjustmentFromValues({
+          catchmentArea: answers.catchmentArea,
+          differentiation: answers.differentiation,
+          pricingPower: answers.pricingPower,
+        }).marketPositionSignalScore
+      ),
+      financialQuality: Math.round(confidenceBreakdown.recordsQuality),
+      ownerIndependence: Math.round(average([
+        scoreOwnerAbsence2Weeks(answers.ownerAbsence2Weeks),
+        scoreOwnerAbsence3Months(answers.ownerAbsence3Months),
+        scoreManagementDepth(answers.managementDepth),
+      ], 55)),
+      revenueQuality: Math.round(average([
+        normalizeFounderDependence(answers.founderRevenueDependence || answers.ownerCustomerRelationship) === 'very_little'
+          ? 88
+          : normalizeFounderDependence(answers.founderRevenueDependence || answers.ownerCustomerRelationship) === 'some'
+            ? 66
+            : normalizeFounderDependence(answers.founderRevenueDependence || answers.ownerCustomerRelationship) === 'large_share'
+              ? 40
+              : 18,
+        normalizeCustomerConcentration(answers.customerConcentration) === 'none_material'
+          ? 86
+          : normalizeCustomerConcentration(answers.customerConcentration) === 'manageable'
+            ? 70
+            : normalizeCustomerConcentration(answers.customerConcentration) === 'high'
+              ? 42
+              : 22,
+      ], 55)),
+      operatingResilience: Math.round(average([
+        getSupplierRiskScore(answers),
+        getHiringRiskScore(answers),
+      ], 60)),
+      transactionReadiness: Math.round(average([
+        scoreReplacementDifficulty(answers.replacementDifficulty),
+        scoreDocumentation(answers.processDocumentation),
+        scoreProofReadiness(answers.proofReadiness),
+      ], 56)),
+    },
+    qualitativeAdjustments: {
+      geographyAdjustmentFactor: Number(partialGeographyFactor.toFixed(4)),
+      level1AdjustmentFactor: Number(partialLevel1Factor.toFixed(4)),
+      transactionContextFactor: Number(partialTransactionFactor.toFixed(4)),
+      achievableUrgencyFactor: Number(partialUrgencyFactor.toFixed(4)),
+      marketPositionAdjustmentFactor: Number(partialMarketPositionFactor.toFixed(4)),
+      fxExposureAdjustmentFactor: Number(partialFxFactor.toFixed(4)),
+      branchQualityFactor: Number(partialBranchFactor.toFixed(4)),
+      marketPositionSignalScore: buildMarketPositionAdjustmentFromValues({
+        catchmentArea: answers.catchmentArea,
+        differentiation: answers.differentiation,
+        pricingPower: answers.pricingPower,
+      }).marketPositionSignalScore,
+    },
+    factorCards: buildFallbackFactorCards({
+      partialGeographyFactor,
+      partialBranchFactor,
+      partialLevel1Factor,
+      partialMarketPositionFactor,
+      partialFxFactor,
+      partialTransactionFactor,
+      partialUrgencyFactor,
+    }),
+    sourceModel: 'fallback',
   };
 }
 

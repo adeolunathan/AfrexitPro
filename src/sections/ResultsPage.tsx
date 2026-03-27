@@ -15,6 +15,16 @@ function formatCurrency(value: number) {
   })}m`;
 }
 
+function formatSignedCurrency(value: number | undefined) {
+  if (typeof value !== 'number' || !Number.isFinite(value)) {
+    return 'N/A';
+  }
+  if (value === 0) {
+    return '₦0m';
+  }
+  return `${value > 0 ? '+' : '-'}${formatCurrency(Math.abs(value))}`;
+}
+
 function formatOptionalCurrency(value: number | undefined) {
   return typeof value === 'number' ? formatCurrency(value) : 'N/A';
 }
@@ -56,6 +66,21 @@ export function ResultsPage({ result, onRestart, onEdit }: ResultsPageProps) {
   const normalizedWorkingCapital = result.normalizedMetrics.normalizedWorkingCapital;
   const methodNormalizationImpacts = result.valueConclusion.reconciliation?.methodNormalizationImpacts || [];
   const qualitativeAdjustments = result.audit.qualitativeAdjustments;
+  const normalizationLedger = result.audit.calculationLedger?.normalization;
+  const primaryMethodNormalizationImpact = methodNormalizationImpacts.find(
+    (impact) => impact.method === result.selectedMethods.primaryMethod
+  );
+  const ebitDelta =
+    normalizationLedger ? normalizationLedger.adjustedEbit - normalizationLedger.rawEbit : undefined;
+  const ebitdaDelta =
+    normalizationLedger ? normalizationLedger.adjustedEbitda - normalizationLedger.rawEbitda : undefined;
+  const sdeDelta =
+    normalizationLedger ? (result.normalizedMetrics.sde ?? normalizationLedger.sde) - (normalizationLedger.rawSde || 0) : undefined;
+  const primaryMethodUsesRevenue =
+    primaryMethodNormalizationImpact?.driverMetric === 'revenue';
+  const hasOverallNormalizationEffect =
+    Boolean(normalizationLedger) &&
+    [ebitDelta, ebitdaDelta, sdeDelta].some((value) => typeof value === 'number' && Math.abs(value) > 0.0001);
   const workingCapitalGap =
     typeof actualWorkingCapital === 'number' && typeof normalizedWorkingCapital === 'number'
       ? actualWorkingCapital - normalizedWorkingCapital
@@ -166,6 +191,7 @@ export function ResultsPage({ result, onRestart, onEdit }: ResultsPageProps) {
               <div className="mt-2">Source: {formatMethodLabel(result.calibrationContext.source)}</div>
               <div>Benchmark observations: {result.calibrationContext.observationCount}</div>
               <div>Evidence score: {formatPercent(result.calibrationContext.evidenceScore)}</div>
+              <div>Current range width setting: {result.confidenceAssessment.rangeWidthPct.toFixed(1)}%</div>
               {result.calibrationContext.benchmarkSetIds.length > 0 ? (
                 <div>Benchmark sets: {result.calibrationContext.benchmarkSetIds.join(', ')}</div>
               ) : null}
@@ -325,7 +351,7 @@ export function ResultsPage({ result, onRestart, onEdit }: ResultsPageProps) {
                 <div className="text-slate-500">Weight: {result.valueConclusion.reconciliation?.appliedWeights?.market_multiple ?? 'N/A'}</div>
                 {methodNormalizationImpacts.find((impact) => impact.method === 'market_multiple') ? (
                   <div className="mt-2 text-slate-500">
-                    Normalization impact:{' '}
+                    Method-specific normalization delta:{' '}
                     {formatOptionalCurrency(methodNormalizationImpacts.find((impact) => impact.method === 'market_multiple')?.deltaMid)}
                   </div>
                 ) : null}
@@ -336,7 +362,7 @@ export function ResultsPage({ result, onRestart, onEdit }: ResultsPageProps) {
                 <div className="text-slate-500">Weight: {result.valueConclusion.reconciliation?.appliedWeights?.capitalized_earnings ?? 'N/A'}</div>
                 {methodNormalizationImpacts.find((impact) => impact.method === 'capitalized_earnings') ? (
                   <div className="mt-2 text-slate-500">
-                    Normalization impact:{' '}
+                    Method-specific normalization delta:{' '}
                     {formatOptionalCurrency(methodNormalizationImpacts.find((impact) => impact.method === 'capitalized_earnings')?.deltaMid)}
                   </div>
                 ) : null}
@@ -347,7 +373,7 @@ export function ResultsPage({ result, onRestart, onEdit }: ResultsPageProps) {
                 <div className="text-slate-500">Weight: {result.valueConclusion.reconciliation?.appliedWeights?.asset_approach ?? 'N/A'}</div>
                 {methodNormalizationImpacts.find((impact) => impact.method === 'asset_approach') ? (
                   <div className="mt-2 text-slate-500">
-                    Normalization impact:{' '}
+                    Method-specific normalization delta:{' '}
                     {formatOptionalCurrency(methodNormalizationImpacts.find((impact) => impact.method === 'asset_approach')?.deltaMid)}
                   </div>
                 ) : null}
@@ -357,7 +383,45 @@ export function ResultsPage({ result, onRestart, onEdit }: ResultsPageProps) {
         </section>
 
         <section className="rounded-3xl border border-white/10 bg-white/5 p-6">
-          <div className="mb-5 text-sm font-medium uppercase tracking-[0.18em] text-slate-400">Normalization impact by method</div>
+          <div className="mb-5 text-sm font-medium uppercase tracking-[0.18em] text-slate-400">Normalization effect</div>
+          {normalizationLedger ? (
+            <div className="mb-5 rounded-2xl bg-white/5 p-4 text-sm leading-7 text-slate-300">
+              <div className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-slate-500">Overall normalization summary</div>
+              <div className="grid gap-3 md:grid-cols-3">
+                <div className="rounded-xl bg-slate-950/30 p-3">
+                  <div className="text-xs uppercase tracking-[0.18em] text-slate-500">EBIT impact</div>
+                  <div className="mt-1 font-medium">{formatSignedCurrency(ebitDelta)}</div>
+                  <div className="mt-1 text-xs text-slate-400">
+                    Raw {formatCurrency(normalizationLedger.rawEbit)} → Adjusted {formatCurrency(normalizationLedger.adjustedEbit)}
+                  </div>
+                </div>
+                <div className="rounded-xl bg-slate-950/30 p-3">
+                  <div className="text-xs uppercase tracking-[0.18em] text-slate-500">EBITDA impact</div>
+                  <div className="mt-1 font-medium">{formatSignedCurrency(ebitdaDelta)}</div>
+                  <div className="mt-1 text-xs text-slate-400">
+                    Raw {formatCurrency(normalizationLedger.rawEbitda)} → Adjusted {formatCurrency(normalizationLedger.adjustedEbitda)}
+                  </div>
+                </div>
+                <div className="rounded-xl bg-slate-950/30 p-3">
+                  <div className="text-xs uppercase tracking-[0.18em] text-slate-500">SDE impact</div>
+                  <div className="mt-1 font-medium">{formatSignedCurrency(sdeDelta)}</div>
+                  <div className="mt-1 text-xs text-slate-400">
+                    Raw {formatCurrency(normalizationLedger.rawSde)} → Adjusted {formatCurrency(result.normalizedMetrics.sde || 0)}
+                  </div>
+                </div>
+              </div>
+              {primaryMethodNormalizationImpact ? (
+                <div className="mt-4 rounded-xl border border-slate-700/40 bg-slate-950/20 px-4 py-3 text-sm text-slate-300">
+                  Primary method: <span className="font-medium text-white">{formatMethodLabel(result.selectedMethods.primaryMethod)}</span>.{' '}
+                  Direct value delta for that method: <span className="font-medium text-white">{formatOptionalCurrency(primaryMethodNormalizationImpact.deltaMid)}</span>.
+                  {primaryMethodUsesRevenue && hasOverallNormalizationEffect ? (
+                    <span> This method is revenue-driven, so earnings normalization can materially change EBIT, EBITDA, or SDE while leaving the primary revenue-multiple delta at ₦0m.</span>
+                  ) : null}
+                </div>
+              ) : null}
+            </div>
+          ) : null}
+          <div className="mb-5 text-sm text-slate-400">Method-specific normalization impact</div>
           <div className="grid gap-3 lg:grid-cols-3">
             {methodNormalizationImpacts.map((impact) => (
               <div key={impact.method} className="rounded-2xl bg-white/5 p-4 text-sm leading-7 text-slate-300">
@@ -381,7 +445,7 @@ export function ResultsPage({ result, onRestart, onEdit }: ResultsPageProps) {
                     <div className="mt-1 font-medium">{formatOptionalCurrency(impact.normalizedMid)}</div>
                   </div>
                   <div className="rounded-xl bg-slate-950/30 p-3">
-                    <div className="text-xs uppercase tracking-[0.18em] text-slate-500">Value delta from normalization</div>
+                    <div className="text-xs uppercase tracking-[0.18em] text-slate-500">Method mid-value delta from normalization</div>
                     <div className="mt-1 font-medium">{formatOptionalCurrency(impact.deltaMid)}</div>
                   </div>
                 </div>

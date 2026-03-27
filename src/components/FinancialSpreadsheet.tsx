@@ -3,6 +3,7 @@ import { Switch } from '@/components/ui/switch';
 import { QuestionHelpTooltip } from '@/components/QuestionHelpTooltip';
 import {
   formatMillions,
+  formatMillionsDisplay,
   normalizeMillions,
   sanitizeMillionInput,
   serializeMillions,
@@ -470,7 +471,16 @@ export function FinancialSpreadsheet({ periods, onChange }: FinancialSpreadsheet
             /[0-9.-]/.test(event.key) &&
             !event.ctrlKey && !event.metaKey && !event.altKey) {
           event.preventDefault();
-          startEditing(state.activeCell, event.key);
+          const rowDef = rowDefinitions[state.activeCell.rowIndex];
+          const initialValue =
+            event.key === '.'
+              ? '0.'
+              : event.key === '-' && !(rowDef?.allowNegative ?? false)
+                ? undefined
+                : event.key;
+          if (initialValue !== undefined) {
+            startEditing(state.activeCell, initialValue);
+          }
         }
         break;
     }
@@ -736,7 +746,6 @@ export function FinancialSpreadsheet({ periods, onChange }: FinancialSpreadsheet
 
                       {isEditing ? (
                         <div className="absolute inset-0 flex items-center bg-white">
-                          <span className="pl-2 text-xs text-slate-400">₦m</span>
                           <input
                             ref={inputRef}
                             type="text"
@@ -750,7 +759,7 @@ export function FinancialSpreadsheet({ periods, onChange }: FinancialSpreadsheet
                               setState(prev => ({ ...prev, editValue: sanitized }));
                             }}
                             onBlur={commitEditing}
-                            className="h-full w-full bg-transparent px-2 text-right text-sm font-medium text-slate-900 outline-none"
+                            className="h-full w-full bg-transparent px-3 text-right text-sm font-medium text-slate-900 outline-none"
                             placeholder="0"
                           />
                         </div>
@@ -762,9 +771,12 @@ export function FinancialSpreadsheet({ periods, onChange }: FinancialSpreadsheet
                                 ? 'text-emerald-600'
                                 : 'text-slate-700'
                         }`}>
-                          {rowDef.editable ? '₦m ' : ''}
-                          {displayValue}
-                          {!rowDef.editable ? '%' : ''}
+                          {rowDef.editable
+                            ? formatMillionsDisplay(getCellValue(rowIndex, colIndex), {
+                                allowNegative: rowDef.allowNegative ?? false,
+                                emptyDisplay: '0',
+                              })
+                            : `${displayValue}%`}
                         </span>
                       )}
                     </div>

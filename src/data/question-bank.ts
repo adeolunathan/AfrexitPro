@@ -216,7 +216,7 @@ const rawSections: DraftSection[] = [
       {
         id: 'transactionTimeline',
         type: 'select',
-        prompt: 'When do you realistically expect a transaction process could begin?',
+        prompt: 'If you wanted a real transaction process to begin, when would you realistically want it to start?',
         required: true,
         options: [
           { value: 'within_6m', label: 'Within 6 months' },
@@ -277,13 +277,13 @@ const rawSections: DraftSection[] = [
       {
         id: 'bankingQuality',
         type: 'select',
-        prompt: 'How clean are your business banking records?',
+        prompt: 'How clean and well-separated are your business banking records?',
         required: true,
         options: [
-          { value: 'clean', label: 'Clean business transactions with little mixing' },
-          { value: 'mostly_clean', label: 'Mostly business transactions, with some personal mixing' },
-          { value: 'incomplete', label: 'Incomplete or inconsistent in some periods' },
-          { value: 'informal', label: 'Many business transactions do not pass through formal banking' },
+          { value: 'clean', label: 'Business banking is clean and fully separated, with no meaningful personal mixing' },
+          { value: 'mostly_clean', label: 'Business banking is mostly clean, with occasional personal or mixed transactions' },
+          { value: 'incomplete', label: 'Records are incomplete, inconsistent, or hard to follow in some periods' },
+          { value: 'informal', label: 'A large share of business activity does not pass through formal banking records' },
         ],
       },
       {
@@ -379,13 +379,13 @@ const rawSections: DraftSection[] = [
       {
         id: 'ownerAbsence2Weeks',
         type: 'select',
-        prompt: 'If you stepped away from the business for 2 weeks, what would happen?',
+        prompt: 'If you stepped away for 2 weeks, what would most likely happen to day-to-day operations, delivery, sales, and approvals?',
         required: true,
         options: [
-          { value: 'smooth', label: 'It would keep running smoothly' },
-          { value: 'minor_issues', label: 'It would run with some issues, but nothing major' },
-          { value: 'struggle', label: 'It would struggle badly' },
-          { value: 'almost_stop', label: 'It would almost stop' },
+          { value: 'smooth', label: 'Operations would continue normally, with no material disruption to delivery, sales, or approvals' },
+          { value: 'minor_issues', label: 'Operations would continue, with only minor delays or under about 5% disruption' },
+          { value: 'struggle', label: 'Operations or sales would be materially disrupted during that period' },
+          { value: 'almost_stop', label: 'Core operations would largely stop without direct owner involvement' },
         ],
       },
       {

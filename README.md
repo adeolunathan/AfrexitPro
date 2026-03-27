@@ -7,7 +7,8 @@ This repository currently contains:
 - a React + Vite frontend in the repo root
 - a local valuation backend in `server/valuation`
 - the canonical valuation-engine plan in `docs/valuation-engine/afrexit-valuation-engine-master-plan.md`
-- the adaptive questionnaire product draft in `docs/ADAPTIVE_QUESTIONNAIRE_PRD.md`
+- the current questionnaire audit and impact docs in `docs/questionnaires`
+- the current valuation-engine references in `docs/valuation-engine`
 
 ## Current Status
 
@@ -24,6 +25,8 @@ Current active work in this repo is the next UX layer on top of that foundation:
 - partial valuation updates during intake
 - richer multi-year financial intake
 - ongoing benchmark provenance cleanup and calibration refinement
+
+Older draft and source-reference docs are preserved in `docs/archive`.
 
 ## Run Locally
 

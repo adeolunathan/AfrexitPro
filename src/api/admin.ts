@@ -60,6 +60,9 @@ export interface AdminRunResponse {
     adjustedValue: number;
     lowEstimate: number;
     highEstimate: number;
+    preciseAdjustedValue: number;
+    preciseLowEstimate: number;
+    preciseHighEstimate: number;
     readinessScore: number;
     confidenceScore: number;
     primaryMethod: string;
@@ -67,6 +70,12 @@ export interface AdminRunResponse {
     scorecard: ResultData['summary']['scorecard'];
     branchQualityFactor: number;
     geographyAdjustmentFactor: number;
+    level1AdjustmentFactor: number;
+    transactionContextFactor: number;
+    achievableUrgencyFactor: number;
+    marketPositionAdjustmentFactor: number;
+    fxExposureAdjustmentFactor: number;
+    traceabilityAdjustmentFactor: number;
   };
 }
 
@@ -80,6 +89,131 @@ export interface SensitivityRow {
   metricValue: unknown;
   summary: AdminRunResponse['summary'];
   result: ResultData;
+}
+
+export interface QuestionAuditBaselineSummary {
+  id: string;
+  label: string;
+  fixtureId: string;
+}
+
+export interface QuestionAuditStatus {
+  overallStatus:
+    | 'passing'
+    | 'wrong direction'
+    | 'too weak / tied'
+    | 'unexpected method switch'
+    | 'no-effect'
+    | 'context-only by design'
+    | 'structural by design';
+  directionPassed: boolean | null;
+  tiePolicyPassed: boolean | null;
+  influencePassed: boolean;
+  methodSwitchPassed: boolean;
+  failureReasons: string[];
+}
+
+export interface QuestionAuditRow {
+  label: string;
+  inputValue: unknown;
+  metricPath: string | null;
+  metricValue: unknown;
+  metricDelta: number | null;
+  summary: {
+    adjustedValue: number;
+    lowEstimate: number;
+    highEstimate: number;
+    preciseAdjustedValue: number;
+    preciseLowEstimate: number;
+    preciseHighEstimate: number;
+    readinessScore: number;
+    confidenceScore: number;
+    primaryMethod: string;
+    secondaryMethods: string[];
+    marketPosition: number;
+    financialQuality: number;
+    ownerIndependence: number;
+    revenueQuality: number;
+    operatingResilience: number;
+    transactionReadiness: number;
+    branchQualityFactor: number;
+    geographyAdjustmentFactor: number;
+    level1AdjustmentFactor: number;
+    transactionContextFactor: number;
+    urgencyFactor: number;
+    marketPositionAdjustmentFactor: number;
+    fxExposureAdjustmentFactor: number;
+    traceabilityAdjustmentFactor: number;
+  };
+  result: ResultData;
+  selectedMethods: {
+    primaryMethod: string;
+    secondaryMethods: string[];
+  };
+}
+
+export interface QuestionAuditEntry {
+  questionId: string;
+  manifestEntry: {
+    questionId: string;
+    prompt: string;
+    questionType: string;
+    canonicalPath: string | null;
+    valueType: string | null;
+    optionOrder?: string[];
+    availableOptionValues: string[];
+    auditClass: string;
+    allowedImpactDomains: string[];
+    expectedAffectedOutputs: string[];
+    monotonicity: string;
+    primaryMetricPath: string | null;
+    expectedDirection: string | null;
+    allowMethodSwitch?: boolean;
+    auditStrategy: string;
+    baselineIds: string[];
+  };
+  baseline: {
+    id: string;
+    label: string;
+    fixtureId: string;
+    summary: QuestionAuditRow['summary'] | null;
+  } | null;
+  baselineRow: QuestionAuditRow | null;
+  rows: QuestionAuditRow[];
+  status: QuestionAuditStatus;
+}
+
+export interface QuestionAuditReport {
+  generatedAt: string;
+  coverage: {
+    manifestValid: boolean;
+    liveQuestionsCovered: number;
+  };
+  validation: {
+    valid: boolean;
+    missing: string[];
+    extra: string[];
+    liveIds: string[];
+    manifestIds: string[];
+    baselineIds: string[];
+  };
+  summary: {
+    passing: number;
+    wrongDirection: number;
+    tooWeak: number;
+    methodSwitch: number;
+    noEffect: number;
+    contextOnly: number;
+    structural: number;
+  };
+  results: QuestionAuditEntry[];
+  failures: Array<{
+    questionId: string;
+    status: string;
+    metricPath: string | null;
+    failureReasons: string[];
+  }>;
+  baselines: QuestionAuditBaselineSummary[];
 }
 
 export interface InternalObservationRecord {
@@ -203,6 +337,15 @@ export function runAdminSensitivity(
     method: 'POST',
     body: JSON.stringify(payload),
   });
+}
+
+export function getAdminQuestionAuditReport(token: string) {
+  return apiRequest<QuestionAuditReport>('/api/admin/question-audit', token);
+}
+
+export function getAdminQuestionAuditDetail(token: string, questionId: string, baselineId?: string) {
+  const suffix = baselineId ? `?baselineId=${encodeURIComponent(baselineId)}` : '';
+  return apiRequest<QuestionAuditEntry>(`/api/admin/question-audit/${encodeURIComponent(questionId)}${suffix}`, token);
 }
 
 export function listAdminInternalObservations(token: string) {

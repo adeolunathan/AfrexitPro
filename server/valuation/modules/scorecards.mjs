@@ -17,7 +17,7 @@ const scoreMaps = {
   pricingPower: { none: 40, some: 60, premium: 80, strong_premium: 92, not_sure: 50 },
   proofReadiness: { immediate: 95, organize_fast: 75, show_patterns: 50, difficult: 25 },
   traceablePaymentsShare: { '80_100': 90, '50_79': 70, '20_49': 45, lt_20: 20 },
-  bankingQuality: { clean: 90, mostly_clean: 65, incomplete: 40, informal: 20 },
+  bankingQuality: { clean: 95, mostly_clean: 75, incomplete: 45, informal: 20 },
   financeTracking: { software: 90, spreadsheet: 70, notes: 45, informal: 20 },
   ownerAbsence2Weeks: { smooth: 90, minor_issues: 70, struggle: 40, almost_stop: 15 },
   ownerAbsence3Months: { no_disruption: 96, limited_disruption: 85, risky_but_possible: 60, very_difficult: 35, not_realistic: 15 },
@@ -37,9 +37,34 @@ const scoreMaps = {
   fxExposure: { low: 80, moderate: 60, high: 40, very_high: 25 },
   transactionGoal: { sale: 80, fundraise: 70, succession: 65, internal_planning: 60, lending: 65, other: 55 },
   urgency: { orderly: 80, accelerated: 65, forced: 35 },
-  legalStructure: { sole_prop: 50, partnership: 55, limited_company: 80, group_structure: 75, other: 50 },
+  legalStructure: { sole_prop: 50, partnership: 58, limited_company: 80, group_structure: 74, other: 45 },
   ownerControlBand: { lt_25: 45, '25_50': 55, '51_75': 70, gt_75: 80 },
 };
+
+function scoreLargestSupplierShare(value) {
+  const map = { lt_20: 85, '20_35': 65, '35_60': 40, gt_60: 20 };
+  return map[String(value ?? '').trim()];
+}
+
+function scoreSupplierReplacementTime(value) {
+  const map = { lt_2w: 85, '2_8w': 65, '2_6m': 40, gt_6m: 20 };
+  return map[String(value ?? '').trim()];
+}
+
+function scoreCriticalHireTime(value) {
+  const map = { lt_30d: 82, '1_3m': 65, '3_6m': 40, gt_6m: 20 };
+  return map[String(value ?? '').trim()];
+}
+
+function scoreCriticalHireSalaryPremium(value) {
+  const map = { none: 82, up_to_10: 68, '10_25': 45, gt_25: 25 };
+  return map[String(value ?? '').trim()];
+}
+
+function blendScores(values, fallback = 50) {
+  const filtered = values.filter((value) => typeof value === 'number' && Number.isFinite(value));
+  return filtered.length ? average(filtered, fallback) : fallback;
+}
 
 export function scoreFromMap(mapName, key, fallback = 50) {
   const map = scoreMaps[mapName] || {};
@@ -52,6 +77,22 @@ export function buildScorecard(request) {
   const productRetailBranchScore = branchQuality.branchFamily === 'product_retail' ? branchSignalScore : undefined;
   const professionalServicesBranchScore = branchQuality.branchFamily === 'professional_services' ? branchSignalScore : undefined;
   const manufacturingBranchScore = branchQuality.branchFamily === 'manufacturing' ? branchSignalScore : undefined;
+  const supplierTransferabilityScore = blendScores(
+    [
+      scoreLargestSupplierShare(request.operatingProfile.largestSupplierShare),
+      scoreSupplierReplacementTime(request.operatingProfile.supplierReplacementTime),
+      scoreFromMap('supplierTransferability', request.operatingProfile.supplierTransferability),
+    ],
+    scoreFromMap('supplierTransferability', request.operatingProfile.supplierTransferability)
+  );
+  const hiringDifficultyScore = blendScores(
+    [
+      scoreCriticalHireTime(request.operatingProfile.criticalHireTime),
+      scoreCriticalHireSalaryPremium(request.operatingProfile.criticalHireSalaryPremium),
+      scoreFromMap('hiringDifficulty', request.operatingProfile.hiringDifficulty),
+    ],
+    scoreFromMap('hiringDifficulty', request.operatingProfile.hiringDifficulty)
+  );
 
   return {
     marketPosition: average([
@@ -86,8 +127,8 @@ export function buildScorecard(request) {
       professionalServicesBranchScore,
     ]),
     operatingResilience: average([
-      scoreFromMap('supplierTransferability', request.operatingProfile.supplierTransferability),
-      scoreFromMap('hiringDifficulty', request.operatingProfile.hiringDifficulty),
+      supplierTransferabilityScore,
+      hiringDifficultyScore,
       scoreFromMap('inventoryProfile', request.operatingProfile.inventoryProfile),
       scoreFromMap('workingCapitalHealth', request.operatingProfile.workingCapitalHealth),
       scoreFromMap('assetSeparation', request.operatingProfile.assetSeparation),
@@ -145,5 +186,20 @@ export function buildReadinessAssessment(request, scorecard) {
     compliance: Math.round(readiness.compliance),
     documentation: Math.round(readiness.documentation),
     topGaps: topGaps.slice(0, 4),
+    ledger: {
+      recordsQuality: readiness.recordsQuality,
+      ownershipClarity: readiness.ownershipClarity,
+      customerTransferability: readiness.customerTransferability,
+      managementDepth: readiness.managementDepth,
+      compliance: readiness.compliance,
+      documentation: readiness.documentation,
+      readinessAverage,
+      operatingYearsScore,
+      overallScore,
+      weights: {
+        readinessAverage: 0.9,
+        operatingYears: 0.1,
+      },
+    },
   };
 }

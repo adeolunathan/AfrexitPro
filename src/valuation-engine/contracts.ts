@@ -96,7 +96,11 @@ export const operatingProfileSchema = z.object({
   recurringRevenueShare: z.string().optional(),
   revenueVisibility: z.string().optional(),
   supplierTransferability: z.string().optional(),
+  largestSupplierShare: z.string().optional(),
+  supplierReplacementTime: z.string().optional(),
   hiringDifficulty: z.string().optional(),
+  criticalHireTime: z.string().optional(),
+  criticalHireSalaryPremium: z.string().optional(),
   fxExposure: z.string().optional(),
   assetSeparation: z.string().optional(),
   inventoryProfile: z.string().optional(),
@@ -338,6 +342,17 @@ const qualitativeAdjustmentSchema = z.object({
   geographyBucket: z.string().optional(),
   normalizedPrimaryState: z.string().optional(),
   geographyAdjustmentFactor: z.number().optional(),
+  level1Bucket: z.string().optional(),
+  level1AdjustmentFactor: z.number().optional(),
+  transactionContextLabel: z.string().optional(),
+  transactionContextFactor: z.number().optional(),
+  achievableUrgencyFactor: z.number().optional(),
+  marketPositionSignalScore: z.number().optional(),
+  marketPositionAdjustmentFactor: z.number().optional(),
+  fxExposure: z.string().optional(),
+  fxExposureAdjustmentFactor: z.number().optional(),
+  traceablePaymentsShare: z.string().optional(),
+  traceabilityAdjustmentFactor: z.number().optional(),
   branchFamily: z.string().optional(),
   branchQualityFactor: z.number().optional(),
   branchSignalScore: z.number().optional(),
@@ -350,6 +365,179 @@ const qualitativeAdjustmentSchema = z.object({
       })
     )
     .optional(),
+});
+
+const rangePointSchema = z.object({
+  low: z.number(),
+  mid: z.number(),
+  high: z.number(),
+});
+
+const factorApplicationSchema = z.object({
+  key: z.string().min(1),
+  label: z.string().min(1),
+  factor: z.number(),
+  note: z.string().optional(),
+  appliesTo: z.array(z.enum(methodValues)).optional(),
+});
+
+const approachCalculationSchema = z.object({
+  method: z.enum(methodValues),
+  metric: z.string().min(1),
+  driverValue: z.number().optional(),
+  preAdjustment: rangePointSchema.optional(),
+  postAdjustment: rangePointSchema,
+  qualitativeFactor: z.number().optional(),
+  qualitativeFactors: z.array(factorApplicationSchema).optional(),
+  formula: z.string().min(1).optional(),
+});
+
+const reconciliationContributionSchema = z.object({
+  method: z.enum(methodValues),
+  weight: z.number(),
+  low: z.number(),
+  mid: z.number(),
+  high: z.number(),
+  weightedLow: z.number(),
+  weightedMid: z.number(),
+  weightedHigh: z.number(),
+});
+
+const historyLedgerSchema = z.object({
+  actualPeriods: z.array(
+    z.object({
+      periodId: z.string().min(1),
+      label: z.string().min(1),
+      revenue: z.number(),
+      operatingProfit: z.number(),
+      weight: z.number(),
+    })
+  ),
+  historicalRepresentativeRevenue: z.number(),
+  historicalRepresentativeOperatingProfit: z.number(),
+  forecastIncluded: z.boolean(),
+  forecastBlendWeight: z.number(),
+  forecastPeriodId: z.string().optional(),
+  forecastConfidence: z.string().optional(),
+  forecastRevenue: z.number().optional(),
+  forecastOperatingProfit: z.number().optional(),
+  representativeRevenue: z.number(),
+  representativeOperatingProfit: z.number(),
+  revenueGrowthReference: z.string().min(1),
+});
+
+const normalizationLedgerSchema = z.object({
+  rawEbit: z.number(),
+  rawEbitda: z.number(),
+  rawSde: z.number(),
+  ebitAdjustment: z.number(),
+  sdeAdjustment: z.number(),
+  depreciationAmortization: z.number(),
+  interestExpense: z.number(),
+  taxExpense: z.number(),
+  adjustedEbit: z.number(),
+  adjustedEbitda: z.number(),
+  sde: z.number(),
+  actualWorkingCapital: z.number(),
+  normalizedWorkingCapital: z.number(),
+  workingCapitalDelta: z.number(),
+  workingCapitalTargetPct: z.number(),
+  maintenanceCapex: z.number(),
+  netDebt: z.number(),
+});
+
+const bridgeLedgerSchema = z.object({
+  marketabilityFloor: z.number(),
+  marketabilityCeiling: z.number(),
+  marketabilityFactor: z.number(),
+  geographyFactor: z.number(),
+  level1Factor: z.number(),
+  transactionContextFactor: z.number(),
+  traceabilityFactor: z.number(),
+  achievableUrgencyFactor: z.number(),
+  forcedSaleUrgencyFactor: z.number(),
+  workingCapitalBridge: z.number(),
+  bridgeComponents: z.array(
+    z.object({
+      key: z.string().min(1),
+      label: z.string().min(1),
+      amount: z.number(),
+    })
+  ),
+  bridgeDelta: z.number(),
+  spreadMultiplier: z.number(),
+  fundamentalEnterpriseLow: z.number(),
+  fundamentalEnterpriseMid: z.number(),
+  fundamentalEnterpriseHigh: z.number(),
+  achievableEnterpriseLow: z.number(),
+  achievableEnterpriseMid: z.number(),
+  achievableEnterpriseHigh: z.number(),
+  fundamentalEquityLow: z.number(),
+  fundamentalEquityMid: z.number(),
+  fundamentalEquityHigh: z.number(),
+  achievableEquityLow: z.number(),
+  achievableEquityMid: z.number(),
+  achievableEquityHigh: z.number(),
+});
+
+const readinessLedgerSchema = z.object({
+  recordsQuality: z.number(),
+  ownershipClarity: z.number(),
+  customerTransferability: z.number(),
+  managementDepth: z.number(),
+  compliance: z.number(),
+  documentation: z.number(),
+  readinessAverage: z.number(),
+  operatingYearsScore: z.number(),
+  overallScore: z.number(),
+  weights: z.object({
+    readinessAverage: z.number(),
+    operatingYears: z.number(),
+  }),
+});
+
+const confidenceLedgerSchema = z.object({
+  historicalDepthScore: z.number(),
+  yearsAvailableScore: z.number(),
+  operatingYearsScore: z.number(),
+  forecastCoverageScore: z.number().optional(),
+  workingCapitalCoverage: z.number(),
+  normalizationQuality: z.number(),
+  benchmarkCoverage: z.number(),
+  earningsStability: z.number(),
+  methodDispersionPct: z.number(),
+  freshnessPenalty: z.number(),
+  weakEvidencePenalty: z.number(),
+  internalEvidenceBonus: z.number(),
+  dispersionPenaltyWeight: z.number(),
+  overallBeforeClamp: z.number(),
+  overallAfterClamp: z.number(),
+  rangeWidthPct: z.number(),
+  weights: z.object({
+    historicalDepth: z.number(),
+    financialQuality: z.number(),
+    normalizationQuality: z.number(),
+    workingCapitalCoverage: z.number(),
+    benchmarkCoverage: z.number(),
+    earningsStability: z.number(),
+  }),
+});
+
+const calculationLedgerSchema = z.object({
+  history: historyLedgerSchema,
+  normalization: normalizationLedgerSchema,
+  approaches: z.array(approachCalculationSchema),
+  reconciliation: z.object({
+    contributions: z.array(reconciliationContributionSchema),
+    appliedWeights: z.record(z.string(), z.number()),
+    blendedLow: z.number(),
+    blendedMid: z.number(),
+    blendedHigh: z.number(),
+  }),
+  bridge: bridgeLedgerSchema,
+  readiness: readinessLedgerSchema,
+  confidence: confidenceLedgerSchema,
+  qualitativeFactors: z.array(factorApplicationSchema),
 });
 
 export const valueConclusionSchema = z.object({
@@ -472,6 +660,7 @@ export const valuationResultSchema = z.object({
     warnings: z.array(z.string()),
     validationPassed: z.boolean(),
     qualitativeAdjustments: qualitativeAdjustmentSchema.optional(),
+    calculationLedger: calculationLedgerSchema.optional(),
   }),
 });
 
@@ -499,3 +688,4 @@ export type ConfidenceAssessment = z.infer<typeof confidenceAssessmentSchema>;
 export type ValuationSummary = z.infer<typeof valuationSummarySchema>;
 export type CalibrationContext = z.infer<typeof calibrationContextSchema>;
 export type ValuationResult = z.infer<typeof valuationResultSchema>;
+export type CalculationLedger = z.infer<typeof calculationLedgerSchema>;

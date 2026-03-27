@@ -1,12 +1,14 @@
 # Adaptive Questionnaire Audit And Target Matrix
 
 Status: approved reference for the adaptive owner-mode questionnaire  
-Applies to engine version: `owner-phase-skeleton-v0.5`  
-Last updated: March 19, 2026
+Applies to engine version: current local owner-mode engine  
+Last updated: March 27, 2026
 
 Related references:
 
-- [Adaptive Questionnaire PRD](/Users/deolunathan/Downloads/BB/AfrexitPro/docs/ADAPTIVE_QUESTIONNAIRE_PRD.md)
+- [Historical Adaptive Questionnaire PRD (Archived)](/Users/deolunathan/Downloads/BB/AfrexitPro/docs/archive/questionnaires/ADAPTIVE_QUESTIONNAIRE_PRD.md)
+- [Adaptive Question Impact Matrix](/Users/deolunathan/Downloads/BB/AfrexitPro/docs/questionnaires/question-impact-matrix.md)
+- [Generated Question Audit Report](/Users/deolunathan/Downloads/BB/AfrexitPro/docs/questionnaires/generated-question-audit-report.md)
 - [Owner-Phase Valuation Logic Traceability Spec](/Users/deolunathan/Downloads/BB/AfrexitPro/docs/valuation-engine/owner-phase-valuation-logic-traceability-spec.md)
 - [Afrexit Valuation Engine Master Plan](/Users/deolunathan/Downloads/BB/AfrexitPro/docs/valuation-engine/afrexit-valuation-engine-master-plan.md)
 
@@ -79,12 +81,14 @@ This table records the approved decision for every adaptive question that existe
 | `processDocumentation` | Keep | R/T | Direct documentation and transferability input. |
 | `replacementDifficulty` | Keep | R/T | Direct transferability input. |
 | `employeeTenure` | Drop | - | Useful in diligence, but not critical enough for adaptive owner intake. |
-| `laborMarketDifficulty` | Fix | R/T | Kept and remapped to canonical `hiringDifficulty`. |
+| `criticalHireTime` | Keep | R/T | Added as a quantitative hiring-time input; contributes to derived `hiringDifficulty`. |
+| `criticalHireSalaryPremium` | Keep | R/T | Added as a quantitative pay-premium input; contributes to derived `hiringDifficulty`. |
 | `recruitmentForGrowth` | Drop | - | Redundant beside hiring-difficulty logic. |
 | `growthPotential` | Fix | V/R/T | Kept and remapped to canonical `growthOutlook`. |
 | `customerConcentration` | Fix | R/T | Kept once as the universal concentration question; value set canonicalized. |
 | `bestCustomerImpact` | Fix | R/T | Kept and remapped to canonical `bestCustomerRisk`; now conditional. |
-| `partnerDependency` | Fix | R/T | Kept and remapped to canonical `supplierTransferability`. |
+| `largestSupplierShare` | Keep | R/T | Added as a quantitative supplier-concentration input; contributes to derived `supplierTransferability`. |
+| `supplierReplacementTime` | Keep | R/T | Added as a quantitative supplier-switching input; contributes to derived `supplierTransferability`. |
 | `legalStructure` | Keep | R/T | Added back because readiness and transferability already score it. |
 | `transactionTimeline` | Keep | R/T | Added back because urgency matters for readiness and forced-sale framing. |
 | `receivablesLatest` | Keep | V | Working-capital bridge input. |
@@ -162,8 +166,8 @@ This table records the approved decision for every adaptive question that existe
 ### 4.2 Closing flow
 
 - Records and proof: `traceablePaymentsShare`, `bankingQuality`, `financeTracking`
-- Market position and resilience: `growthPotential`, `differentiation`, `customerConcentration`, `bestCustomerImpact`, `partnerDependency`, `assetSeparation`, `fxExposure`
-- Transferability and readiness: `ownerAbsence2Weeks`, `ownerAbsence3Months`, `ownerCustomerRelationship`, `managementDepth`, `processDocumentation`, `replacementDifficulty`, `laborMarketDifficulty`, `legalStructure`, `transactionTimeline`
+- Market position and resilience: `growthPotential`, `differentiation`, `customerConcentration`, `bestCustomerImpact`, `largestSupplierShare`, `supplierReplacementTime`, `assetSeparation`, `fxExposure`
+- Transferability and readiness: `ownerAbsence2Weeks`, `ownerAbsence3Months`, `ownerCustomerRelationship`, `managementDepth`, `processDocumentation`, `replacementDifficulty`, `criticalHireTime`, `criticalHireSalaryPremium`, `legalStructure`, `transactionTimeline`
 - Working capital and bridge: `receivablesLatest`, `payablesLatest`, `cashBalance`, `financialDebt`, `shareholderLoans`
 - Normalization: `ownerTotalCompensation`, `marketManagerCompensation`, `relatedPartyRentPaid`, `marketRentEquivalent`, `relatedPartyCompPaid`, `marketRelatedPartyCompEquivalent`, `privateExpensesAmount`, `oneOffExpenseAmount`, `oneOffIncomeAmount`, `nonCoreIncomeAmount`, `annualDepreciation`
 - Market-context / audit: `previousOffer`, `previousOfferAmount`
@@ -186,15 +190,15 @@ The following mappings are the ones most likely to be audited because they were 
 | `catchmentArea` | `operatingProfile.catchmentArea` | Canonicalize adaptive values to the original bank values. | Market-position score. |
 | `pricingPower` | `operatingProfile.pricingPower` | Canonicalize adaptive values to the original bank values. | Market-position score. |
 | `growthPotential` | `operatingProfile.growthOutlook` | Map directly into canonical growth outlook. | Market-position score and confidence earnings-stability input. |
-| `differentiation` | `operatingProfile.differentiation` | Store directly from the adaptive market-position question. | Market-position score. |
-| `laborMarketDifficulty` | `operatingProfile.hiringDifficulty` | Map directly into canonical hiring difficulty. | Operating-resilience score. |
+| `differentiation` | `operatingProfile.differentiation` | Store directly from the adaptive market-position question. | Market-position score and capped qualitative value factor. |
+| `criticalHireTime` + `criticalHireSalaryPremium` | `operatingProfile.criticalHireTime` / `operatingProfile.criticalHireSalaryPremium` and derived `operatingProfile.hiringDifficulty` | Quantitative hiring inputs are stored directly and also collapsed into canonical hiring difficulty. | Operating-resilience score. |
 | `ownerCustomerRelationship` | `operatingProfile.founderRevenueDependence` | Use as the universal founder-dependence resolver when no branch-specific answer exists. | Revenue quality, transferability, readiness. |
 | `founderRevenueDependence` | `operatingProfile.founderRevenueDependence` | Branch-specific resolver takes precedence over the universal fallback. | Revenue quality, transferability, readiness. |
 | `customerConcentration` | `operatingProfile.customerConcentration` | Canonicalize to `none_material / manageable / high / extreme / not_sure`. | Revenue quality and transferability. |
 | `bestCustomerImpact` | `operatingProfile.bestCustomerRisk` | Canonicalize to `minor / noticeable / major / severe`. | Revenue quality and transferability. |
-| `partnerDependency` | `operatingProfile.supplierTransferability` | Canonicalize to `very_easy / manageable / uncertain / very_difficult`. | Operating resilience. |
+| `largestSupplierShare` + `supplierReplacementTime` | `operatingProfile.largestSupplierShare` / `operatingProfile.supplierReplacementTime` and derived `operatingProfile.supplierTransferability` | Quantitative supplier inputs are stored directly and also collapsed into canonical supplier transferability. | Operating resilience. |
 | `assetSeparation` | `operatingProfile.assetSeparation` | Store directly from the adaptive resilience question. | Operating-resilience and readiness/compliance score. |
-| `fxExposure` | `operatingProfile.fxExposure` | Store directly from the adaptive resilience question. | Operating-resilience score. |
+| `fxExposure` | `operatingProfile.fxExposure` | Store directly from the adaptive resilience question and apply a capped sensitivity factor. | Operating-resilience score and capped valuation sensitivity. |
 | `productRights` | `operatingProfile.productRights` | Store directly as a product/manufacturing defensibility signal. | Branch quality, market position, capped valuation factor. |
 | `quantities` | `operatingProfile.quantities` | Store directly as a repeatability / scalability signal. | Branch quality, resilience, capped valuation factor. |
 | `productCustomisation` | `operatingProfile.productCustomisation` | Store directly as a repeatability / complexity signal. | Branch quality, resilience, capped valuation factor. |

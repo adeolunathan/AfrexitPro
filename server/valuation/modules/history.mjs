@@ -10,6 +10,13 @@ function weightedAverage(values) {
   return values.reduce((sum, value, index) => sum + value * weights[index], 0) / totalWeight;
 }
 
+function getActualHistoryWeights(periodCount) {
+  const weightTemplate = [0.5, 0.3, 0.2];
+  const weights = Array.from({ length: periodCount }, (_, index) => weightTemplate[index] || 0.1);
+  const totalWeight = weights.reduce((sum, weight) => sum + weight, 0) || 1;
+  return weights.map((weight) => weight / totalWeight);
+}
+
 function getForecastSnapshot(request) {
   const forecastPackage = request.financials?.forecast;
   const forecastYear = forecastPackage?.forecastYears?.[0];
@@ -120,6 +127,32 @@ export function buildHistoricalSummary(request) {
     });
   }
 
+  const actualWeights = getActualHistoryWeights(periods.length);
+  const historyLedger = {
+    actualPeriods: periods.map((period, index) => ({
+      periodId: period.periodId,
+      label: period.label,
+      revenue: period.revenue || 0,
+      operatingProfit: period.operatingProfit ?? period.ebit ?? 0,
+      weight: Number((actualWeights[index] || 0).toFixed(4)),
+    })),
+    historicalRepresentativeRevenue,
+    historicalRepresentativeOperatingProfit,
+    forecastIncluded: Boolean(forecastSnapshot),
+    forecastBlendWeight: Number(forecastBlendWeight.toFixed(4)),
+    forecastPeriodId: forecastSnapshot?.periodId,
+    forecastConfidence: forecastSnapshot?.confidence,
+    forecastRevenue: forecastSnapshot?.revenue,
+    forecastOperatingProfit: forecastSnapshot?.operatingProfit,
+    representativeRevenue,
+    representativeOperatingProfit,
+    revenueGrowthReference: prior?.revenue
+      ? 'latest_actual_vs_prior_actual'
+      : forecastSnapshot?.revenue && latest?.revenue
+        ? 'forecast_vs_latest_actual'
+        : 'not_available',
+  };
+
   return {
     yearsAvailable: periods.length,
     latestPeriod: latest,
@@ -139,5 +172,6 @@ export function buildHistoricalSummary(request) {
     marginStabilityScore,
     blendedStabilityScore: Math.round(average([revenueStabilityScore, marginStabilityScore], 55)),
     periodSummaries,
+    ledger: historyLedger,
   };
 }

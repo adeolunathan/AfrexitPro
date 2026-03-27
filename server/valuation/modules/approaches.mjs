@@ -1,4 +1,4 @@
-import { buildBranchQualityAdjustment } from './qualitative-adjustments.mjs';
+import { buildBranchQualityAdjustment, buildFxExposureAdjustment, buildMarketPositionAdjustment } from './qualitative-adjustments.mjs';
 
 function getMetricValue(normalizedMetrics, metricName) {
   switch (metricName) {
@@ -67,16 +67,107 @@ export function runAssetApproach(normalizedMetrics, request, policyGroup) {
     mid: base,
     high: base * 1.1,
     metric: 'asset_floor',
+    ledger: {
+      method: 'asset_approach',
+      metric: 'asset_floor',
+      driverValue: base,
+      postAdjustment: {
+        low: base * 0.9,
+        mid: base,
+        high: base * 1.1,
+      },
+      qualitativeFactor: 1,
+      qualitativeFactors: [],
+      formula: 'asset floor = revenue floor + tangible working capital support + cash + non-operating assets - debt burden',
+    },
   };
 }
 
 export function runSelectedApproaches(methodOrder, normalizedMetrics, request, policyGroup, branchQuality = buildBranchQualityAdjustment(request)) {
   const branchQualityFactor = branchQuality.branchQualityFactor || 1;
+  const marketPositionFactor = buildMarketPositionAdjustment(request).marketPositionAdjustmentFactor || 1;
+  const fxExposureFactor = buildFxExposureAdjustment(request).fxExposureAdjustmentFactor || 1;
+  const qualitativeMethodFactor = branchQualityFactor * marketPositionFactor * fxExposureFactor;
+  const qualitativeFactors = [
+    {
+      key: 'branch_quality',
+      label: 'Branch-quality factor',
+      factor: branchQualityFactor,
+      note: 'Applies to market and capitalized-earnings methods only.',
+      appliesTo: ['market_multiple', 'capitalized_earnings'],
+    },
+    {
+      key: 'market_position',
+      label: 'Market-position factor',
+      factor: marketPositionFactor,
+      note: 'Derived from catchment breadth, differentiation, and pricing power.',
+      appliesTo: ['market_multiple', 'capitalized_earnings'],
+    },
+    {
+      key: 'fx_exposure',
+      label: 'FX sensitivity factor',
+      factor: fxExposureFactor,
+      note: 'Capped sensitivity discount for foreign-currency-linked exposure.',
+      appliesTo: ['market_multiple', 'capitalized_earnings'],
+    },
+  ];
 
   return methodOrder
     .map((method) => {
-      if (method === 'market_multiple') return runMarketApproach(normalizedMetrics, policyGroup, branchQualityFactor);
-      if (method === 'capitalized_earnings') return runCapitalizedEarningsApproach(normalizedMetrics, policyGroup, branchQualityFactor);
+      if (method === 'market_multiple') {
+        const raw = runMarketApproach(normalizedMetrics, policyGroup, 1);
+        if (!raw) return null;
+        const adjusted = runMarketApproach(normalizedMetrics, policyGroup, qualitativeMethodFactor);
+        return {
+          ...adjusted,
+          ledger: {
+            method: 'market_multiple',
+            metric: adjusted.metric,
+            driverValue: getMetricValue(normalizedMetrics, policyGroup.ownerPhase.marketMetric || 'revenue'),
+            preAdjustment: {
+              low: raw.low,
+              mid: raw.mid,
+              high: raw.high,
+            },
+            postAdjustment: {
+              low: adjusted.low,
+              mid: adjusted.mid,
+              high: adjusted.high,
+            },
+            qualitativeFactor: Number(qualitativeMethodFactor.toFixed(4)),
+            qualitativeFactors,
+            formula: `market multiple = ${adjusted.metric} × selected low/mid/high multiple × combined qualitative factor`,
+          },
+        };
+      }
+
+      if (method === 'capitalized_earnings') {
+        const raw = runCapitalizedEarningsApproach(normalizedMetrics, policyGroup, 1);
+        if (!raw) return null;
+        const adjusted = runCapitalizedEarningsApproach(normalizedMetrics, policyGroup, qualitativeMethodFactor);
+        return {
+          ...adjusted,
+          ledger: {
+            method: 'capitalized_earnings',
+            metric: adjusted.metric,
+            driverValue: getMetricValue(normalizedMetrics, policyGroup.ownerPhase.capitalizedMetric || 'adjustedEbit'),
+            preAdjustment: {
+              low: raw.low,
+              mid: raw.mid,
+              high: raw.high,
+            },
+            postAdjustment: {
+              low: adjusted.low,
+              mid: adjusted.mid,
+              high: adjusted.high,
+            },
+            qualitativeFactor: Number(qualitativeMethodFactor.toFixed(4)),
+            qualitativeFactors,
+            formula: `capitalized earnings = maintainable metric ÷ capitalization rate × combined qualitative factor`,
+          },
+        };
+      }
+
       if (method === 'asset_approach') return runAssetApproach(normalizedMetrics, request, policyGroup);
       return null;
     })

@@ -117,6 +117,103 @@ function normalizeGrowthOutlook(value) {
   }
 }
 
+function scoreLargestSupplierShare(value) {
+  switch (String(value ?? '').trim()) {
+    case 'lt_20':
+      return 85;
+    case '20_35':
+      return 65;
+    case '35_60':
+      return 40;
+    case 'gt_60':
+      return 20;
+    default:
+      return undefined;
+  }
+}
+
+function scoreSupplierReplacementTime(value) {
+  switch (String(value ?? '').trim()) {
+    case 'lt_2w':
+      return 85;
+    case '2_8w':
+      return 65;
+    case '2_6m':
+      return 40;
+    case 'gt_6m':
+      return 20;
+    default:
+      return undefined;
+  }
+}
+
+function normalizeSupplierTransferability(value) {
+  switch (String(value ?? '').trim()) {
+    case 'no_dependency':
+    case 'replaceable_weeks':
+      return 'very_easy';
+    case 'replaceable_year':
+      return 'uncertain';
+    case 'difficult_replace':
+      return 'very_difficult';
+    case 'very_easy':
+    case 'manageable':
+    case 'uncertain':
+    case 'very_difficult':
+      return String(value);
+    default:
+      return 'manageable';
+  }
+}
+
+function deriveSupplierTransferability(largestSupplierShare, supplierReplacementTime, fallbackValue) {
+  const shareScore = scoreLargestSupplierShare(largestSupplierShare);
+  const replacementScore = scoreSupplierReplacementTime(supplierReplacementTime);
+  if (typeof shareScore !== 'number' && typeof replacementScore !== 'number') {
+    return normalizeSupplierTransferability(fallbackValue);
+  }
+
+  const compositeScore =
+    typeof shareScore === 'number' && typeof replacementScore === 'number'
+      ? (shareScore + replacementScore) / 2
+      : shareScore ?? replacementScore ?? 50;
+
+  if (compositeScore >= 76) return 'very_easy';
+  if (compositeScore >= 56) return 'manageable';
+  if (compositeScore >= 36) return 'uncertain';
+  return 'very_difficult';
+}
+
+function scoreCriticalHireTime(value) {
+  switch (String(value ?? '').trim()) {
+    case 'lt_30d':
+      return 82;
+    case '1_3m':
+      return 65;
+    case '3_6m':
+      return 40;
+    case 'gt_6m':
+      return 20;
+    default:
+      return undefined;
+  }
+}
+
+function scoreCriticalHireSalaryPremium(value) {
+  switch (String(value ?? '').trim()) {
+    case 'none':
+      return 82;
+    case 'up_to_10':
+      return 68;
+    case '10_25':
+      return 45;
+    case 'gt_25':
+      return 25;
+    default:
+      return undefined;
+  }
+}
+
 function normalizeHiringDifficulty(value) {
   switch (String(value ?? '').trim()) {
     case 'no_shortage':
@@ -133,6 +230,24 @@ function normalizeHiringDifficulty(value) {
     default:
       return 'feasible';
   }
+}
+
+function deriveHiringDifficulty(criticalHireTime, criticalHireSalaryPremium, fallbackValue) {
+  const hireTimeScore = scoreCriticalHireTime(criticalHireTime);
+  const salaryPremiumScore = scoreCriticalHireSalaryPremium(criticalHireSalaryPremium);
+  if (typeof hireTimeScore !== 'number' && typeof salaryPremiumScore !== 'number') {
+    return normalizeHiringDifficulty(fallbackValue);
+  }
+
+  const compositeScore =
+    typeof hireTimeScore === 'number' && typeof salaryPremiumScore === 'number'
+      ? (hireTimeScore + salaryPremiumScore) / 2
+      : hireTimeScore ?? salaryPremiumScore ?? 50;
+
+  if (compositeScore >= 74) return 'easy';
+  if (compositeScore >= 56) return 'feasible';
+  if (compositeScore >= 36) return 'difficult';
+  return 'severe';
 }
 
 function normalizeCustomerConcentration(value) {
@@ -184,25 +299,6 @@ function normalizeBestCustomerRisk(value, customerConcentration) {
   }
 }
 
-function normalizeSupplierTransferability(value) {
-  switch (String(value ?? '').trim()) {
-    case 'no_dependency':
-    case 'replaceable_weeks':
-      return 'very_easy';
-    case 'replaceable_year':
-      return 'uncertain';
-    case 'difficult_replace':
-      return 'very_difficult';
-    case 'very_easy':
-    case 'manageable':
-    case 'uncertain':
-    case 'very_difficult':
-      return String(value);
-    default:
-      return 'manageable';
-  }
-}
-
 function normalizeFounderDependence(value) {
   switch (String(value ?? '').trim()) {
     case 'brand_not_personal':
@@ -247,8 +343,15 @@ function mapPurpose(transactionGoal) {
   }
 }
 
-function mapUrgency(transactionTimeline) {
-  if (transactionTimeline === 'within_6m') return 'accelerated';
+function mapUrgency(transactionTimeline, transactionGoal) {
+  if (transactionTimeline === 'within_6m') {
+    return transactionGoal === 'external_sale' || transactionGoal === 'partial_sale' ? 'forced' : 'accelerated';
+  }
+
+  if (transactionTimeline === '6_12m') {
+    return 'accelerated';
+  }
+
   return 'orderly';
 }
 
@@ -263,6 +366,18 @@ function mapTargetTransaction(transactionGoal) {
     default:
       return 'not_sure';
   }
+}
+
+function mapStandardOfValue(purpose, transactionGoal) {
+  if (purpose === 'fundraise') return 'investment_value';
+  if (transactionGoal === 'partial_sale') return 'investment_value';
+  return 'fair_market_value';
+}
+
+function mapPremiseOfValue(urgency) {
+  if (urgency === 'forced') return 'forced_liquidation';
+  if (urgency === 'accelerated') return 'orderly_liquidation';
+  return 'going_concern';
 }
 
 function buildHistoricalPeriod(periodId, label, revenue, operatingProfit, options = {}) {
@@ -622,7 +737,7 @@ export function adaptOwnerRequest(raw) {
   const { policyGroupId, policyGroup } = resolvePolicyGroup(raw.level2);
   const now = new Date().toISOString();
   const purpose = mapPurpose(raw.transactionGoal);
-  const urgency = mapUrgency(raw.transactionTimeline);
+  const urgency = mapUrgency(raw.transactionTimeline, raw.transactionGoal);
   const historicals = buildOwnerHistoricals(raw);
   const forecast = buildOwnerForecast(raw);
   const latestReceivables = toNumber(raw.receivablesLatest);
@@ -639,6 +754,16 @@ export function adaptOwnerRequest(raw) {
   const founderRevenueDependence = raw.founderRevenueDependence
     ? normalizeFounderDependence(raw.founderRevenueDependence)
     : normalizeFounderDependence(raw.ownerCustomerRelationship);
+  const supplierTransferability = deriveSupplierTransferability(
+    raw.largestSupplierShare,
+    raw.supplierReplacementTime,
+    raw.partnerDependency || raw.supplierTransferability
+  );
+  const hiringDifficulty = deriveHiringDifficulty(
+    raw.criticalHireTime,
+    raw.criticalHireSalaryPremium,
+    raw.laborMarketDifficulty || raw.hiringDifficulty
+  );
   const workingCapitalHealth = deriveWorkingCapitalHealth({
     hasInputs: hasWorkingCapitalInputs,
     actualWorkingCapital,
@@ -664,8 +789,8 @@ export function adaptOwnerRequest(raw) {
       purpose,
       urgency,
       targetTransaction: mapTargetTransaction(raw.transactionGoal),
-      standardOfValue: purpose === 'fundraise' ? 'investment_value' : 'fair_market_value',
-      premiseOfValue: urgency === 'forced' ? 'forced_liquidation' : 'going_concern',
+      standardOfValue: mapStandardOfValue(purpose, raw.transactionGoal),
+      premiseOfValue: mapPremiseOfValue(urgency),
       valuationDate: now.slice(0, 10),
       previousOfferStatus,
       previousOfferAmount,
@@ -699,8 +824,12 @@ export function adaptOwnerRequest(raw) {
       founderRevenueDependence,
       recurringRevenueShare: raw.recurringRevenueShare,
       revenueVisibility: raw.revenueVisibility,
-      supplierTransferability: normalizeSupplierTransferability(raw.partnerDependency || raw.supplierTransferability),
-      hiringDifficulty: normalizeHiringDifficulty(raw.laborMarketDifficulty || raw.hiringDifficulty),
+      supplierTransferability,
+      largestSupplierShare: raw.largestSupplierShare || '',
+      supplierReplacementTime: raw.supplierReplacementTime || '',
+      hiringDifficulty,
+      criticalHireTime: raw.criticalHireTime || '',
+      criticalHireSalaryPremium: raw.criticalHireSalaryPremium || '',
       fxExposure: raw.fxExposure,
       assetSeparation: raw.assetSeparation,
       inventoryProfile: raw.inventoryProfile,

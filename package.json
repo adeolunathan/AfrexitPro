@@ -19,7 +19,8 @@
     "preview": "vite preview",
     "valuation:fixtures": "node scripts/valuation-engine/run-owner-fixtures.mjs",
     "valuation:fixtures:api": "node scripts/valuation-engine/run-owner-fixtures.mjs --mode api",
-    "valuation:sensitivity": "node scripts/valuation-engine/run-owner-sensitivity.mjs"
+    "valuation:sensitivity": "node scripts/valuation-engine/run-owner-sensitivity.mjs",
+    "valuation:preview-parity": "node scripts/valuation-engine/run-live-preview-parity.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

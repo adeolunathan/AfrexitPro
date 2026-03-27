@@ -1,7 +1,14 @@
 import { average, clamp, safeDivide } from './utils.mjs';
+import {
+  buildFxExposureAdjustmentFromValue,
+  buildGeographyAdjustmentFromPrimaryState,
+  buildLevel1AdjustmentFromLevel1,
+  buildMarketPositionAdjustmentFromValues,
+  buildTraceabilityAdjustmentFromValue,
+  normalizePrimaryState as normalizeSharedPrimaryState,
+  scoreOperatingYearsBand as scoreSharedOperatingYearsBand,
+} from '../../../src/valuation-engine/shared/live-preview-factors.mjs';
 
-const premiumStateSet = new Set(['lagos_island', 'lagos_mainland', 'fct']);
-const establishedStateSet = new Set(['rivers', 'ogun', 'oyo', 'kano', 'anambra', 'delta', 'edo', 'kaduna', 'akwa_ibom']);
 const productRetailLevel2Set = new Set([
   'retail_physical',
   'retail_ecommerce',
@@ -67,55 +74,67 @@ function scoreMaintenanceCapexContext(request) {
 }
 
 export function normalizePrimaryState(value) {
-  const normalized = String(value ?? '').trim().toLowerCase();
-  if (!normalized) return 'lagos_mainland';
-
-  const aliases = {
-    abuja_fct: 'fct',
-    abuja: 'fct',
-    port_harcourt: 'rivers',
-  };
-
-  return aliases[normalized] || normalized;
+  return normalizeSharedPrimaryState(value);
 }
 
 export function buildGeographyAdjustment(primaryState) {
-  const normalizedPrimaryState = normalizePrimaryState(primaryState);
+  return buildGeographyAdjustmentFromPrimaryState(primaryState);
+}
 
-  if (premiumStateSet.has(normalizedPrimaryState)) {
+export function scoreOperatingYearsBand(value) {
+  return scoreSharedOperatingYearsBand(value);
+}
+
+export function buildLevel1Adjustment(level1) {
+  return buildLevel1AdjustmentFromLevel1(level1);
+}
+
+export function buildMarketPositionAdjustment(request) {
+  const operatingProfile = request.operatingProfile || {};
+  return buildMarketPositionAdjustmentFromValues({
+    catchmentArea: operatingProfile.catchmentArea,
+    differentiation: operatingProfile.differentiation,
+    pricingPower: operatingProfile.pricingPower,
+  });
+}
+
+export function buildFxExposureAdjustment(request) {
+  return buildFxExposureAdjustmentFromValue(request.operatingProfile?.fxExposure);
+}
+
+export function buildTraceabilityAdjustment(request) {
+  return buildTraceabilityAdjustmentFromValue(request.financials?.sourceQuality?.traceablePaymentsShare);
+}
+
+export function buildTransactionGoalAdjustment(request) {
+  const purpose = request.engagement?.purpose;
+  const targetTransaction = request.engagement?.targetTransaction;
+
+  if (purpose === 'fundraise' || targetTransaction === 'minority_raise') {
     return {
-      normalizedPrimaryState,
-      geographyBucket: 'premium_hub',
-      geographyAdjustmentFactor: 1.025,
+      transactionContextFactor: 1.01,
+      transactionContextLabel: 'investment_context',
     };
   }
 
-  if (establishedStateSet.has(normalizedPrimaryState)) {
+  if (targetTransaction === 'partial_sale') {
     return {
-      normalizedPrimaryState,
-      geographyBucket: 'established_hub',
-      geographyAdjustmentFactor: 1,
+      transactionContextFactor: 0.995,
+      transactionContextLabel: 'partial_sale_context',
+    };
+  }
+
+  if (purpose === 'internal_planning') {
+    return {
+      transactionContextFactor: 1.005,
+      transactionContextLabel: 'planning_context',
     };
   }
 
   return {
-    normalizedPrimaryState,
-    geographyBucket: 'other_state',
-    geographyAdjustmentFactor: 0.975,
+    transactionContextFactor: 1,
+    transactionContextLabel: 'sale_context',
   };
-}
-
-export function scoreOperatingYearsBand(value) {
-  const map = {
-    lt_1: 35,
-    '1_3': 48,
-    '3_5': 60,
-    '5_10': 72,
-    '10_20': 82,
-    gt_20: 88,
-  };
-
-  return map[String(value ?? '').trim()] ?? 55;
 }
 
 export function buildBranchQualityAdjustment(request) {

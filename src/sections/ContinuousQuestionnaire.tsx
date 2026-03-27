@@ -2,12 +2,13 @@ import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { Check, ArrowRight, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
 import { CurrencyInput } from '@/components/CurrencyInput';
 import { anchorQuestions, getVisibleClosingQuestions } from '@/data/adaptive-question-bank';
 import { detectBranches, getBranchQuestions, type BranchModule, type BranchQuestion } from '@/data/branch-modules';
-import { fetchPartialValuation, calculatePreliminaryRange, formatRange } from '@/api/valuation-partial';
-import type { PartialValuationResult } from '@/api/valuation-partial';
+import { formatRange } from '@/api/valuation-partial';
 import { ConfidenceMeter } from '@/components/ConfidenceMeter';
+import { LiveEstimateDebugPanel } from '@/components/LiveEstimateDebugPanel';
 import {
   FinancialSpreadsheet,
   buildFinancialPeriodsFromAnswers,
@@ -22,7 +23,8 @@ import { QuestionHelpTooltip } from '@/components/QuestionHelpTooltip';
 import type { FormData } from '@/types/valuation';
 import type { Question } from '@/data/adaptive-question-bank';
 import { resolveQuestionCopy } from '@/lib/adaptive-question-copy';
-import { formatMillions } from '@/lib/million-currency';
+import { formatMillionsDisplay, parseMillionsNumber } from '@/lib/million-currency';
+import { useLivePreviewDebugToggle, useOwnerLivePreview } from '@/hooks/use-owner-live-preview';
 import { level2ByLevel1 } from '@/valuation-engine/policy-registry';
 
 // Currency questions that should be shown in inline spreadsheet format
@@ -75,13 +77,19 @@ export function ContinuousQuestionnaire({
 }: ContinuousQuestionnaireProps) {
   const [phase, setPhase] = useState<Phase>('anchor');
   const [visibleCount, setVisibleCount] = useState(1);
-  const [preliminaryResult, setPreliminaryResult] = useState<PartialValuationResult | null>(null);
   const [activeBranches, setActiveBranches] = useState<BranchModule[]>([]);
   const [, setCurrentBranchIndex] = useState(0);
-  const [isCalculating, setIsCalculating] = useState(false);
-  const [, setPreviousRange] = useState<{ low: number; high: number } | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [editingQuestionId, setEditingQuestionId] = useState<string | null>(null);
+  const { debugAvailable, debugEnabled, setDebugEnabled } = useLivePreviewDebugToggle();
+  const {
+    result: preliminaryResult,
+    previousResult: previousPreviewResult,
+    isCalculating,
+    isResultCurrent,
+  } = useOwnerLivePreview(formData, {
+    debounceMs: phase === 'anchor' ? 260 : 450,
+  });
   
   const bottomRef = useRef<HTMLDivElement>(null);
   const questionRefs = useRef<Record<string, HTMLDivElement>>({});
@@ -189,37 +197,21 @@ export function ContinuousQuestionnaire({
     return allQuestions.slice(0, visibleCount);
   }, [allQuestions, visibleCount]);
 
-  // Calculate preliminary result when anchor phase completes
+  useEffect(() => {
+    const level2 = String(formData.level2 || '');
+    setActiveBranches(detectBranches(level2, formData));
+  }, [formData]);
+
+  // Enter preliminary screen once anchor questions are answered and a live preview exists
   useEffect(() => {
     const anchorCompleted = allQuestions
       .filter(q => q.phase === 'anchor')
       .every(q => q.answered);
     
-    if (anchorCompleted && phase === 'anchor' && !preliminaryResult && !isCalculating) {
-      setIsCalculating(true);
-      
-      fetchPartialValuation(formData)
-        .then(result => {
-          setPreliminaryResult(result);
-          setPreviousRange(result.range);
-          setPhase('preliminary');
-        })
-        .catch(err => {
-          console.log('Backend failed, using fallback:', err.message);
-          const result = calculatePreliminaryRange(formData);
-          setPreliminaryResult(result);
-          setPreviousRange(result.range);
-          setPhase('preliminary');
-        })
-        .finally(() => {
-          setIsCalculating(false);
-        });
-      
-      const level2 = String(formData.level2 || '');
-      const branches = detectBranches(level2, formData);
-      setActiveBranches(branches);
+    if (anchorCompleted && phase === 'anchor' && preliminaryResult && isResultCurrent && !isCalculating) {
+      setPhase('preliminary');
     }
-  }, [allQuestions, formData, phase, preliminaryResult, isCalculating]);
+  }, [allQuestions, phase, preliminaryResult, isCalculating, isResultCurrent]);
 
   // Scroll to bottom when new question appears
   useEffect(() => {
@@ -251,10 +243,14 @@ export function ContinuousQuestionnaire({
     }
     
     if ((question.type === 'number' || question.type === 'currency') && value) {
-      const numValue = Number(String(value).replace(/[^0-9]/g, ''));
-      if (isNaN(numValue) || numValue < 0) return 'Please enter a valid positive number';
+      const numValue = question.type === 'currency'
+        ? parseMillionsNumber(value, { allowNegative: question.min !== undefined && question.min < 0 })
+        : Number(String(value).trim());
+      if (numValue === null || isNaN(numValue) || numValue < 0) return 'Please enter a valid positive number';
       if (question.min !== undefined && numValue < question.min) {
-        return `Value must be at least ₦${question.min.toLocaleString()}`;
+        return question.type === 'currency'
+          ? `Value must be at least ₦${question.min.toLocaleString('en-NG', { maximumFractionDigits: 2 })}m`
+          : `Value must be at least ${question.min.toLocaleString('en-NG', { maximumFractionDigits: 2 })}`;
       }
     }
     
@@ -547,10 +543,10 @@ export function ContinuousQuestionnaire({
       } else if (q.type === 'checkbox') {
         displayValue = value === true ? 'Yes' : 'No';
       } else if (q.type === 'currency') {
-        displayValue = `₦${formatMillions(String(value || '')) || '0'}m`;
+        displayValue = formatMillionsDisplay(String(value || ''), { allowNegative: true, emptyDisplay: '0' });
       } else if (q.type === 'financial_table') {
         const latest = getFinancialPeriodById(financialPeriods, 'latest');
-        displayValue = `Latest: ₦${formatMillions(latest.revenue) || '0'}m`;
+        displayValue = `Latest: ${formatMillionsDisplay(latest.revenue, { emptyDisplay: '0' })}`;
       } else {
         displayValue = String(value || '');
       }
@@ -679,7 +675,7 @@ export function ContinuousQuestionnaire({
             <>
               <Input
                 type={q.type === 'tel' ? 'tel' : q.type === 'email' ? 'email' : 'text'}
-                inputMode={q.type === 'number' ? 'numeric' : undefined}
+                inputMode={q.type === 'number' ? 'decimal' : undefined}
                 value={String(value || '')}
                 onChange={(e) => {
                   onUpdate({ [q.id]: e.target.value });
@@ -707,71 +703,115 @@ export function ContinuousQuestionnaire({
     );
   };
 
+  const renderDebugToggle = () =>
+    debugAvailable ? (
+      <div className="mb-4 flex items-center justify-end gap-3">
+        <span className="text-xs font-medium uppercase tracking-[0.18em] text-slate-500">Internal live debug</span>
+        <Switch checked={debugEnabled} onCheckedChange={setDebugEnabled} />
+      </div>
+    ) : null;
+
+  const renderDebugPanel = () =>
+    debugEnabled && preliminaryResult ? (
+      <LiveEstimateDebugPanel
+        result={preliminaryResult}
+        previousResult={previousPreviewResult}
+      />
+    ) : null;
+
   // Preliminary results screen
   if (phase === 'preliminary' && preliminaryResult) {
     const level2Label = level2Options.find(o => o.value === formData.level2)?.label || 'your business';
     const hasBranches = activeBranches.length > 0;
+    const showPreliminaryLoading = isCalculating || !isResultCurrent;
     
     return (
       <div className="min-h-screen bg-gray-50 px-4 py-8">
-        <div className="mx-auto max-w-4xl">
-          {/* Previous questions summary */}
-          <div className="mb-8 space-y-4">
-            {visibleQuestions.slice(0, -1).map((qState) => (
-              <div 
-                key={qState.question.id} 
-                className="rounded-xl bg-white p-4 shadow-sm"
-              >
-                {renderQuestionInput(qState, false)}
+        <div className="mx-auto max-w-6xl">
+          {renderDebugToggle()}
+          <div className={debugEnabled && preliminaryResult ? 'xl:grid xl:grid-cols-[minmax(0,1fr)_360px] xl:items-start xl:gap-8' : ''}>
+            <div>
+              {/* Previous questions summary */}
+              <div className="mb-8 space-y-4">
+                {visibleQuestions.slice(0, -1).map((qState) => (
+                  <div
+                    key={qState.question.id}
+                    className="rounded-xl bg-white p-4 shadow-sm"
+                  >
+                    {renderQuestionInput(qState, false)}
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
 
-          {/* Preliminary Results */}
-          <div className="rounded-2xl bg-white p-8 shadow-lg">
-            <p className="mb-2 text-sm font-medium uppercase tracking-wider text-purple-600">
-              Preliminary Assessment
-            </p>
-            <h1 className="text-2xl font-bold text-gray-900">
-              Based on {level2Label}
-            </h1>
-            <p className="mt-1 text-gray-600">
-              with ₦{Number(formData.revenueLatest || 0).toLocaleString('en-NG', { maximumFractionDigits: 2 })}m revenue
-            </p>
+              {/* Preliminary Results */}
+              <div className="rounded-2xl bg-white p-8 shadow-lg">
+                <p className="mb-2 text-sm font-medium uppercase tracking-wider text-purple-600">
+                  Preliminary Assessment
+                </p>
+                <h1 className="text-2xl font-bold text-gray-900">
+                  Based on {level2Label}
+                </h1>
+                <p className="mt-1 text-gray-600">
+                  with ₦{Number(formData.revenueLatest || 0).toLocaleString('en-NG', { maximumFractionDigits: 2 })}m revenue
+                </p>
 
-            <div className="mt-6 rounded-xl bg-purple-50 p-6 text-center">
-              <p className="text-sm text-gray-600">Preliminary Valuation Range</p>
-              <p className="mt-2 text-4xl font-bold text-purple-600">
-                {formatRange(preliminaryResult.range.low, preliminaryResult.range.high)}
-              </p>
+                {showPreliminaryLoading ? (
+                  <div className="mt-6 rounded-xl bg-slate-50 p-10 text-center">
+                    <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-4 border-purple-200 border-t-purple-600" />
+                    <p className="text-base text-gray-600">Refreshing your preliminary valuation with the latest answers...</p>
+                  </div>
+                ) : (
+                  <>
+                    <div className="mt-6 rounded-xl bg-purple-50 p-6 text-center">
+                      <p className="text-sm text-gray-600">Preliminary Valuation Range</p>
+                      <p className="mt-2 text-4xl font-bold text-purple-600">
+                        {formatRange(preliminaryResult.range.low, preliminaryResult.range.high)}
+                      </p>
+                    </div>
+
+                    <ConfidenceMeter
+                      result={preliminaryResult}
+                      questionsAnswered={anchorQuestions.length}
+                      totalQuestions={allQuestions.length}
+                      phase="anchor"
+                      previousRange={previousPreviewResult?.range}
+                    />
+
+                    {debugEnabled ? (
+                      <div className="mt-6 xl:hidden">
+                        {renderDebugPanel()}
+                      </div>
+                    ) : null}
+                  </>
+                )}
+
+                {hasBranches && (
+                  <div className="mt-6 rounded-xl border border-purple-100 bg-purple-50 p-4">
+                    <p className="text-sm font-medium text-purple-900">What's Next</p>
+                    <p className="mt-1 text-sm text-purple-700">
+                      We'll ask about {activeBranches.map(b => b.shortDescription).join(', ')}
+                    </p>
+                  </div>
+                )}
+
+                <Button
+                  onClick={handleContinueFromPreliminary}
+                  className="mt-6 w-full bg-purple-600 hover:bg-purple-700"
+                >
+                  Continue Assessment
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
+
+              <div ref={bottomRef} />
             </div>
 
-            <ConfidenceMeter
-              result={preliminaryResult}
-              questionsAnswered={anchorQuestions.length}
-              totalQuestions={allQuestions.length}
-              phase="anchor"
-            />
-
-            {hasBranches && (
-              <div className="mt-6 rounded-xl border border-purple-100 bg-purple-50 p-4">
-                <p className="text-sm font-medium text-purple-900">What's Next</p>
-                <p className="mt-1 text-sm text-purple-700">
-                  We'll ask about {activeBranches.map(b => b.shortDescription).join(', ')}
-                </p>
-              </div>
-            )}
-
-            <Button 
-              onClick={handleContinueFromPreliminary}
-              className="mt-6 w-full bg-purple-600 hover:bg-purple-700"
-            >
-              Continue Assessment
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
+            {debugEnabled && preliminaryResult ? (
+              <aside className="hidden xl:block xl:sticky xl:top-24">
+                {renderDebugPanel()}
+              </aside>
+            ) : null}
           </div>
-
-          <div ref={bottomRef} />
         </div>
       </div>
     );
@@ -804,54 +844,71 @@ export function ContinuousQuestionnaire({
             className="h-full bg-purple-600 transition-all duration-300"
             style={{ width: `${progress}%` }}
           />
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center text-sm font-semibold text-slate-700">
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center text-sm font-semibold text-white">
             {progress}% Complete
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="mx-auto max-w-5xl px-4 py-8">
-        {/* Questions List */}
-        <div className="space-y-4">
-          {visibleQuestions.map((qState, index) => {
-            const isActive = index === visibleCount - 1;
-            const isEditing = editingQuestionId === qState.question.id;
-            const isAnswered = qState.answered && !isActive && !isEditing;
-            
-            return (
-              <div
-                key={`${qState.question.id}-${index}`}
-                ref={el => { if (el) questionRefs.current[qState.question.id] = el; }}
-                className={`rounded-2xl bg-white p-6 shadow-sm transition-all ${
-                  isActive || isEditing ? 'shadow-lg ring-2 ring-purple-100' : ''
-                } ${isAnswered ? 'opacity-80' : ''}`}
-              >
-                {isActive && qState.phase !== 'anchor' && (
-                  <div className="mb-4">
-                    <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-700">
-                      {qState.phase === 'branch' && activeBranches[qState.branchIndex || 0]?.title}
-                      {qState.phase === 'closing' && !isContactQuestion(qState.question.id) && 'Final Details'}
-                      {isContactQuestion(qState.question.id) && 'Almost Done'}
-                    </span>
-                  </div>
-                )}
-                
-                {renderQuestionInput(qState, isActive || isEditing)}
+      <main className="mx-auto max-w-7xl px-4 py-8">
+        {renderDebugToggle()}
+        <div className={debugEnabled && preliminaryResult ? 'xl:grid xl:grid-cols-[minmax(0,1fr)_360px] xl:items-start xl:gap-8' : ''}>
+          <div>
+            {debugEnabled && preliminaryResult ? (
+              <div className="mb-6 xl:hidden">
+                {renderDebugPanel()}
               </div>
-            );
-          })}
-        </div>
+            ) : null}
 
-        <div ref={bottomRef} />
+            {/* Questions List */}
+            <div className="space-y-4">
+              {visibleQuestions.map((qState, index) => {
+                const isActive = index === visibleCount - 1;
+                const isEditing = editingQuestionId === qState.question.id;
+                const isAnswered = qState.answered && !isActive && !isEditing;
 
-        {/* Context Help */}
-        {!isContactPhase && (
-          <div className="mt-8 text-center text-sm text-gray-500">
-            <p>Your answers are confidential and secure.</p>
-            <p className="mt-1">Scroll up to review or click Edit on any answered question.</p>
+                return (
+                  <div
+                    key={`${qState.question.id}-${index}`}
+                    ref={el => { if (el) questionRefs.current[qState.question.id] = el; }}
+                    className={`rounded-2xl bg-white p-6 shadow-sm transition-all ${
+                      isActive || isEditing ? 'shadow-lg ring-2 ring-purple-100' : ''
+                    } ${isAnswered ? 'opacity-80' : ''}`}
+                  >
+                    {isActive && qState.phase !== 'anchor' && (
+                      <div className="mb-4">
+                        <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-700">
+                          {qState.phase === 'branch' && activeBranches[qState.branchIndex || 0]?.title}
+                          {qState.phase === 'closing' && !isContactQuestion(qState.question.id) && 'Final Details'}
+                          {isContactQuestion(qState.question.id) && 'Almost Done'}
+                        </span>
+                      </div>
+                    )}
+
+                    {renderQuestionInput(qState, isActive || isEditing)}
+                  </div>
+                );
+              })}
+            </div>
+
+            <div ref={bottomRef} />
+
+            {/* Context Help */}
+            {!isContactPhase && (
+              <div className="mt-8 text-center text-sm text-gray-500">
+                <p>Your answers are confidential and secure.</p>
+                <p className="mt-1">Scroll up to review or click Edit on any answered question.</p>
+              </div>
+            )}
           </div>
-        )}
+
+          {debugEnabled && preliminaryResult ? (
+            <aside className="hidden xl:block xl:sticky xl:top-24">
+              {renderDebugPanel()}
+            </aside>
+          ) : null}
+        </div>
       </main>
     </div>
   );

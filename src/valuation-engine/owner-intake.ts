@@ -74,7 +74,11 @@ export type OwnerFieldId =
   | 'bestCustomerImpact'
   | 'bestCustomerRisk'
   | 'partnerDependency'
+  | 'largestSupplierShare'
+  | 'supplierReplacementTime'
   | 'supplierTransferability'
+  | 'criticalHireTime'
+  | 'criticalHireSalaryPremium'
   | 'workingCapitalHealth'
   | 'assetSeparation'
   | 'fxExposure'
@@ -165,10 +169,14 @@ export const ownerFieldBindings: Record<OwnerFieldId, OwnerFieldBinding> = {
   bestCustomerImpact: { canonicalPath: 'operatingProfile.bestCustomerRisk', valueType: 'string' },
   bestCustomerRisk: { canonicalPath: 'operatingProfile.bestCustomerRisk', valueType: 'string' },
   partnerDependency: { canonicalPath: 'operatingProfile.supplierTransferability', valueType: 'string' },
+  largestSupplierShare: { canonicalPath: 'operatingProfile.largestSupplierShare', valueType: 'string' },
+  supplierReplacementTime: { canonicalPath: 'operatingProfile.supplierReplacementTime', valueType: 'string' },
   founderRevenueDependence: { canonicalPath: 'operatingProfile.founderRevenueDependence', valueType: 'string' },
   recurringRevenueShare: { canonicalPath: 'operatingProfile.recurringRevenueShare', valueType: 'string' },
   revenueVisibility: { canonicalPath: 'operatingProfile.revenueVisibility', valueType: 'string' },
   supplierTransferability: { canonicalPath: 'operatingProfile.supplierTransferability', valueType: 'string' },
+  criticalHireTime: { canonicalPath: 'operatingProfile.criticalHireTime', valueType: 'string' },
+  criticalHireSalaryPremium: { canonicalPath: 'operatingProfile.criticalHireSalaryPremium', valueType: 'string' },
   inventoryProfile: { canonicalPath: 'operatingProfile.inventoryProfile', valueType: 'string' },
   productRights: { canonicalPath: 'operatingProfile.productRights', valueType: 'string' },
   quantities: { canonicalPath: 'operatingProfile.quantities', valueType: 'string' },
@@ -337,6 +345,106 @@ function normalizeGrowthOutlook(value: string | boolean | undefined) {
   }
 }
 
+function scoreLargestSupplierShare(value: string | boolean | undefined) {
+  switch (String(value ?? '').trim()) {
+    case 'lt_20':
+      return 85;
+    case '20_35':
+      return 65;
+    case '35_60':
+      return 40;
+    case 'gt_60':
+      return 20;
+    default:
+      return undefined;
+  }
+}
+
+function scoreSupplierReplacementTime(value: string | boolean | undefined) {
+  switch (String(value ?? '').trim()) {
+    case 'lt_2w':
+      return 85;
+    case '2_8w':
+      return 65;
+    case '2_6m':
+      return 40;
+    case 'gt_6m':
+      return 20;
+    default:
+      return undefined;
+  }
+}
+
+function normalizeSupplierTransferability(value: string | boolean | undefined) {
+  switch (String(value ?? '').trim()) {
+    case 'no_dependency':
+    case 'replaceable_weeks':
+      return 'very_easy';
+    case 'replaceable_year':
+      return 'uncertain';
+    case 'difficult_replace':
+      return 'very_difficult';
+    case 'very_easy':
+    case 'manageable':
+    case 'uncertain':
+    case 'very_difficult':
+      return String(value);
+    default:
+      return 'manageable';
+  }
+}
+
+function deriveSupplierTransferability(
+  largestSupplierShare: string | boolean | undefined,
+  supplierReplacementTime: string | boolean | undefined,
+  fallbackValue: string | boolean | undefined
+) {
+  const shareScore = scoreLargestSupplierShare(largestSupplierShare);
+  const replacementScore = scoreSupplierReplacementTime(supplierReplacementTime);
+  if (typeof shareScore !== 'number' && typeof replacementScore !== 'number') {
+    return normalizeSupplierTransferability(fallbackValue);
+  }
+
+  const compositeScore = typeof shareScore === 'number' && typeof replacementScore === 'number'
+    ? (shareScore + replacementScore) / 2
+    : shareScore ?? replacementScore ?? 50;
+
+  if (compositeScore >= 76) return 'very_easy';
+  if (compositeScore >= 56) return 'manageable';
+  if (compositeScore >= 36) return 'uncertain';
+  return 'very_difficult';
+}
+
+function scoreCriticalHireTime(value: string | boolean | undefined) {
+  switch (String(value ?? '').trim()) {
+    case 'lt_30d':
+      return 82;
+    case '1_3m':
+      return 65;
+    case '3_6m':
+      return 40;
+    case 'gt_6m':
+      return 20;
+    default:
+      return undefined;
+  }
+}
+
+function scoreCriticalHireSalaryPremium(value: string | boolean | undefined) {
+  switch (String(value ?? '').trim()) {
+    case 'none':
+      return 82;
+    case 'up_to_10':
+      return 68;
+    case '10_25':
+      return 45;
+    case 'gt_25':
+      return 25;
+    default:
+      return undefined;
+  }
+}
+
 function normalizeHiringDifficulty(value: string | boolean | undefined) {
   switch (String(value ?? '').trim()) {
     case 'no_shortage':
@@ -353,6 +461,27 @@ function normalizeHiringDifficulty(value: string | boolean | undefined) {
     default:
       return 'feasible';
   }
+}
+
+function deriveHiringDifficulty(
+  criticalHireTime: string | boolean | undefined,
+  criticalHireSalaryPremium: string | boolean | undefined,
+  fallbackValue: string | boolean | undefined
+) {
+  const hireTimeScore = scoreCriticalHireTime(criticalHireTime);
+  const salaryPremiumScore = scoreCriticalHireSalaryPremium(criticalHireSalaryPremium);
+  if (typeof hireTimeScore !== 'number' && typeof salaryPremiumScore !== 'number') {
+    return normalizeHiringDifficulty(fallbackValue);
+  }
+
+  const compositeScore = typeof hireTimeScore === 'number' && typeof salaryPremiumScore === 'number'
+    ? (hireTimeScore + salaryPremiumScore) / 2
+    : hireTimeScore ?? salaryPremiumScore ?? 50;
+
+  if (compositeScore >= 74) return 'easy';
+  if (compositeScore >= 56) return 'feasible';
+  if (compositeScore >= 36) return 'difficult';
+  return 'severe';
 }
 
 function normalizeCustomerConcentration(value: string | boolean | undefined) {
@@ -404,25 +533,6 @@ function normalizeBestCustomerRisk(
       return String(value) as 'minor' | 'noticeable' | 'major' | 'severe';
     default:
       return deriveBestCustomerRisk(customerConcentration) as 'minor' | 'noticeable' | 'major' | 'severe';
-  }
-}
-
-function normalizeSupplierTransferability(value: string | boolean | undefined) {
-  switch (String(value ?? '').trim()) {
-    case 'no_dependency':
-    case 'replaceable_weeks':
-      return 'very_easy';
-    case 'replaceable_year':
-      return 'uncertain';
-    case 'difficult_replace':
-      return 'very_difficult';
-    case 'very_easy':
-    case 'manageable':
-    case 'uncertain':
-    case 'very_difficult':
-      return String(value);
-    default:
-      return 'manageable';
   }
 }
 
@@ -587,8 +697,18 @@ function mapPurpose(transactionGoal: string | boolean | undefined): ValuationReq
   }
 }
 
-function mapUrgency(transactionTimeline: string | boolean | undefined): ValuationRequest['engagement']['urgency'] {
-  if (transactionTimeline === 'within_6m') return 'accelerated';
+function mapUrgency(
+  transactionTimeline: string | boolean | undefined,
+  transactionGoal: string | boolean | undefined
+): ValuationRequest['engagement']['urgency'] {
+  if (transactionTimeline === 'within_6m') {
+    return transactionGoal === 'external_sale' || transactionGoal === 'partial_sale' ? 'forced' : 'accelerated';
+  }
+
+  if (transactionTimeline === '6_12m') {
+    return 'accelerated';
+  }
+
   return 'orderly';
 }
 
@@ -603,6 +723,23 @@ function mapTargetTransaction(transactionGoal: string | boolean | undefined): Va
     default:
       return 'not_sure';
   }
+}
+
+function mapStandardOfValue(
+  purpose: ValuationRequest['engagement']['purpose'],
+  transactionGoal: string | boolean | undefined
+): ValuationRequest['engagement']['standardOfValue'] {
+  if (purpose === 'fundraise') return 'investment_value';
+  if (transactionGoal === 'partial_sale') return 'investment_value';
+  return 'fair_market_value';
+}
+
+function mapPremiseOfValue(
+  urgency: ValuationRequest['engagement']['urgency']
+): ValuationRequest['engagement']['premiseOfValue'] {
+  if (urgency === 'forced') return 'forced_liquidation';
+  if (urgency === 'accelerated') return 'orderly_liquidation';
+  return 'going_concern';
 }
 
 function deriveWorkingCapitalHealth(
@@ -872,9 +1009,9 @@ function mapPurposeToTransactionGoal(
 }
 
 function mapUrgencyToTransactionTimeline(urgency: ValuationRequest['engagement']['urgency']): FormData['transactionTimeline'] {
-  if (urgency === 'accelerated') return 'within_6m';
-  if (urgency === 'orderly') return '6_12m';
-  return 'not_sure';
+  if (urgency === 'forced') return 'within_6m';
+  if (urgency === 'accelerated') return '6_12m';
+  return '12_24m';
 }
 
 function mapFounderDependenceToOwnerRelationship(value: unknown): FormData['ownerCustomerRelationship'] {
@@ -896,6 +1033,66 @@ function mapOwnerAbsence3Months(value: unknown) {
   const normalized = String(value ?? '').trim();
   if (normalized === 'smooth') return 'no_disruption';
   return normalized;
+}
+
+function mapSupplierTransferabilityToLargestSupplierShare(value: unknown) {
+  switch (String(value ?? '').trim()) {
+    case 'very_easy':
+      return 'lt_20';
+    case 'manageable':
+      return '20_35';
+    case 'uncertain':
+      return '35_60';
+    case 'very_difficult':
+      return 'gt_60';
+    default:
+      return '';
+  }
+}
+
+function mapSupplierTransferabilityToReplacementTime(value: unknown) {
+  switch (String(value ?? '').trim()) {
+    case 'very_easy':
+      return 'lt_2w';
+    case 'manageable':
+      return '2_8w';
+    case 'uncertain':
+      return '2_6m';
+    case 'very_difficult':
+      return 'gt_6m';
+    default:
+      return '';
+  }
+}
+
+function mapHiringDifficultyToHireTime(value: unknown) {
+  switch (String(value ?? '').trim()) {
+    case 'easy':
+      return 'lt_30d';
+    case 'feasible':
+      return '1_3m';
+    case 'difficult':
+      return '3_6m';
+    case 'severe':
+      return 'gt_6m';
+    default:
+      return '';
+  }
+}
+
+function mapHiringDifficultyToSalaryPremium(value: unknown) {
+  switch (String(value ?? '').trim()) {
+    case 'easy':
+      return 'none';
+    case 'feasible':
+      return 'up_to_10';
+    case 'difficult':
+      return '10_25';
+    case 'severe':
+      return 'gt_25';
+    default:
+      return '';
+  }
 }
 
 function findHistoricalPeriod(request: ValuationRequest, periodId: string, fallbackIndex?: number) {
@@ -947,7 +1144,7 @@ export function buildOwnerValuationRequest(formData: FormData): ValuationRequest
   const { policyGroupId, policyGroup } = resolveFrontendPolicyGroup(String(formData.level2 || ''));
   const submittedAt = new Date().toISOString();
   const purpose = mapPurpose(formData.transactionGoal);
-  const urgency = mapUrgency(formData.transactionTimeline);
+  const urgency = mapUrgency(formData.transactionTimeline, formData.transactionGoal);
   const historicals = buildOwnerHistoricals(formData);
   const forecast = buildOwnerForecast(formData);
   const normalizationSchedule = buildNormalizationSchedule(formData);
@@ -965,6 +1162,16 @@ export function buildOwnerValuationRequest(formData: FormData): ValuationRequest
   const founderRevenueDependence = hasValue(formData.founderRevenueDependence)
     ? normalizeFounderDependence(formData.founderRevenueDependence)
     : normalizeFounderDependence(formData.ownerCustomerRelationship);
+  const supplierTransferability = deriveSupplierTransferability(
+    formData.largestSupplierShare,
+    formData.supplierReplacementTime,
+    formData.partnerDependency || formData.supplierTransferability
+  );
+  const hiringDifficulty = deriveHiringDifficulty(
+    formData.criticalHireTime,
+    formData.criticalHireSalaryPremium,
+    formData.laborMarketDifficulty || formData.hiringDifficulty
+  );
   const earningsBaseType =
     policyGroup.ownerPhase.capitalizedMetric === 'sde'
       ? 'sde'
@@ -1000,8 +1207,8 @@ export function buildOwnerValuationRequest(formData: FormData): ValuationRequest
       purpose,
       urgency,
       targetTransaction: mapTargetTransaction(formData.transactionGoal),
-      standardOfValue: purpose === 'fundraise' ? 'investment_value' : 'fair_market_value',
-      premiseOfValue: urgency === 'forced' ? 'forced_liquidation' : 'going_concern',
+      standardOfValue: mapStandardOfValue(purpose, formData.transactionGoal),
+      premiseOfValue: mapPremiseOfValue(urgency),
       valuationDate: submittedAt.slice(0, 10),
       previousOfferStatus,
       previousOfferAmount,
@@ -1035,8 +1242,12 @@ export function buildOwnerValuationRequest(formData: FormData): ValuationRequest
       founderRevenueDependence,
       recurringRevenueShare: String(formData.recurringRevenueShare || ''),
       revenueVisibility: String(formData.revenueVisibility || ''),
-      supplierTransferability: normalizeSupplierTransferability(formData.partnerDependency || formData.supplierTransferability),
-      hiringDifficulty: normalizeHiringDifficulty(formData.laborMarketDifficulty || formData.hiringDifficulty),
+      supplierTransferability,
+      largestSupplierShare: String(formData.largestSupplierShare || ''),
+      supplierReplacementTime: String(formData.supplierReplacementTime || ''),
+      hiringDifficulty,
+      criticalHireTime: String(formData.criticalHireTime || ''),
+      criticalHireSalaryPremium: String(formData.criticalHireSalaryPremium || ''),
       fxExposure: String(formData.fxExposure || ''),
       assetSeparation: String(formData.assetSeparation || ''),
       inventoryProfile: String(formData.inventoryProfile || ''),
@@ -1191,11 +1402,22 @@ export function buildOwnerAnswersFromRequest(request: ValuationRequest): FormDat
     processDocumentation: request.readiness.processDocumentation || '',
     replacementDifficulty: request.readiness.replacementDifficulty || '',
     laborMarketDifficulty: request.operatingProfile.hiringDifficulty || '',
+    criticalHireTime:
+      request.operatingProfile.criticalHireTime || mapHiringDifficultyToHireTime(request.operatingProfile.hiringDifficulty),
+    criticalHireSalaryPremium:
+      request.operatingProfile.criticalHireSalaryPremium
+      || mapHiringDifficultyToSalaryPremium(request.operatingProfile.hiringDifficulty),
     growthPotential: request.operatingProfile.growthOutlook || '',
     differentiation: request.operatingProfile.differentiation || '',
     customerConcentration: request.operatingProfile.customerConcentration || '',
     bestCustomerImpact: request.operatingProfile.bestCustomerRisk || '',
     partnerDependency: request.operatingProfile.supplierTransferability || '',
+    largestSupplierShare:
+      request.operatingProfile.largestSupplierShare
+      || mapSupplierTransferabilityToLargestSupplierShare(request.operatingProfile.supplierTransferability),
+    supplierReplacementTime:
+      request.operatingProfile.supplierReplacementTime
+      || mapSupplierTransferabilityToReplacementTime(request.operatingProfile.supplierTransferability),
     assetSeparation: request.operatingProfile.assetSeparation || '',
     fxExposure: request.operatingProfile.fxExposure || '',
     founderRevenueDependence: request.operatingProfile.founderRevenueDependence || '',

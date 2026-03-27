@@ -3,7 +3,7 @@ import { ArrowRight } from 'lucide-react';
 import type { Question } from '@/data/adaptive-question-bank';
 import { QuestionHelpTooltip } from '@/components/QuestionHelpTooltip';
 import { resolveQuestionCopy } from '@/lib/adaptive-question-copy';
-import { formatMillions, sanitizeMillionInput, serializeMillions } from '@/lib/million-currency';
+import { formatMillions, formatMillionsDisplay, sanitizeMillionInput, serializeMillions } from '@/lib/million-currency';
 
 interface InlineCurrencyQuestionnaireProps {
   questions: Question[];
@@ -139,7 +139,6 @@ export function InlineCurrencyQuestionnaire({
               }`}>
                 {isActive ? (
                   <div className="absolute inset-0 flex items-center bg-white">
-                    <span className="pl-3 text-slate-400 text-sm">₦</span>
                     <input
                       ref={inputRef}
                       type="text"
@@ -148,12 +147,12 @@ export function InlineCurrencyQuestionnaire({
                       onChange={(e) => setEditValue(sanitizeMillionInput(e.target.value))}
                       onKeyDown={handleKeyDown}
                       placeholder={q.placeholder || '0'}
-                      className="h-full w-full bg-transparent px-2 text-right text-sm font-medium text-slate-900 outline-none"
+                      className="h-full w-full bg-transparent px-4 text-right text-sm font-medium text-slate-900 outline-none"
                     />
                   </div>
                 ) : isAnswered ? (
                   <span className="text-sm font-medium text-slate-700">
-                    ₦{formatMillions(value)}m
+                    {formatMillionsDisplay(value, { emptyDisplay: '0' })}
                   </span>
                 ) : (
                   <span className="text-sm text-slate-300">0</span>

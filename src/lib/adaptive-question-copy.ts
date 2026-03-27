@@ -39,12 +39,20 @@ export function resolveQuestionCopy(
       resolved.prompt = 'What percentage of the business does the owner own or control?';
       break;
     case 'ownerAbsence2Weeks':
-      resolved.prompt = 'If the owner stepped away for 2 weeks, what would happen?';
+      resolved.prompt = 'If the owner stepped away for 2 weeks, what would most likely happen to day-to-day operations, delivery, sales, and approvals?';
+      if (resolved.options) {
+        resolved.options = [
+          { value: 'smooth', label: 'Operations would continue normally, with no material disruption to delivery, sales, or approvals' },
+          { value: 'minor_issues', label: 'Operations would continue, with only minor delays or under about 5% disruption' },
+          { value: 'struggle', label: 'Operations or sales would be materially disrupted during that period' },
+          { value: 'almost_stop', label: 'Core operations would largely stop without direct owner involvement' },
+        ];
+      }
       break;
     case 'ownerAbsence3Months':
       resolved.prompt = 'If the owner were unavailable for 3 months, what is the most realistic impact on operations and revenue?';
       resolved.helperText =
-        'Base this on what would happen without the owner\'s direct involvement, not on a best-case hope. This is one of the strongest transferability signals in owner mode.';
+        'Base this on what would happen without the owner\'s direct involvement, not on a best-case hope.';
       if (resolved.options) {
         resolved.options = resolved.options.map((option) =>
           option.value === 'not_realistic'
@@ -67,10 +75,10 @@ export function resolveQuestionCopy(
     case 'managementDepth':
       if (resolved.options) {
         resolved.options = [
-          { value: 'team_controls', label: 'A team with clear roles and controls' },
-          { value: 'trusted_manager', label: 'A trusted manager, with the owner\'s oversight' },
-          { value: 'founder_plus_support', label: 'The owner, with occasional help from family or staff' },
-          { value: 'founder_only', label: 'Mostly the owner alone' },
+          { value: 'team_controls', label: 'A management team carries day-to-day control, with clear roles and delegated authority' },
+          { value: 'trusted_manager', label: 'One trusted manager carries most operations, with owner oversight' },
+          { value: 'founder_plus_support', label: 'The owner still carries most operations, with occasional support from staff or family' },
+          { value: 'founder_only', label: 'The business still depends on the owner for most key decisions and coordination' },
         ];
       }
       break;
@@ -78,7 +86,7 @@ export function resolveQuestionCopy(
       if (resolved.options) {
         resolved.options = resolved.options.map((option) =>
           option.value === 'founder_head'
-            ? { ...option, label: 'Most of it sits in the owner\'s head' }
+            ? { ...option, label: 'Most important operating knowledge still sits with the owner or a few key people' }
             : option
         );
       }

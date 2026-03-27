@@ -63,6 +63,7 @@ export function evaluateSubmission(request) {
     values: {
       ...bridgedValues,
       appliedWeights: reconciled.appliedWeights,
+      appliedContributions: reconciled.contributions,
     },
     readinessAssessment,
     confidenceAssessment,

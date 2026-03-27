@@ -24,6 +24,12 @@ This document exists so the engine is not a black box. It makes the current mech
 
 For the adaptive questionnaire keep/fix/drop decisions, conditional resolver rules, and question-to-canonical mapping inventory, see [Adaptive Questionnaire Audit And Target Matrix](/Users/deolunathan/Downloads/BB/AfrexitPro/docs/questionnaires/adaptive-questionnaire-audit-and-target-matrix.md).
 
+For a practical explanation of what readiness and confidence mean, example high-readiness / high-confidence scenarios, and the current policy-group method and multiple table, see [Readiness, Confidence, Methods, and Multiples Reference](/Users/deolunathan/Downloads/BB/AfrexitPro/docs/valuation-engine/readiness-confidence-methods-reference.md).
+
+For the end-to-end benchmark basis and calibration-refresh workflow, see [Benchmark Provenance and Refresh Workflow](/Users/deolunathan/Downloads/BB/AfrexitPro/docs/valuation-engine/benchmark-provenance-and-refresh-workflow.md).
+
+For how to interpret Scenario Lab, Sensitivity Matrix, Direction check, and Question Audit statuses in the admin tool, see [Admin Lab Sensitivity and Audit Guide](/Users/deolunathan/Downloads/BB/AfrexitPro/docs/valuation-engine/admin-lab-sensitivity-and-audit-guide.md).
+
 ## 2. Engine Flow
 
 The owner-phase engine runs in this order:

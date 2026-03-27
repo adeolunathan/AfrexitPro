@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Input } from '@/components/ui/input';
-import { formatMillions, sanitizeMillionInput, serializeMillions } from '@/lib/million-currency';
+import { formatMillionsDisplay, sanitizeMillionInput, serializeMillions } from '@/lib/million-currency';
 
 interface CurrencyInputProps {
   value: string | number;
@@ -14,8 +14,7 @@ interface CurrencyInputProps {
 }
 
 export function formatNaira(value: number | string): string {
-  const formatted = formatMillions(value);
-  return formatted ? `₦${formatted}m` : '';
+  return formatMillionsDisplay(value, { allowNegative: true, emptyDisplay: '0' });
 }
 
 export function parseNaira(formatted: string): string {
@@ -36,7 +35,7 @@ export function CurrencyInput({
 
   useEffect(() => {
     const rawValue = typeof value === 'number' ? String(value) : String(value || '');
-    setDisplayValue(formatMillions(rawValue));
+    setDisplayValue(sanitizeMillionInput(rawValue));
   }, [value]);
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,9 +56,6 @@ export function CurrencyInput({
 
   return (
     <div className="relative">
-      <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-        ₦m
-      </span>
       <Input
         id={id}
         type="text"
@@ -68,13 +64,8 @@ export function CurrencyInput({
         onChange={handleChange}
         placeholder={placeholder}
         required={required}
-        className={`h-14 rounded-xl border-gray-200 pl-10 pr-4 text-base focus:border-purple-500 focus:ring-4 focus:ring-purple-100 ${className || ''}`}
+        className={`h-14 rounded-xl border-gray-200 px-4 text-right text-base focus:border-purple-500 focus:ring-4 focus:ring-purple-100 ${className || ''}`}
       />
-      {displayValue && (
-        <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs text-gray-400">
-          millions
-        </div>
-      )}
     </div>
   );
 }
